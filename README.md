@@ -1,3 +1,5 @@
+![Immersive Technology Reforged logo](src/main/resources/ITlogo.png)
+
 # Links
 - [Immersive Technology on CurseForge](https://www.curseforge.com/minecraft/mc-mods/immersive-technology)
 - [Official Discord](https://discord.gg/ujY2mV9)<br/>
