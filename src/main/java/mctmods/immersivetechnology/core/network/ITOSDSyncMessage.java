@@ -3,10 +3,10 @@ package mctmods.immersivetechnology.core.network;
 import mctmods.immersivetechnology.common.blocks.metal.logic.OSDCommonBlockEntity;
 import mctmods.immersivetechnology.common.blocks.metal.logic.ValveCommonBlockEntity;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -25,16 +25,16 @@ public record ITOSDSyncMessage(BlockPos pos, long lastAccepted, long average, in
 
     @Override public void process(IPayloadContext context) {
         context.enqueueWork(() -> {
-            if (Minecraft.getInstance().level != null) {
-                BlockEntity te = Minecraft.getInstance().level.getBlockEntity(pos);
-                if (te instanceof OSDCommonBlockEntity osd) {
-                    osd.lastAcceptedAmount = lastAccepted;
-                }
-                if (te instanceof ValveCommonBlockEntity valve) {
-                    valve.lastAcceptedAmount = lastAccepted;
-                    valve.average = average;
-                    valve.packetAverage = packetAverage;
-                }
+            Player player = context.player();
+            if (player == null) { return; }
+            BlockEntity te = player.level().getBlockEntity(pos);
+            if (te instanceof OSDCommonBlockEntity osd) {
+                osd.lastAcceptedAmount = lastAccepted;
+            }
+            if (te instanceof ValveCommonBlockEntity valve) {
+                valve.lastAcceptedAmount = lastAccepted;
+                valve.average = average;
+                valve.packetAverage = packetAverage;
             }
         });
     }

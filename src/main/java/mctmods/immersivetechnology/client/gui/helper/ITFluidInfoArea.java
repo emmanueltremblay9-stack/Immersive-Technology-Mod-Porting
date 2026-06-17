@@ -44,7 +44,7 @@ public class ITFluidInfoArea extends ITInfoArea {
     public void fillTooltipOverArea(int mouseX, int mouseY, List<Component> tooltip) { if (ModList.get().isLoaded("jei")) { return; } FluidStack fluid = tank.getFluid(); int capacity = tank.getCapacity(); Objects.requireNonNull(tooltip); fillTooltip(fluid, capacity, tooltip::add); }
 
     public static void fillTooltip(FluidStack fluid, int tankCapacity, Consumer<Component> tooltip) {
-        if (!fluid.isEmpty()) { tooltip.accept(fluid.getDisplayName().copy().withStyle(fluid.getFluid().getFluidType().getRarity(fluid).getStyleModifier())); }
+        if (!fluid.isEmpty()) { tooltip.accept(fluid.getHoverName().copy().withStyle(fluid.getFluid().getFluidType().getRarity(fluid).getStyleModifier())); }
         else { tooltip.accept(Component.translatable(TranslationKey.GUI_EMPTY.getLocation())); }
 
         if (Minecraft.getInstance().options.advancedItemTooltips && !fluid.isEmpty()) {

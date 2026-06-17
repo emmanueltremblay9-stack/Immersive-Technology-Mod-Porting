@@ -4,9 +4,9 @@ import com.mojang.datafixers.util.Pair;
 import mctmods.immersivetechnology.common.gui.helper.ITGenericDataSerializers;
 import mctmods.immersivetechnology.common.gui.helper.ITGenericDataSerializers.DataPair;
 import mctmods.immersivetechnology.common.gui.helper.ITContainerMenu;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import java.util.ArrayList;
@@ -36,8 +36,9 @@ public record ITMessageContainerData(List<Pair<Integer, DataPair<?>>> synced) im
 
     @Override public void process(IPayloadContext context) {
         context.enqueueWork(() -> {
-            assert Minecraft.getInstance().player != null;
-            AbstractContainerMenu currentContainer = Minecraft.getInstance().player.containerMenu;
+            Player player = context.player();
+            if (player == null) { return; }
+            AbstractContainerMenu currentContainer = player.containerMenu;
             if (currentContainer instanceof ITContainerMenu itContainer) { itContainer.receiveSync(synced); }
         });
     }

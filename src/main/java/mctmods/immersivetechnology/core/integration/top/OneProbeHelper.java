@@ -46,7 +46,7 @@ public class OneProbeHelper {
     private static void addFluidTankDisplay(IProbeInfo probeInfo, FluidTank tank) {
         FluidStack fluid = tank.getFluid();
         int amount = !fluid.isEmpty() ? fluid.getAmount() : 0;
-        String fluidName = !fluid.isEmpty() ? fluid.getDisplayName().getString() : "Empty";
+        String fluidName = !fluid.isEmpty() ? fluid.getHoverName().getString() : "Empty";
         int color = getFluidColor(fluid);
         probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER).spacing(2))
                 .progress(amount, tank.getCapacity(), probeInfo.defaultProgressStyle().suffix(" mB").numberFormat(NumberFormat.COMPACT).filledColor(color).alternateFilledColor(color).backgroundColor(0xff000000).borderColor(0xffffffff))

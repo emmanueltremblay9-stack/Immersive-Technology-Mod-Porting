@@ -124,7 +124,7 @@ public abstract class BarrelCommonBlockEntity extends ITBaseBlockEntity implemen
         if (Utils.isFluidRelatedItemStack(player.getItemInHand(InteractionHand.MAIN_HAND))) {
             FluidStack fs = tank.getFluid();
             if (fs.isEmpty()) return new Component[]{Component.translatable(TranslationKey.GUI_EMPTY.text())};
-            return new Component[]{Component.literal(TranslationKey.OVERLAY_OSD_BARREL_NORMAL_FIRST_LINE.format(fs.getDisplayName().getString(), fs.getAmount()))};
+            return new Component[]{Component.literal(TranslationKey.OVERLAY_OSD_BARREL_NORMAL_FIRST_LINE.format(fs.getHoverName().getString(), fs.getAmount()))};
         }
         return new Component[0];
     }

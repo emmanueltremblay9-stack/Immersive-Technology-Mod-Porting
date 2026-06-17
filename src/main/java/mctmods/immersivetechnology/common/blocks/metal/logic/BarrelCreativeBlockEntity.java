@@ -60,7 +60,7 @@ public class BarrelCreativeBlockEntity extends OSDCommonBlockEntity implements I
         @Override public int fill(FluidStack resource, FluidAction action) { return 0; }
 
         @Override @NotNull public FluidStack drain(FluidStack resource, FluidAction action) {
-            if (selectedFluid.isEmpty() || !selectedFluid.isFluidEqual(resource)) { return FluidStack.EMPTY; }
+            if (selectedFluid.isEmpty() || !FluidStack.isSameFluidSameComponents(selectedFluid, resource)) { return FluidStack.EMPTY; }
             return selectedFluid.copyWithAmount(resource.getAmount());
         }
 
@@ -159,7 +159,7 @@ public class BarrelCreativeBlockEntity extends OSDCommonBlockEntity implements I
             requestCooldown = 20;
         }
         if (selectedFluid.isEmpty()) { return new Component[]{Component.translatable(TranslationKey.GUI_EMPTY.text())}; }
-        Component fluidName = selectedFluid.getDisplayName();
+        Component fluidName = selectedFluid.getHoverName();
         double rawValue = ITClientConfig.perTickTrashCans ? (double)lastAcceptedAmount / 20.0 : lastAcceptedAmount;
         String value = NUMBER_FORMAT.format(rawValue);
         return new Component[]{Component.translatable(text().text(), fluidName, value)};

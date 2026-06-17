@@ -47,7 +47,7 @@ public class SolarMenu extends ITContainerMenu {
             @Override public boolean mayPlace(@Nonnull ItemStack itemStack) {
                 FluidStack fs = FluidUtil.getFluidContained(itemStack).orElse(null);
                 if (fs == null) return false;
-                return inputTank.getFluidAmount() <= 0 || fs.isFluidEqual(inputTank.getFluid());
+                return inputTank.getFluidAmount() <= 0 || FluidStack.isSameFluidSameComponents(fs, inputTank.getFluid());
             }
         });
         this.addSlot(new ITSlot.Output(inv, 1, 80, 53));

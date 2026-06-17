@@ -1,10 +1,10 @@
 package mctmods.immersivetechnology.core.network;
 
 import mctmods.immersivetechnology.core.util.TranslationKey;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ITOSDSyncBlock implements ITMessage {
@@ -24,7 +24,8 @@ public class ITOSDSyncBlock implements ITMessage {
             Component msg;
             if (distance >= 0) { msg = Component.translatable(actualKey, distance); }
             else { msg = Component.translatable(actualKey); }
-            Minecraft.getInstance().gui.getChat().addMessage(msg);
+            Player player = context.player();
+            if (player != null) { player.displayClientMessage(msg, false); }
         });
     }
 

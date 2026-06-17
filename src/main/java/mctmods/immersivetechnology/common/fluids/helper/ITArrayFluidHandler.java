@@ -32,7 +32,7 @@ public record ITArrayFluidHandler(IFluidTank[] internal, boolean allowDrain, boo
         FluidStack remaining = resource.copy();
         IFluidTank existing = null;
         for (IFluidTank tank : this.internal) {
-            if (tank.getFluid().isFluidEqual(remaining)) {
+            if (FluidStack.isSameFluidSameComponents(tank.getFluid(), remaining)) {
                 existing = tank;
                 break;
             }

@@ -15,7 +15,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 public class ITGenericDataSerializers {
     private static final List<DataSerializer<?>> SERIALIZERS = new ArrayList<>();
     public static final DataSerializer<Integer> INT32 = register(FriendlyByteBuf::readVarInt, FriendlyByteBuf::writeVarInt);
-    public static final DataSerializer<FluidStack> FLUID_STACK = register(ITGenericDataSerializers::readFluidStack, ITGenericDataSerializers::writeFluidStack, FluidStack::copy, FluidStack::isFluidStackIdentical);
+    public static final DataSerializer<FluidStack> FLUID_STACK = register(ITGenericDataSerializers::readFluidStack, ITGenericDataSerializers::writeFluidStack, FluidStack::copy, FluidStack::matches);
     public static final DataSerializer<Float> FLOAT = register(FriendlyByteBuf::readFloat, FriendlyByteBuf::writeFloat);
     public static final DataSerializer<Double> DOUBLE = register(FriendlyByteBuf::readDouble, FriendlyByteBuf::writeDouble);
     public static final DataSerializer<ItemStack> ITEM_STACK = register(ITGenericDataSerializers::readItemStack, ITGenericDataSerializers::writeItemStack, ItemStack::copy, Object::equals);

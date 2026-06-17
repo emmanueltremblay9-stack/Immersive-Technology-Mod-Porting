@@ -59,7 +59,7 @@ public class ITBlockItem extends BlockItem {
         if (ItemNBTHelper.hasKey(stack, "tank")) {
             HolderLookup.Provider registries = context.registries() != null ? context.registries() : BUILTIN_PROVIDER;
             FluidStack fs = FluidStack.parseOptional(registries, ItemNBTHelper.getTagCompound(stack, "tank"));
-            if (!fs.isEmpty()) tooltip.add(TextUtils.applyFormat(Component.translatable(ITLib.DESC_INFO + "fluidStored", fs.getDisplayName(), fs.getAmount()), ChatFormatting.GRAY));
+            if (!fs.isEmpty()) tooltip.add(TextUtils.applyFormat(Component.translatable(ITLib.DESC_INFO + "fluidStored", fs.getHoverName(), fs.getAmount()), ChatFormatting.GRAY));
         }
     }
 
