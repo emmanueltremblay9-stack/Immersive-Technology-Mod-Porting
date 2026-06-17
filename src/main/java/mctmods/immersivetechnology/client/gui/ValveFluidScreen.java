@@ -104,7 +104,7 @@ public class ValveFluidScreen extends AbstractContainerScreen<ValveFluidMenu> {
 
     @Override public void onClose() { super.onClose(); }
     @Override protected void renderBg(@NotNull GuiGraphics graphics, float pt, int mx, int my) {
-        this.renderBackground(graphics);
+        this.renderBackground(graphics, mx, my, pt);
         graphics.blit(TEXTURE, leftPos, topPos, 0, 0.0F, 0.0F, imageWidth, 88, imageWidth, 88);
     }
 

@@ -5,7 +5,7 @@ import blusunrize.immersiveengineering.api.crafting.MixerRecipe;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,6 +24,7 @@ public abstract class MixerRecipePriorityMixin {
     )
     private static void it$prioritizeHigherIngredients(Level level, FluidStack fluid, NonNullList<ItemStack> components, CallbackInfoReturnable<MixerRecipe> cir) {
         List<MixerRecipe> allMatching = MixerRecipe.RECIPES.getRecipes(level).stream()
+                .map(holder -> holder.value())
                 .filter(r -> r.matches(fluid, components))
                 .toList();
 
@@ -38,13 +39,13 @@ public abstract class MixerRecipePriorityMixin {
                     for (IngredientWithSize ingr : r1.itemInputs) {
                         if (ingr != null) sum1 += ingr.getCount();
                     }
-                    int count1 = (int) java.util.Arrays.stream(r1.itemInputs).filter(ingr -> ingr != null).count();
+                    int count1 = (int) r1.itemInputs.stream().filter(ingr -> ingr != null).count();
 
                     int sum2 = 0;
                     for (IngredientWithSize ingr : r2.itemInputs) {
                         if (ingr != null) sum2 += ingr.getCount();
                     }
-                    int count2 = (int) java.util.Arrays.stream(r2.itemInputs).filter(ingr -> ingr != null).count();
+                    int count2 = (int) r2.itemInputs.stream().filter(ingr -> ingr != null).count();
 
                     int cmp = Integer.compare(sum1, sum2);
                     if (cmp == 0) cmp = Integer.compare(count1, count2);

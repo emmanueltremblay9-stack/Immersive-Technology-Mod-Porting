@@ -10,8 +10,8 @@ import mctmods.immersivetechnology.core.util.inventory.IITDropInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -29,12 +29,12 @@ public class ITMultiblockBlockEntityMaster<State extends IMultiblockState> exten
 
     public ITMultiblockBlockEntityMaster(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, MultiblockRegistration<State> multiblock) { super(type, worldPosition, blockState, multiblock); }
 
-    @Override public AABB getRenderBoundingBox() {
+    public AABB getRenderBoundingBox() {
         IMultiblockContext<State> ctx = getHelper().getContext();
         BlockPos min = ctx.getLevel().toAbsolute(BlockPos.ZERO);
-        Vec3i size = getHelper().getSize(ctx.getLevel().getRawLevel());
+        Vec3i size = getHelper().getMultiblock().size(ctx.getLevel().getRawLevel());
         BlockPos max = ctx.getLevel().toAbsolute(new BlockPos(size.getX() - 1, size.getY() - 1, size.getZ() - 1));
-        return new AABB(min, max.offset(1, 1, 1)).inflate(1);
+        return new AABB(Vec3.atLowerCornerOf(min), Vec3.atLowerCornerOf(max.offset(1, 1, 1))).inflate(1);
     }
 
     @Override public boolean interact(Direction side, Player player, InteractionHand hand, ItemStack heldItem, float hitX, float hitY, float hitZ) {
@@ -44,11 +44,11 @@ public class ITMultiblockBlockEntityMaster<State extends IMultiblockState> exten
         BlockHitResult absoluteHit = new BlockHitResult(hitVec, side, getBlockPos(), false);
         assert this.level != null;
         boolean isClient = this.level.isClientSide;
-        InteractionResult result = InteractionResult.PASS;
+        ItemInteractionResult result = ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         for (MultiblockRegistration.ExtraComponent<State, ?> extra : getHelper().getMultiblock().extraComponents()) {
             @SuppressWarnings("unchecked")
             IMultiblockComponent<State> component = (IMultiblockComponent<State>) extra.component();
-            InteractionResult componentResult = component.click(ctx, posInMultiblock, player, hand, absoluteHit, isClient);
+            ItemInteractionResult componentResult = component.click(ctx, posInMultiblock, player, hand, absoluteHit, isClient);
             if (componentResult.consumesAction()) {
                 result = componentResult;
                 break;

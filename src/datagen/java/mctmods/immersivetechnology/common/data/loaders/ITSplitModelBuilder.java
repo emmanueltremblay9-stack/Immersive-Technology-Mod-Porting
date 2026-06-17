@@ -5,9 +5,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import mctmods.immersivetechnology.client.models.split.ITSplitModelLoader;
 import net.minecraft.core.Vec3i;
-import net.minecraftforge.client.model.generators.CustomLoaderBuilder;
-import net.minecraftforge.client.model.generators.ModelBuilder;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.client.model.generators.CustomLoaderBuilder;
+import net.neoforged.neoforge.client.model.generators.ModelBuilder;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class ITSplitModelBuilder<T extends ModelBuilder<T>> extends CustomLoader
     private List<Vec3i> parts;
     private ModelBuilder<?> modelToSplit;
     private boolean isDynamic;
-    protected ITSplitModelBuilder(T parent, ExistingFileHelper existingFileHelper) { super(ITSplitModelLoader.LOCATION, parent, existingFileHelper); }
+    protected ITSplitModelBuilder(T parent, ExistingFileHelper existingFileHelper) { super(ITSplitModelLoader.LOCATION, parent, existingFileHelper, false); }
     public ITSplitModelBuilder<T> parts(List<Vec3i> parts) { Preconditions.checkNotNull(parts); Preconditions.checkState(this.parts==null); this.parts = parts; return this; }
     public ITSplitModelBuilder<T> innerModel(ModelBuilder<?> modelToSplit) { Preconditions.checkNotNull(modelToSplit); Preconditions.checkState(this.modelToSplit==null); this.modelToSplit = modelToSplit; return this; }
     public ITSplitModelBuilder<T> dynamic(boolean isDynamic) { this.isDynamic = isDynamic; return this; }

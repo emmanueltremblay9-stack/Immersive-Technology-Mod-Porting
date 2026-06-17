@@ -1,10 +1,9 @@
 package mctmods.immersivetechnology.mixin.common;
 
-import blusunrize.immersiveengineering.api.utils.CapabilityReference;
+import mctmods.immersivetechnology.core.util.capability.CapabilityReference;
 import blusunrize.immersiveengineering.common.blocks.metal.FluidPipeBlockEntity;
 import net.minecraft.core.Direction;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,7 +26,7 @@ public abstract class FluidPipeBlockEntityMixin {
                 Class<?> refClass = ref.getClass();
                 Field currentCapField = refClass.getDeclaredField("currentCap");
                 currentCapField.setAccessible(true);
-                currentCapField.set(ref, LazyOptional.empty());
+                currentCapField.set(ref, null);
 
                 Field lastPosField = refClass.getDeclaredField("lastPos");
                 lastPosField.setAccessible(true);

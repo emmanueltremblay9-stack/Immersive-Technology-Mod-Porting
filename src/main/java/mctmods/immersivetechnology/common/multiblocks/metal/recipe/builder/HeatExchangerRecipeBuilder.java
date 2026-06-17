@@ -1,10 +1,10 @@
 package mctmods.immersivetechnology.common.multiblocks.metal.recipe.builder;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
-import blusunrize.immersiveengineering.api.crafting.FluidTagInput;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
 import mctmods.immersivetechnology.common.multiblocks.metal.recipe.HeatExchangerRecipe;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
 
@@ -13,7 +13,7 @@ public class HeatExchangerRecipeBuilder extends IEFinishedRecipe<HeatExchangerRe
         super(HeatExchangerRecipe.SERIALIZER.get());
     }
 
-    public static HeatExchangerRecipeBuilder builder(FluidTagInput input0, @Nullable FluidTagInput input1, FluidStack output0, @Nullable FluidStack output1, int energy, int time) { HeatExchangerRecipeBuilder builder = new HeatExchangerRecipeBuilder().addFluidTag("input0", input0).addFluid("output0", output0).setEnergy(energy).setTime(time);
+    public static HeatExchangerRecipeBuilder builder(SizedFluidIngredient input0, @Nullable SizedFluidIngredient input1, FluidStack output0, @Nullable FluidStack output1, int energy, int time) { HeatExchangerRecipeBuilder builder = new HeatExchangerRecipeBuilder().addFluidTag("input0", input0).addFluid("output0", output0).setEnergy(energy).setTime(time);
         if (input1 != null) builder.addFluidTag("input1", input1);
         if (output1 != null) builder.addFluid("output1", output1);
         return builder;

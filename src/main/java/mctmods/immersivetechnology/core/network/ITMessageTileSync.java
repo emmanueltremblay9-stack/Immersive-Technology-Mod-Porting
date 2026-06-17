@@ -4,12 +4,11 @@ import mctmods.immersivetechnology.common.blocks.helper.ITBaseBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ITMessageTileSync implements ITMessage {
     private final BlockPos pos;
@@ -30,11 +29,10 @@ public class ITMessageTileSync implements ITMessage {
         buf.writeNbt(this.nbt);
     }
 
-    @Override public void process(Supplier<NetworkEvent.Context> context) {
-        NetworkEvent.Context ctx = context.get();
-        ServerPlayer player = ctx.getSender();
+    @Override public void process(IPayloadContext context) {
+        ServerPlayer player = context.player() instanceof ServerPlayer serverPlayer ? serverPlayer : null;
         if (player != null) {
-            ctx.enqueueWork(() -> {
+            context.enqueueWork(() -> {
                 Level level = player.level();
                 BlockEntity tile = level.getBlockEntity(this.pos);
                 if (tile instanceof ITBaseBlockEntity itbe) {
@@ -43,4 +41,6 @@ public class ITMessageTileSync implements ITMessage {
             });
         }
     }
+
+    @Override public CustomPacketPayload.Type<ITMessageTileSync> type() { return ITPacketHandler.TILE_SYNC; }
 }

@@ -1,11 +1,10 @@
 package mctmods.immersivetechnology.core.network;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.function.Supplier;
-
-public interface ITMessage {
+public interface ITMessage extends CustomPacketPayload {
     void toBytes(FriendlyByteBuf buf);
-    void process(Supplier<NetworkEvent.Context> context);
+    void process(IPayloadContext context);
 }

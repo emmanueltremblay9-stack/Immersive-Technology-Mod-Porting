@@ -3,28 +3,29 @@ package mctmods.immersivetechnology.common.multiblocks.metal.recipe;
 import blusunrize.immersiveengineering.api.crafting.*;
 import blusunrize.immersiveengineering.api.crafting.cache.CachedRecipeList;
 import com.google.common.collect.Lists;
-import com.immersiveconvergence.api.HeatCapabilities;
+import mctmods.immersivetechnology.api.convergence.HeatCapabilities;
 import mctmods.immersivetechnology.core.registration.ITRecipeTypes;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.Lazy;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.common.util.Lazy;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
 public class BoilerTankRecipe extends MultiblockRecipe {
-    public static RegistryObject<IERecipeSerializer<BoilerTankRecipe>> SERIALIZER;
+    public static DeferredHolder<net.minecraft.world.item.crafting.RecipeSerializer<?>, IERecipeSerializer<BoilerTankRecipe>> SERIALIZER;
     public static final CachedRecipeList<BoilerTankRecipe> RECIPES = new CachedRecipeList<>(ITRecipeTypes.BOILER_TANK);
 
-    public final FluidTagInput input;
+    public final SizedFluidIngredient input;
     public final FluidStack output;
     public final double requiredHeat;
     Lazy<Integer> totalProcessTime;
 
-    public BoilerTankRecipe(ResourceLocation id, FluidTagInput input, FluidStack output, int time, double requiredHeat) {
-        super(LAZY_EMPTY, ITRecipeTypes.BOILER_TANK, id);
+    public BoilerTankRecipe(SizedFluidIngredient input, FluidStack output, int time, double requiredHeat) {
+        super(TagOutput.EMPTY, ITRecipeTypes.BOILER_TANK, 0, time, ITRecipeTypes.NO_MULTIPLIERS);
         this.input = input;
         this.output = output;
         this.requiredHeat = Math.min(requiredHeat, HeatCapabilities.MAX_HEAT);
@@ -38,12 +39,12 @@ public class BoilerTankRecipe extends MultiblockRecipe {
         return SERIALIZER.get();
     }
 
-    @Override @NotNull public ItemStack getResultItem(RegistryAccess registryAccess) {
+    @Override @NotNull public ItemStack getResultItem(HolderLookup.Provider provider) {
         return ItemStack.EMPTY;
     }
 
     public static BoilerTankRecipe findRecipe(Level level, FluidStack input) {
-        for (BoilerTankRecipe recipe : RECIPES.getRecipes(level)) { if (recipe.input.test(input)) return recipe; }
+        for (var holder : RECIPES.getRecipes(level)) { BoilerTankRecipe recipe = holder.value(); if (recipe.input.test(input)) return recipe; }
         return null;
     }
 

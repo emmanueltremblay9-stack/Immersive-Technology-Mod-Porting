@@ -8,8 +8,8 @@ import blusunrize.immersiveengineering.api.multiblocks.blocks.registry.Multibloc
 import mctmods.immersivetechnology.common.blocks.helper.ITBlockInterfaces;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -27,11 +27,11 @@ public class ITMultiblockBlockEntityDummy<State extends IMultiblockState> extend
         BlockHitResult absoluteHit = new BlockHitResult(hitVec, side, getBlockPos(), false);
         assert this.level != null;
         boolean isClient = this.level.isClientSide;
-        InteractionResult result = InteractionResult.PASS;
+        ItemInteractionResult result = ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         for (MultiblockRegistration.ExtraComponent<State, ?> extra : getHelper().getMultiblock().extraComponents()) {
             @SuppressWarnings("unchecked")
             IMultiblockComponent<State> component = (IMultiblockComponent<State>) extra.component();
-            InteractionResult componentResult = component.click(ctx, posInMultiblock, player, hand, absoluteHit, isClient);
+            ItemInteractionResult componentResult = component.click(ctx, posInMultiblock, player, hand, absoluteHit, isClient);
             if (componentResult.consumesAction()) {
                 result = componentResult;
                 break;

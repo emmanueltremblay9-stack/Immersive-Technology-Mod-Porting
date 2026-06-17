@@ -1,6 +1,6 @@
 package mctmods.immersivetechnology.common.blocks.metal.logic;
 
-import blusunrize.immersiveengineering.api.utils.CapabilityReference;
+import mctmods.immersivetechnology.core.util.capability.CapabilityReference;
 import blusunrize.immersiveengineering.common.util.Utils;
 import com.google.common.collect.ImmutableMap;
 import mctmods.immersivetechnology.common.blocks.helper.ITBaseBlockEntity;
@@ -12,25 +12,24 @@ import mctmods.immersivetechnology.common.fluids.helper.ITMarkableFluidTank;
 import mctmods.immersivetechnology.core.util.TranslationKey;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.EnumMap;
@@ -41,10 +40,10 @@ public abstract class BarrelCommonBlockEntity extends ITBaseBlockEntity implemen
     public final ITMarkableFluidTank tank;
     public EnumMap<Direction, IOSideConfig> sideConfig = new EnumMap<>(ImmutableMap.of(Direction.DOWN, IOSideConfig.OUTPUT, Direction.UP, IOSideConfig.INPUT));
     protected static final int transferSpeed = FluidType.BUCKET_VOLUME;
-    protected final Map<Direction, CapabilityReference<IFluidHandler>> neighbors = ImmutableMap.of(Direction.DOWN, CapabilityReference.forNeighbor(this, ForgeCapabilities.FLUID_HANDLER, Direction.DOWN), Direction.UP, CapabilityReference.forNeighbor(this, ForgeCapabilities.FLUID_HANDLER, Direction.UP));
-    private final LazyOptional<IFluidHandler> nonsidedHandler = LazyOptional.of(() -> new SidedFluidHandler(this, null));
-    private final LazyOptional<IFluidHandler> upHandler = LazyOptional.of(() -> new SidedFluidHandler(this, Direction.UP));
-    private final LazyOptional<IFluidHandler> downHandler = LazyOptional.of(() -> new SidedFluidHandler(this, Direction.DOWN));
+    protected final Map<Direction, CapabilityReference<IFluidHandler>> neighbors = ImmutableMap.of(Direction.DOWN, CapabilityReference.forNeighbor(this, Capabilities.FluidHandler.BLOCK, Direction.DOWN), Direction.UP, CapabilityReference.forNeighbor(this, Capabilities.FluidHandler.BLOCK, Direction.UP));
+    private final IFluidHandler nonsidedHandler = new SidedFluidHandler(this, null);
+    private final IFluidHandler upHandler = new SidedFluidHandler(this, Direction.UP);
+    private final IFluidHandler downHandler = new SidedFluidHandler(this, Direction.DOWN);
 
     public BarrelCommonBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, int tankSize) {
         super(type, pos, state);
@@ -55,7 +54,7 @@ public abstract class BarrelCommonBlockEntity extends ITBaseBlockEntity implemen
 
     @Override public abstract void tickServer();
 
-    @Override public void readCustomNBT(@NotNull CompoundTag nbt, boolean descPacket) {
+    private void readSideConfig(CompoundTag nbt) {
         sideConfig.clear();
         int[] sideCfgArray = nbt.getIntArray("sideConfig");
         if (sideCfgArray.length >= 2) {
@@ -65,34 +64,49 @@ public abstract class BarrelCommonBlockEntity extends ITBaseBlockEntity implemen
             sideConfig.put(Direction.DOWN, IOSideConfig.OUTPUT);
             sideConfig.put(Direction.UP, IOSideConfig.INPUT);
         }
-        tank.readFromNBT(nbt.getCompound("tank"));
+    }
+
+    private void writeSideConfig(CompoundTag nbt) {
+        int[] sideCfgArray = new int[2];
+        sideCfgArray[0] = sideConfig.getOrDefault(Direction.DOWN, IOSideConfig.OUTPUT).ordinal();
+        sideCfgArray[1] = sideConfig.getOrDefault(Direction.UP, IOSideConfig.INPUT).ordinal();
+        nbt.putIntArray("sideConfig", sideCfgArray);
+    }
+
+    @Override public void readCustomNBT(@NotNull CompoundTag nbt, boolean descPacket) {
+        if (level != null) {
+            readCustomNBT(nbt, descPacket, level.registryAccess());
+            return;
+        }
+        readSideConfig(nbt);
+        postRead(descPacket);
+    }
+
+    @Override public void readCustomNBT(@NotNull CompoundTag nbt, boolean descPacket, HolderLookup.Provider provider) {
+        readSideConfig(nbt);
+        tank.readFromNBT(provider, nbt.getCompound("tank"));
         postRead(descPacket);
     }
 
     protected void postRead(boolean descPacket) { if (!descPacket) updateState(); }
 
     @Override public void writeCustomNBT(@NotNull CompoundTag nbt, boolean descPacket) {
-        int[] sideCfgArray = new int[2];
-        sideCfgArray[0] = sideConfig.getOrDefault(Direction.DOWN, IOSideConfig.OUTPUT).ordinal();
-        sideCfgArray[1] = sideConfig.getOrDefault(Direction.UP, IOSideConfig.INPUT).ordinal();
-        nbt.putIntArray("sideConfig", sideCfgArray);
-        nbt.put("tank", tank.writeToNBT(new CompoundTag()));
-    }
-
-    @Override @NotNull public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction facing) {
-        if (capability == ForgeCapabilities.FLUID_HANDLER) {
-            if (facing == null) return nonsidedHandler.cast();
-            if (facing.getAxis() != Direction.Axis.Y) return super.getCapability(capability, facing);
-            return (facing == Direction.UP ? upHandler : downHandler).cast();
+        if (level != null) {
+            writeCustomNBT(nbt, descPacket, level.registryAccess());
+            return;
         }
-        return super.getCapability(capability, facing);
+        writeSideConfig(nbt);
     }
 
-    @Override public void invalidateCaps() {
-        super.invalidateCaps();
-        nonsidedHandler.invalidate();
-        upHandler.invalidate();
-        downHandler.invalidate();
+    @Override public void writeCustomNBT(@NotNull CompoundTag nbt, boolean descPacket, HolderLookup.Provider provider) {
+        writeSideConfig(nbt);
+        nbt.put("tank", tank.writeToNBT(provider, new CompoundTag()));
+    }
+
+    public IFluidHandler getFluidHandler(@Nullable Direction facing) {
+        if (facing == null) return nonsidedHandler;
+        if (facing.getAxis() != Direction.Axis.Y) return null;
+        return facing == Direction.UP ? upHandler : downHandler;
     }
 
     @Override public boolean interact(@NotNull Direction side, @NotNull Player player, @NotNull InteractionHand hand, @NotNull ItemStack heldItem, float hitX, float hitY, float hitZ) {
@@ -120,20 +134,32 @@ public abstract class BarrelCommonBlockEntity extends ITBaseBlockEntity implemen
     @Override public void getBlockEntityDrop(@NotNull LootContext context, @NotNull Consumer<ItemStack> drop) {
         ItemStack stack = new ItemStack(getBlockState().getBlock(), 1);
         CompoundTag tag = new CompoundTag();
-        writeTank(tag, true);
-        if (!tag.isEmpty()) stack.setTag(tag);
+        writeTank(context.getLevel().registryAccess(), tag, true);
+        if (!tag.isEmpty()) stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
         drop.accept(stack);
     }
 
-    @Override public void onBEPlaced(BlockPlaceContext ctx) { if (ctx.getItemInHand().hasTag()) readTank(ctx.getItemInHand().getOrCreateTag()); }
+    @Override public void onBEPlaced(BlockPlaceContext ctx) {
+        CompoundTag tag = ctx.getItemInHand().getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        if (!tag.isEmpty()) readTank(ctx.getLevel().registryAccess(), tag);
+    }
 
     public void writeTank(CompoundTag nbt, boolean toItem) {
+        if (level == null) return;
+        writeTank(level.registryAccess(), nbt, toItem);
+    }
+
+    public void writeTank(HolderLookup.Provider provider, CompoundTag nbt, boolean toItem) {
         boolean write = tank.getFluidAmount() > 0;
-        CompoundTag tankTag = tank.writeToNBT(new CompoundTag());
+        CompoundTag tankTag = tank.writeToNBT(provider, new CompoundTag());
         if (!toItem || write) nbt.put("tank", tankTag);
     }
 
-    public void readTank(CompoundTag nbt) { tank.readFromNBT(nbt.getCompound("tank")); }
+    public void readTank(CompoundTag nbt) {
+        if (level != null) readTank(level.registryAccess(), nbt);
+    }
+
+    public void readTank(HolderLookup.Provider provider, CompoundTag nbt) { tank.readFromNBT(provider, nbt.getCompound("tank")); }
 
     protected abstract boolean isFluidValid(@NotNull FluidStack fluid);
 
@@ -153,24 +179,6 @@ public abstract class BarrelCommonBlockEntity extends ITBaseBlockEntity implemen
     protected abstract boolean canConfigureSide(Direction side);
 
     protected abstract void updateState();
-
-    @Override @NotNull public CompoundTag getUpdateTag() {
-        CompoundTag tag = super.getUpdateTag();
-        writeCustomNBT(tag, true);
-        return tag;
-    }
-
-    @Override public void handleUpdateTag(CompoundTag tag) {
-        super.handleUpdateTag(tag);
-        readCustomNBT(tag, true);
-    }
-
-    @Override public ClientboundBlockEntityDataPacket getUpdatePacket() { return ClientboundBlockEntityDataPacket.create(this); }
-
-    @Override public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        assert pkt.getTag() != null;
-        readCustomNBT(pkt.getTag(), true);
-    }
 
     public static class SidedFluidHandler implements IFluidHandler {
         BarrelCommonBlockEntity barrel;

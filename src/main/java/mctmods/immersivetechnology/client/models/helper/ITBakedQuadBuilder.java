@@ -3,7 +3,6 @@ package mctmods.immersivetechnology.client.models.helper;
 import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormatElement;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
@@ -11,12 +10,13 @@ import net.minecraft.world.phys.Vec3;
 
 public class ITBakedQuadBuilder {
     public static final VertexFormat FORMAT = DefaultVertexFormat.BLOCK;
+    private static final int VERTEX_SIZE = FORMAT.getVertexSize() / Integer.BYTES;
 
     private int nextVertex = 0;
-    private final int[] data = new int[FORMAT.getIntegerSize() * 4];
+    private final int[] data = new int[VERTEX_SIZE * 4];
 
     public void putVertexData(Vec3 pos, Vec3 faceNormal, double u, double v, TextureAtlasSprite sprite, float[] colour, float alpha) {
-        int next = nextVertex * FORMAT.getIntegerSize();
+        int next = nextVertex * VERTEX_SIZE;
 
         data[next++] = Float.floatToIntBits((float)pos.x);
         data[next++] = Float.floatToIntBits((float)pos.y);
@@ -37,17 +37,8 @@ public class ITBakedQuadBuilder {
         data[next] |= ((int)(faceNormal.z * 127) & 255) << 16;
         ++next;
 
-        int extraPaddingBytes = 0;
-        for (int i = 6; i < FORMAT.getElements().size(); ++i) {
-            final var extraElement = FORMAT.getElements().get(i);
-            Preconditions.checkState(extraElement.getUsage() == VertexFormatElement.Usage.PADDING);
-            extraPaddingBytes += extraElement.getByteSize();
-        }
-        Preconditions.checkState(extraPaddingBytes % Integer.BYTES == 0);
-        next += extraPaddingBytes / Integer.BYTES;
-
         ++nextVertex;
-        Preconditions.checkState(next == nextVertex * FORMAT.getIntegerSize());
+        Preconditions.checkState(next == nextVertex * VERTEX_SIZE);
     }
 
     public BakedQuad bake(int tint, Direction side, TextureAtlasSprite texture, boolean shade) {

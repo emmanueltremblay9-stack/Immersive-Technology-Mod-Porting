@@ -4,7 +4,7 @@ import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
 import mctmods.immersivetechnology.common.multiblocks.metal.recipe.SolarMelterRecipe;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class SolarMelterRecipeBuilder extends IEFinishedRecipe<SolarMelterRecipeBuilder> {
     private SolarMelterRecipeBuilder() { super(SolarMelterRecipe.SERIALIZER.get()); }

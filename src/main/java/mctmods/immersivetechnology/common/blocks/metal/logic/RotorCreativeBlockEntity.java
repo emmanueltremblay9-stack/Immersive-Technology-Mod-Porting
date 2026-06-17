@@ -1,7 +1,7 @@
 package mctmods.immersivetechnology.common.blocks.metal.logic;
 
-import com.immersiveconvergence.api.MechanicalCapabilities;
-import com.immersiveconvergence.api.capability.IMechanicalEnergyProvider;
+import mctmods.immersivetechnology.api.convergence.MechanicalCapabilities;
+import mctmods.immersivetechnology.api.convergence.capability.IMechanicalEnergyProvider;
 import mctmods.immersivetechnology.common.blocks.helper.ITBaseBlockEntity;
 import mctmods.immersivetechnology.common.blocks.helper.ITClientTickableBE;
 import mctmods.immersivetechnology.common.blocks.metal.RotorCreativeBlock;
@@ -17,14 +17,12 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class RotorCreativeBlockEntity extends ITBaseBlockEntity implements MenuProvider, ITClientTickableBE {
     public int rpm;
-    private final LazyOptional<IMechanicalEnergyProvider> providerCap = LazyOptional.of(Provider::new);
+    private final IMechanicalEnergyProvider provider = new Provider();
     public float animation_rotation = 0f;
     public float animation_step = 0f;
 
@@ -37,10 +35,10 @@ public class RotorCreativeBlockEntity extends ITBaseBlockEntity implements MenuP
         animation_rotation %= 360;
     }
 
-    @Override @NotNull public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+    public IMechanicalEnergyProvider getMechanicalProvider(@Nullable Direction side) {
         Direction facing = getBlockState().getValue(RotorCreativeBlock.FACING);
-        if ((side == facing || side == facing.getOpposite()) && cap == MechanicalCapabilities.MECHANICAL_PROVIDER_CAPABILITY) { return providerCap.cast(); }
-        return super.getCapability(cap, side);
+        if (side == facing || side == facing.getOpposite()) { return provider; }
+        return null;
     }
 
     private class Provider implements IMechanicalEnergyProvider {

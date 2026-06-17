@@ -3,6 +3,7 @@ package mctmods.immersivetechnology.common.multiblocks.metal.logic;
 import blusunrize.immersiveengineering.api.IETags;
 import blusunrize.immersiveengineering.api.energy.AveragingEnergyStorage;
 import blusunrize.immersiveengineering.api.fluid.FluidUtils;
+import blusunrize.immersiveengineering.api.multiblocks.blocks.component.IMultiblockComponent.CapabilityRegistrar;
 import blusunrize.immersiveengineering.api.multiblocks.blocks.component.IServerTickableComponent;
 import blusunrize.immersiveengineering.api.multiblocks.blocks.component.RedstoneControl.RSState;
 import blusunrize.immersiveengineering.api.multiblocks.blocks.env.IInitialMultiblockContext;
@@ -10,7 +11,7 @@ import blusunrize.immersiveengineering.api.multiblocks.blocks.env.IMultiblockCon
 import blusunrize.immersiveengineering.api.multiblocks.blocks.env.IMultiblockLevel;
 import blusunrize.immersiveengineering.api.multiblocks.blocks.logic.IMultiblockState;
 import blusunrize.immersiveengineering.api.multiblocks.blocks.util.*;
-import blusunrize.immersiveengineering.api.utils.CapabilityReference;
+import mctmods.immersivetechnology.core.util.capability.CapabilityReference;
 import blusunrize.immersiveengineering.client.utils.TextUtils;
 import blusunrize.immersiveengineering.common.blocks.multiblocks.logic.interfaces.MBOverlayText;
 import blusunrize.immersiveengineering.common.util.LayeredComparatorOutput;
@@ -23,23 +24,23 @@ import mctmods.immersivetechnology.core.util.TranslationKey;
 import mctmods.immersivetechnology.common.fluids.helper.ITMarkableFluidTank;
 import mctmods.immersivetechnology.core.util.multiblock.PoIJSONSchema;
 import mctmods.immersivetechnology.core.ITServerConfig;
+import mctmods.immersivetechnology.core.util.capability.StoredCapability;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.IFluidTank;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -147,7 +148,7 @@ public class SteelSheetmetalTankLogic implements IServerTickableComponent<SteelS
             for (CapabilityPosition p : IO_POIS) {
                 MultiblockFace mbf = new MultiblockFace(p.side(), p.posInMultiblock());
                 CapabilityPosition opp = CapabilityPosition.opposing(mbf);
-                outputBuilder.add(capabilitySource.getCapabilityAt(ForgeCapabilities.FLUID_HANDLER, opp.posInMultiblock(), opp.side()));
+                outputBuilder.add(CapabilityReference.of(capabilitySource.getCapabilityAt(Capabilities.FluidHandler.BLOCK, opp.posInMultiblock(), opp.side())));
             }
             this.outputs = outputBuilder.build();
             Runnable changedAndSync = () -> { capabilitySource.getSyncRunnable().run(); capabilitySource.getMarkDirtyRunnable().run(); };
@@ -189,31 +190,31 @@ public class SteelSheetmetalTankLogic implements IServerTickableComponent<SteelS
 
         @Override public IFluidTank[] getInternalTanks() { return new IFluidTank[]{tank}; }
 
-        @Override public void writeDisplaySyncNBT(CompoundTag nbt) {
+        @Override public void writeDisplaySyncNBT(CompoundTag nbt, HolderLookup.Provider provider) {
             nbt.putBoolean("active", active);
             nbt.put("tank", tank.writeToNBT(new CompoundTag()));
         }
 
-        @Override public void readDisplaySyncNBT(CompoundTag nbt) {
+        @Override public void readDisplaySyncNBT(CompoundTag nbt, HolderLookup.Provider provider) {
             active = nbt.getBoolean("active");
             tank.readFromNBT(nbt.getCompound("tank"));
         }
 
-        @Override public void writeSaveNBT(CompoundTag nbt) {
+        @Override public void writeSaveNBT(CompoundTag nbt, HolderLookup.Provider provider) {
             nbt.put("tank", tank.writeToNBT(new CompoundTag()));
             CompoundTag rsTag = new CompoundTag();
-            rsState.writeSaveNBT(rsTag);
+            rsState.writeSaveNBT(rsTag, provider);
             nbt.put("rsState", rsTag);
         }
 
-        @Override public void readSaveNBT(CompoundTag nbt) {
+        @Override public void readSaveNBT(CompoundTag nbt, HolderLookup.Provider provider) {
             tank.readFromNBT(nbt.getCompound("tank"));
-            rsState.readSaveNBT(nbt.getCompound("rsState"));
+            rsState.readSaveNBT(nbt.getCompound("rsState"), provider);
         }
 
-        @Override public void writeSyncNBT(CompoundTag nbt) { writeSaveNBT(nbt); nbt.putBoolean("active", active); }
+        @Override public void writeSyncNBT(CompoundTag nbt, HolderLookup.Provider provider) { writeSaveNBT(nbt, provider); nbt.putBoolean("active", active); }
 
-        @Override public void readSyncNBT(CompoundTag nbt) { readSaveNBT(nbt); active = nbt.getBoolean("active"); }
+        @Override public void readSyncNBT(CompoundTag nbt, HolderLookup.Provider provider) { readSaveNBT(nbt, provider); active = nbt.getBoolean("active"); }
     }
 
     @Override public void tickServer(IMultiblockContext<State> ctx) {
@@ -227,27 +228,28 @@ public class SteelSheetmetalTankLogic implements IServerTickableComponent<SteelS
 
     @Override public State createInitialState(IInitialMultiblockContext<State> capabilitySource) { return new State(capabilitySource); }
 
-    @Override public <T> LazyOptional<T> getCapability(IMultiblockContext<State> ctx, CapabilityPosition position, Capability<T> cap) {
-        State state = ctx.getState();
-        if (cap == ForgeCapabilities.FLUID_HANDLER) {
-            BlockPos posIn = position.posInMultiblock();
-            RelativeBlockFace side = position.side();
-            if (side != null) {
-                if (INPUT_POIS.stream().anyMatch(p -> p.posInMultiblock().equals(posIn) && p.side() == side)) return state.inputHandler.cast(ctx);
-                if (IO_POIS.stream().anyMatch(p -> p.posInMultiblock().equals(posIn) && p.side() == side)) return state.ioHandler.cast(ctx);
-            }
-        }
-        return LazyOptional.empty();
+    @Override public void registerCapabilities(CapabilityRegistrar<State> register) {
+        register.register(Capabilities.FluidHandler.BLOCK, this::getFluidCapability);
     }
 
-    @Override @Nullable public List<Component> getOverlayText(State state, Player player, boolean hammer) {
+    private IFluidHandler getFluidCapability(State state, CapabilityPosition position) {
+        BlockPos posIn = position.posInMultiblock();
+        RelativeBlockFace side = position.side();
+        if (side != null) {
+            if (INPUT_POIS.stream().anyMatch(p -> p.posInMultiblock().equals(posIn) && p.side() == side)) return state.inputHandler.get();
+            if (IO_POIS.stream().anyMatch(p -> p.posInMultiblock().equals(posIn) && p.side() == side)) return state.ioHandler.get();
+        }
+        return null;
+    }
+
+    @Override @Nullable public List<Component> getOverlayText(State state, BlockPos posInMultiblock, BlockHitResult hit, Player player, boolean hammer) {
         if (Utils.isFluidRelatedItemStack(player.getItemInHand(InteractionHand.MAIN_HAND))) return List.of(TextUtils.formatFluidStack(state.tank.getFluid()));
         return null;
     }
 
     @Override public Function<BlockPos, VoxelShape> shapeGetter(ShapeType forType) { return SteelSheetmetalTankShape.GETTER; }
 
-    @Override public InteractionResult click(IMultiblockContext<State> ctx, BlockPos posInMultiblock, Player player, InteractionHand hand, BlockHitResult absoluteHit, boolean isClient) {
+    @Override public ItemInteractionResult click(IMultiblockContext<State> ctx, BlockPos posInMultiblock, Player player, InteractionHand hand, BlockHitResult absoluteHit, boolean isClient) {
         if (posInMultiblock.equals(REDSTONE_POI) && player.getItemInHand(hand).is(IETags.screwdrivers)) {
             if (!isClient) {
                 State state = ctx.getState();
@@ -263,8 +265,8 @@ public class SteelSheetmetalTankLogic implements IServerTickableComponent<SteelS
                     throw new RuntimeException("Failed to invert RSState", e);
                 }
             }
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
-        if (FluidUtils.interactWithFluidHandler(player, hand, ctx.getState().tank)) { ctx.markDirtyAndSync(); return InteractionResult.SUCCESS; } else return InteractionResult.PASS;
+        if (FluidUtils.interactWithFluidHandler(player, hand, ctx.getState().tank)) { ctx.markDirtyAndSync(); return ItemInteractionResult.SUCCESS; } else return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 }

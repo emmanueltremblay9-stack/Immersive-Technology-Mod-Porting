@@ -3,6 +3,7 @@ package mctmods.immersivetechnology.common.fluids;
 import mctmods.immersivetechnology.core.registration.ITFluids;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -28,7 +29,7 @@ public class ITFluidBlock extends LiquidBlock {
     private int level;
 
     public ITFluidBlock(ITFluids.FluidEntry entry, Properties props) {
-        super(entry.getStillGetter(), Util.make(props, $ -> entryStatic = entry));
+        super(entry.getStill(), Util.make(props, $ -> entryStatic = entry));
         this.entry = entry;
         entryStatic = null;
     }
@@ -56,6 +57,6 @@ public class ITFluidBlock extends LiquidBlock {
     @SuppressWarnings("deprecation")
     @Override public void entityInside(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Entity entityIn) {
         super.entityInside(state, worldIn, pos, entityIn);
-        if (effect != null && entityIn instanceof LivingEntity living) { living.addEffect(new MobEffectInstance(effect, duration, level)); }
+        if (effect != null && entityIn instanceof LivingEntity living) { living.addEffect(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect), duration, level)); }
     }
 }

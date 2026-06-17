@@ -12,18 +12,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.EventBusSubscriber.Bus;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 
-@Mod.EventBusSubscriber(modid = ITLib.MODID, value = Dist.CLIENT, bus = Bus.FORGE)
+@EventBusSubscriber(modid = ITLib.MODID, value = Dist.CLIENT, bus = Bus.GAME)
 public class ITClientEventHandler {
     @SubscribeEvent
-    public static void onRenderOverlayPost(RenderGuiOverlayEvent.Post event) {
-        if (!event.getOverlay().id().equals(VanillaGuiOverlay.ITEM_NAME.id())) return;
+    public static void onRenderOverlayPost(RenderGuiLayerEvent.Post event) {
+        if (!event.getName().equals(VanillaGuiLayers.SELECTED_ITEM_NAME)) return;
 
         Minecraft mc = Minecraft.getInstance();
         if (mc.screen != null || mc.player == null) return;

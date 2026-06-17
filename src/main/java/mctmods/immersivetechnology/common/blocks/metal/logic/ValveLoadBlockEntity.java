@@ -23,11 +23,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,7 +36,6 @@ import java.util.Collection;
 
 import static mctmods.immersivetechnology.common.blocks.metal.ValveLoadBlock.ROTATION;
 import static mctmods.immersivetechnology.common.blocks.metal.ValveLoadBlock.OPEN;
-import static net.minecraftforge.common.capabilities.ForgeCapabilities.ENERGY;
 
 public class ValveLoadBlockEntity extends ValveCommonBlockEntity implements ITServerTickableBE, IImmersiveConnectable, EnergyConnector, ITBlockInterfaces.IMirrorAble {
     protected static final int RIGHT_INDEX = 0;
@@ -202,24 +200,14 @@ public class ValveLoadBlockEntity extends ValveCommonBlockEntity implements ITSe
         assert level != null;
         Direction inputDir = getInputDir();
         BlockPos srcPos = worldPosition.relative(inputDir);
-        BlockEntity src = level.getBlockEntity(srcPos);
-        if (src != null) {
-            LazyOptional<IEnergyStorage> cap = src.getCapability(ENERGY, inputDir.getOpposite());
-            return cap.resolve().orElse(null);
-        }
-        return null;
+        return level.getCapability(Capabilities.EnergyStorage.BLOCK, srcPos, inputDir.getOpposite());
     }
 
     public IEnergyStorage getOutputEnergy() {
         assert level != null;
         Direction outputDir = getOutputDir();
         BlockPos dstPos = worldPosition.relative(outputDir);
-        BlockEntity dst = level.getBlockEntity(dstPos);
-        if (dst != null) {
-            LazyOptional<IEnergyStorage> cap = dst.getCapability(ENERGY, outputDir.getOpposite());
-            return cap.resolve().orElse(null);
-        }
-        return null;
+        return level.getCapability(Capabilities.EnergyStorage.BLOCK, dstPos, outputDir.getOpposite());
     }
 
     @NotNull protected LocalWireNetwork getLocalNet(int cpIndex) {

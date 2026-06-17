@@ -5,7 +5,7 @@ import mctmods.immersivetechnology.common.multiblocks.stone.recipe.CoolingTowerR
 import mctmods.immersivetechnology.core.integration.jei.JEIRecipeTypes;
 import mctmods.immersivetechnology.core.lib.ITLib;
 import mctmods.immersivetechnology.core.registration.ITMultiblockProvider;
-import mezz.jei.api.forge.ForgeTypes;
+import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -15,7 +15,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -47,71 +47,71 @@ public class ITCoolingTowerCategory extends ITRecipeCategory<CoolingTowerRecipe>
     public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull CoolingTowerRecipe recipe, @NotNull IFocusGroup focuses) {
         int tankCapacity = getTankCapacity(recipe);
 
-        List<FluidStack> inputs0 = recipe.input0.getMatchingFluidStacks().stream()
+        List<FluidStack> inputs0 = java.util.Arrays.stream(recipe.input0.getFluids())
                 .map(fs -> {
                     FluidStack copy = fs.copy();
-                    copy.setAmount(recipe.input0.getAmount());
+                    copy.setAmount(recipe.input0.amount());
                     return copy;
                 })
                 .toList();
 
         var input0Slot = builder.addSlot(RecipeIngredientRole.INPUT, 11, 11)
-                .addIngredients(ForgeTypes.FLUID_STACK, inputs0)
+                .addIngredients(NeoForgeTypes.FLUID_STACK, inputs0)
                 .setFluidRenderer(tankCapacity, false, 16, 47);
 
         input0Slot.addRichTooltipCallback((slotView, tooltip) ->
-                slotView.getDisplayedIngredient(ForgeTypes.FLUID_STACK).ifPresent(fs ->
-                        ITFluidInfoArea.fillTooltip(fs, recipe.input0.getAmount(), tooltip::add)));
+                slotView.getDisplayedIngredient(NeoForgeTypes.FLUID_STACK).ifPresent(fs ->
+                        ITFluidInfoArea.fillTooltip(fs, recipe.input0.amount(), tooltip::add)));
 
-        List<FluidStack> inputs1 = recipe.input1.getMatchingFluidStacks().stream()
+        List<FluidStack> inputs1 = java.util.Arrays.stream(recipe.input1.getFluids())
                 .map(fs -> {
                     FluidStack copy = fs.copy();
-                    copy.setAmount(recipe.input1.getAmount());
+                    copy.setAmount(recipe.input1.amount());
                     return copy;
                 })
                 .toList();
 
         var input1Slot = builder.addSlot(RecipeIngredientRole.INPUT, 34, 11)
-                .addIngredients(ForgeTypes.FLUID_STACK, inputs1)
+                .addIngredients(NeoForgeTypes.FLUID_STACK, inputs1)
                 .setFluidRenderer(tankCapacity, false, 16, 47);
 
         input1Slot.addRichTooltipCallback((slotView, tooltip) ->
-                slotView.getDisplayedIngredient(ForgeTypes.FLUID_STACK).ifPresent(fs ->
-                        ITFluidInfoArea.fillTooltip(fs, recipe.input1.getAmount(), tooltip::add)));
+                slotView.getDisplayedIngredient(NeoForgeTypes.FLUID_STACK).ifPresent(fs ->
+                        ITFluidInfoArea.fillTooltip(fs, recipe.input1.amount(), tooltip::add)));
 
         if (recipe.fluidOutput0 != null && !recipe.fluidOutput0.isEmpty()) {
             var output0Slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 86, 11)
-                    .addIngredient(ForgeTypes.FLUID_STACK, recipe.fluidOutput0)
+                    .addIngredient(NeoForgeTypes.FLUID_STACK, recipe.fluidOutput0)
                     .setFluidRenderer(tankCapacity, false, 16, 47);
 
             output0Slot.addRichTooltipCallback((slotView, tooltip) ->
-                    slotView.getDisplayedIngredient(ForgeTypes.FLUID_STACK).ifPresent(fs ->
+                    slotView.getDisplayedIngredient(NeoForgeTypes.FLUID_STACK).ifPresent(fs ->
                             ITFluidInfoArea.fillTooltip(fs, recipe.fluidOutput0.getAmount(), tooltip::add)));
         }
 
         if (recipe.fluidOutput1 != null && !recipe.fluidOutput1.isEmpty()) {
             var output1Slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 109, 11)
-                    .addIngredient(ForgeTypes.FLUID_STACK, recipe.fluidOutput1)
+                    .addIngredient(NeoForgeTypes.FLUID_STACK, recipe.fluidOutput1)
                     .setFluidRenderer(tankCapacity, false, 16, 47);
 
             output1Slot.addRichTooltipCallback((slotView, tooltip) ->
-                    slotView.getDisplayedIngredient(ForgeTypes.FLUID_STACK).ifPresent(fs ->
+                    slotView.getDisplayedIngredient(NeoForgeTypes.FLUID_STACK).ifPresent(fs ->
                             ITFluidInfoArea.fillTooltip(fs, recipe.fluidOutput1.getAmount(), tooltip::add)));
         }
 
         if (recipe.fluidOutput2 != null && !recipe.fluidOutput2.isEmpty()) {
             var output2Slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 132, 11)
-                    .addIngredient(ForgeTypes.FLUID_STACK, recipe.fluidOutput2)
+                    .addIngredient(NeoForgeTypes.FLUID_STACK, recipe.fluidOutput2)
                     .setFluidRenderer(tankCapacity, false, 16, 47);
 
             output2Slot.addRichTooltipCallback((slotView, tooltip) ->
-                    slotView.getDisplayedIngredient(ForgeTypes.FLUID_STACK).ifPresent(fs ->
+                    slotView.getDisplayedIngredient(NeoForgeTypes.FLUID_STACK).ifPresent(fs ->
                             ITFluidInfoArea.fillTooltip(fs, recipe.fluidOutput2.getAmount(), tooltip::add)));
         }
     }
 
     private int getTankCapacity(@NotNull CoolingTowerRecipe recipe) {
-        int tankCapacity = Math.max(recipe.input0.getAmount(), recipe.input1.getAmount());
+        int tankCapacity = Math.max(recipe.input0.amount(), recipe.input1.amount());
         if (recipe.fluidOutput0 != null && !recipe.fluidOutput0.isEmpty()) { tankCapacity = Math.max(tankCapacity, recipe.fluidOutput0.getAmount()); }
         if (recipe.fluidOutput1 != null && !recipe.fluidOutput1.isEmpty()) { tankCapacity = Math.max(tankCapacity, recipe.fluidOutput1.getAmount()); }
         if (recipe.fluidOutput2 != null && !recipe.fluidOutput2.isEmpty()) { tankCapacity = Math.max(tankCapacity, recipe.fluidOutput2.getAmount()); }

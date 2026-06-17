@@ -3,11 +3,10 @@ package mctmods.immersivetechnology.core.network;
 import mctmods.immersivetechnology.common.gui.helper.ITContainerMenu;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ITMessageContainerUpdate implements ITMessage {
     private final int windowId;
@@ -23,11 +22,10 @@ public class ITMessageContainerUpdate implements ITMessage {
         buf.writeNbt(this.nbt);
     }
 
-    @Override public void process(Supplier<NetworkEvent.Context> context) {
-        NetworkEvent.Context ctx = context.get();
-        ServerPlayer player = ctx.getSender();
+    @Override public void process(IPayloadContext context) {
+        ServerPlayer player = context.player() instanceof ServerPlayer serverPlayer ? serverPlayer : null;
         if (player != null) {
-            ctx.enqueueWork(() -> {
+            context.enqueueWork(() -> {
                 player.resetLastActionTime();
                 if (player.containerMenu.containerId == this.windowId) {
                     AbstractContainerMenu menu = player.containerMenu;
@@ -36,4 +34,6 @@ public class ITMessageContainerUpdate implements ITMessage {
             });
         }
     }
+
+    @Override public CustomPacketPayload.Type<ITMessageContainerUpdate> type() { return ITPacketHandler.CONTAINER_UPDATE; }
 }

@@ -2,14 +2,14 @@ package mctmods.immersivetechnology.common.data.generators;
 
 import mctmods.immersivetechnology.common.data.loaders.ITObjModelBuilder;
 import mctmods.immersivetechnology.core.lib.ITLib;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.model.generators.ModelBuilder;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.client.model.generators.ModelProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.client.model.generators.ModelBuilder;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.ModelProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import javax.annotation.Nonnull;
 import java.util.Map.Entry;
@@ -21,7 +21,7 @@ public class ITDynamicModelProvider extends ModelProvider<ITDynamicModelProvider
     public ITDynamicModelProvider(ITBlockStateProvider multiblocks, PackOutput output, ExistingFileHelper existingFileHelper) { super(output, ITLib.MODID, "dynamic", rl -> new SimpleModelBuilder(rl, existingFileHelper), existingFileHelper); this.multiblocks = multiblocks; }
 
     @Override protected void registerModels() {
-        for(Entry<Block, ModelFile> multiblock : multiblocks.unsplitModels.entrySet()) { withExistingParent(Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(multiblock.getKey())).getPath(), multiblock.getValue().getLocation()); }
+        for(Entry<Block, ModelFile> multiblock : multiblocks.unsplitModels.entrySet()) { withExistingParent(Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(multiblock.getKey())).getPath(), multiblock.getValue().getLocation()); }
         getBuilder("dynamic/rotor")
                 .customLoader(ITObjModelBuilder::new)
                 .modelLocation(modLoc("models/multiblock/metal/obj/rotor/rotor.obj"))

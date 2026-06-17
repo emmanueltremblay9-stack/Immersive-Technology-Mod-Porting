@@ -1,14 +1,14 @@
 package mctmods.immersivetechnology.client.particles;
 
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mctmods.immersivetechnology.core.registration.ITParticles;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import java.util.Locale;
@@ -16,7 +16,7 @@ import java.util.Objects;
 
 @SuppressWarnings("deprecation")
 public class ColoredSmoke implements ParticleOptions {
-    public static final Codec<ColoredSmoke> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+    public static final MapCodec<ColoredSmoke> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             Codec.FLOAT.fieldOf("r").forGetter(d -> d.color.x()),
             Codec.FLOAT.fieldOf("g").forGetter(d -> d.color.y()),
             Codec.FLOAT.fieldOf("b").forGetter(d -> d.color.z()),
@@ -24,31 +24,7 @@ public class ColoredSmoke implements ParticleOptions {
             Codec.BOOL.optionalFieldOf("collide_vertical", false).forGetter(d -> d.collideVertical)
     ).apply(inst, ColoredSmoke::new));
 
-    public static final Deserializer<ColoredSmoke> DESERIALIZER = new Deserializer<>() {
-        @NotNull public ColoredSmoke fromCommand(@NotNull ParticleType<ColoredSmoke> type, StringReader reader) throws CommandSyntaxException {
-            reader.expect(' ');
-            float r = reader.readFloat();
-            reader.expect(' ');
-            float g = reader.readFloat();
-            reader.expect(' ');
-            float b = reader.readFloat();
-            boolean collideHorizontal = false;
-            boolean collideVertical = false;
-            if (reader.canRead()) {
-                reader.expect(' ');
-                collideHorizontal = reader.readBoolean();
-                if (reader.canRead()) {
-                    reader.expect(' ');
-                    collideVertical = reader.readBoolean();
-                }
-            }
-            return new ColoredSmoke(r, g, b, collideHorizontal, collideVertical);
-        }
-
-        @NotNull public ColoredSmoke fromNetwork(@NotNull ParticleType<ColoredSmoke> type, FriendlyByteBuf buf) {
-            return new ColoredSmoke(buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readBoolean(), buf.readBoolean());
-        }
-    };
+    public static final StreamCodec<RegistryFriendlyByteBuf, ColoredSmoke> STREAM_CODEC = StreamCodec.ofMember(ColoredSmoke::writeToNetwork, ColoredSmoke::readFromNetwork);
 
     public final Vector3f color;
     public final boolean collideHorizontal;
@@ -64,7 +40,7 @@ public class ColoredSmoke implements ParticleOptions {
 
     @Override @NotNull public ParticleType<?> getType() { return ITParticles.COLORED_SMOKE.get(); }
 
-    @Override public void writeToNetwork(FriendlyByteBuf buf) {
+    public void writeToNetwork(RegistryFriendlyByteBuf buf) {
         buf.writeFloat(color.x());
         buf.writeFloat(color.y());
         buf.writeFloat(color.z());
@@ -72,5 +48,9 @@ public class ColoredSmoke implements ParticleOptions {
         buf.writeBoolean(collideVertical);
     }
 
-    @Override @NotNull public String writeToString() { return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %b %b", Objects.requireNonNull(ForgeRegistries.PARTICLE_TYPES.getKey(this.getType())), this.color.x(), this.color.y(), this.color.z(), this.collideHorizontal, this.collideVertical); }
+    public static ColoredSmoke readFromNetwork(RegistryFriendlyByteBuf buf) {
+        return new ColoredSmoke(buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readBoolean(), buf.readBoolean());
+    }
+
+    @NotNull public String writeToString() { return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %b %b", Objects.requireNonNull(BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType())), this.color.x(), this.color.y(), this.color.z(), this.collideHorizontal, this.collideVertical); }
 }

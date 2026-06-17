@@ -1,43 +1,25 @@
 package mctmods.immersivetechnology.common.multiblocks.metal.recipe.serializer;
 
-import blusunrize.immersiveengineering.api.ApiUtils;
-import blusunrize.immersiveengineering.api.crafting.FluidTagInput;
 import blusunrize.immersiveengineering.api.crafting.IERecipeSerializer;
-import com.google.gson.JsonObject;
+import blusunrize.immersiveengineering.api.utils.codec.IEDualCodecs;
+import malte0811.dualcodecs.DualCodecs;
+import malte0811.dualcodecs.DualCompositeMapCodecs;
+import malte0811.dualcodecs.DualMapCodec;
 import mctmods.immersivetechnology.common.multiblocks.metal.recipe.SolarTowerRecipe;
 import mctmods.immersivetechnology.core.registration.ITMultiblockProvider;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.crafting.conditions.ICondition;
-import net.minecraftforge.fluids.FluidStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class SolarTowerRecipeSerializer extends IERecipeSerializer<SolarTowerRecipe> {
+    public static final DualMapCodec<RegistryFriendlyByteBuf, SolarTowerRecipe> CODECS = DualCompositeMapCodecs.composite(
+            IEDualCodecs.SIZED_FLUID_INGREDIENT.fieldOf("input"), recipe -> recipe.input,
+            IEDualCodecs.FLUID_STACK.fieldOf("output"), recipe -> recipe.fluidOutput,
+            DualCodecs.INT.fieldOf("time"), SolarTowerRecipe::getTotalProcessTime,
+            DualCodecs.DOUBLE.fieldOf("requiredTemp"), recipe -> recipe.requiredTemp,
+            SolarTowerRecipe::new
+    );
+
     @Override public ItemStack getIcon() { return ITMultiblockProvider.SOLAR_TOWER.iconStack(); }
 
-    @Override public SolarTowerRecipe readFromJson(ResourceLocation recipeID, JsonObject json, ICondition.IContext iContext) {
-        FluidTagInput input = FluidTagInput.deserialize(GsonHelper.getAsJsonObject(json, "input"));
-        FluidStack fluidOutput = ApiUtils.jsonDeserializeFluidStack(GsonHelper.getAsJsonObject(json, "output"));
-        int time = GsonHelper.getAsInt(json, "time");
-        double requiredTemp = GsonHelper.getAsDouble(json, "requiredTemp");
-        return new SolarTowerRecipe(recipeID, input, fluidOutput, time, requiredTemp);
-    }
-
-    @Override @Nullable public SolarTowerRecipe fromNetwork(@NotNull ResourceLocation recipeId, @NotNull FriendlyByteBuf buffer) {
-        FluidTagInput input = FluidTagInput.read(buffer);
-        FluidStack fluidOutput = buffer.readFluidStack();
-        int time = buffer.readInt();
-        double requiredTemp = buffer.readDouble();
-        return new SolarTowerRecipe(recipeId, input, fluidOutput, time, requiredTemp);
-    }
-
-    @Override public void toNetwork(@NotNull FriendlyByteBuf buffer, SolarTowerRecipe recipe) {
-        recipe.input.write(buffer);
-        buffer.writeFluidStack(recipe.fluidOutput);
-        buffer.writeInt(recipe.getTotalProcessTime());
-        buffer.writeDouble(recipe.requiredTemp);
-    }
+    @Override protected DualMapCodec<RegistryFriendlyByteBuf, SolarTowerRecipe> codecs() { return CODECS; }
 }

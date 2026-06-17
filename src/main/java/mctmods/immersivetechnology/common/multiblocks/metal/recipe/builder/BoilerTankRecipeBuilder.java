@@ -6,7 +6,7 @@ import mctmods.immersivetechnology.common.multiblocks.metal.recipe.BoilerTankRec
 
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class BoilerTankRecipeBuilder extends IEFinishedRecipe<BoilerTankRecipeBuilder> {
     public BoilerTankRecipeBuilder() {

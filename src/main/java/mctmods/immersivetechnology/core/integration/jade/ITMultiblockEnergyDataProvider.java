@@ -7,8 +7,6 @@ import mctmods.immersivetechnology.common.multiblocks.helper.ITDisplayContext;
 import mctmods.immersivetechnology.core.lib.ITLib;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import snownee.jade.api.Accessor;
 import snownee.jade.api.view.*;
 
@@ -16,11 +14,12 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ITMultiblockEnergyDataProvider implements IServerExtensionProvider<Object, CompoundTag>, IClientExtensionProvider<CompoundTag, EnergyView> {
+public class ITMultiblockEnergyDataProvider implements IServerExtensionProvider<CompoundTag>, IClientExtensionProvider<CompoundTag, EnergyView> {
 
     @Override
     @Nullable
-    public List<ViewGroup<CompoundTag>> getGroups(ServerPlayer serverPlayer, ServerLevel serverLevel, Object target, boolean b) {
+    public List<ViewGroup<CompoundTag>> getGroups(Accessor<?> accessor) {
+        Object target = accessor.getTarget();
         if (!(target instanceof IMultiblockBE<?> multiblockBE)) {
             return null;
         }

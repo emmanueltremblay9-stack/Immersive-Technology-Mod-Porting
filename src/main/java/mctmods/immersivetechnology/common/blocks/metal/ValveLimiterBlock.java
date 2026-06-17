@@ -7,9 +7,10 @@ import mctmods.immersivetechnology.common.blocks.metal.logic.ValveLimiterBlockEn
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -20,7 +21,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiFunction;
@@ -52,18 +52,18 @@ public class ValveLimiterBlock extends ITEntityBlock<ValveLimiterBlockEntity> {
         if (be instanceof ValveCommonBlockEntity valve) { valve.updateRedstoneState(); }
     }
 
-    @Override @NotNull public InteractionResult use(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
-        if (level.isClientSide) return InteractionResult.SUCCESS;
+    @Override @NotNull public ItemInteractionResult useItemOn(@NotNull ItemStack heldItem, @NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+        if (level.isClientSide) return ItemInteractionResult.SUCCESS;
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof ValveCommonBlockEntity valve) {
             if (player.isCrouching()) {
                 valve.redstoneMode = (byte) (valve.redstoneMode == 1 ? 2 : 1);
                 valve.updateRedstoneState();
                 valve.efficientSetChanged();
-            } else { NetworkHooks.openScreen((ServerPlayer) player, valve, b -> b.writeBlockPos(pos)); }
-            return InteractionResult.SUCCESS;
+            } else { ((ServerPlayer) player).openMenu(valve, b -> b.writeBlockPos(pos)); }
+            return ItemInteractionResult.SUCCESS;
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override public BlockState getStateForPlacement(BlockPlaceContext context) {

@@ -5,9 +5,8 @@ import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.core.Vec3i;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
-import net.minecraftforge.client.model.geometry.IUnbakedGeometry;
+import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext;
+import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
@@ -20,8 +19,8 @@ public record ITUnbakedSplitModel(UnbakedModel baseModel, Set<Vec3i> parts, bool
         this(baseModel, new HashSet<>(parts), dynamic, size);
     }
 
-    @Override public BakedModel bake(IGeometryBakingContext owner, ModelBaker bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation) {
-        BakedModel bakedBase = baseModel.bake(bakery, spriteGetter, BlockModelRotation.X0_Y0, modelLocation);
+    @Override public BakedModel bake(IGeometryBakingContext owner, ModelBaker bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides) {
+        BakedModel bakedBase = baseModel.bake(bakery, spriteGetter, BlockModelRotation.X0_Y0);
         if (dynamic) { return new ITBakedDynamicSplitModel<>((ITICacheKeyProvider<?>)bakedBase, parts, modelTransform, size); }
         else { return new ITBakedBasicSplitModel(bakedBase, parts, modelTransform, size, owner.getTransforms()); }
     }

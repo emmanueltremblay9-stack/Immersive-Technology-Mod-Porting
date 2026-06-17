@@ -6,11 +6,11 @@ import mctmods.immersivetechnology.common.gui.helper.ITGenericDataSerializers.Da
 import mctmods.immersivetechnology.common.gui.helper.ITContainerMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraftforge.network.NetworkEvent.Context;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 public record ITMessageContainerData(List<Pair<Integer, DataPair<?>>> synced) implements ITMessage {
     public ITMessageContainerData(FriendlyByteBuf buf) { this(readSynced(buf)); }
@@ -34,11 +34,13 @@ public record ITMessageContainerData(List<Pair<Integer, DataPair<?>>> synced) im
         }
     }
 
-    @Override public void process(Supplier<Context> context) {
-        context.get().enqueueWork(() -> {
+    @Override public void process(IPayloadContext context) {
+        context.enqueueWork(() -> {
             assert Minecraft.getInstance().player != null;
             AbstractContainerMenu currentContainer = Minecraft.getInstance().player.containerMenu;
             if (currentContainer instanceof ITContainerMenu itContainer) { itContainer.receiveSync(synced); }
         });
     }
+
+    @Override public CustomPacketPayload.Type<ITMessageContainerData> type() { return ITPacketHandler.CONTAINER_DATA; }
 }

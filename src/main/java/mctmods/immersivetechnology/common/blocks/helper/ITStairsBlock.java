@@ -10,7 +10,7 @@ public class ITStairsBlock extends StairBlock implements ITBlock {
     private final Supplier<? extends ITBlock> base;
 
     public <T extends Block & ITBlock> ITStairsBlock(BlockBehaviour.Properties properties, Supplier<T> base) {
-        super(() -> base.get().defaultBlockState(), properties);
+        super(base.get().defaultBlockState(), properties);
         this.base = base;
     }
 

@@ -22,20 +22,17 @@ import java.util.List;
 
 public class ITPolygonUtils {
     private static int getOffset(VertexFormatElement element) {
-        int offset = 0;
-        for (VertexFormatElement e : DefaultVertexFormat.BLOCK.getElements()) {
-            if (e == element) { return offset / 4; }
-            else { offset += e.getByteSize(); }
-        }
-        throw new IllegalStateException("Did not find element with usage " + element.getUsage().name() + " and type " + element.getType().name());
+        int offset = DefaultVertexFormat.BLOCK.getOffset(element);
+        if (offset >= 0) { return offset / Integer.BYTES; }
+        throw new IllegalStateException("Did not find vertex element " + element);
     }
 
     public static Polygon<ITPolygonUtils.ExtraQuadData> toPolygon(BakedQuad quad) {
         List<Vertex> vertices = new ArrayList<>(4);
-        final int posOffset = getOffset(DefaultVertexFormat.ELEMENT_POSITION);
-        final int uvOffset = getOffset(DefaultVertexFormat.ELEMENT_UV);
-        final int normalOffset = getOffset(DefaultVertexFormat.ELEMENT_NORMAL);
-        final int colorOffset = getOffset(DefaultVertexFormat.ELEMENT_COLOR);
+        final int posOffset = getOffset(VertexFormatElement.POSITION);
+        final int uvOffset = getOffset(VertexFormatElement.UV0);
+        final int normalOffset = getOffset(VertexFormatElement.NORMAL);
+        final int colorOffset = getOffset(VertexFormatElement.COLOR);
         final int color = quad.getVertices()[colorOffset];
         for (int v = 0; v < 4; ++v) {
             final int baseOffset = v * DefaultVertexFormat.BLOCK.getVertexSize() / 4;

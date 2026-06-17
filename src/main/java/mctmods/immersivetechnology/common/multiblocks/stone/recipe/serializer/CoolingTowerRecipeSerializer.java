@@ -1,51 +1,36 @@
 package mctmods.immersivetechnology.common.multiblocks.stone.recipe.serializer;
 
-import blusunrize.immersiveengineering.api.ApiUtils;
-import blusunrize.immersiveengineering.api.crafting.FluidTagInput;
 import blusunrize.immersiveengineering.api.crafting.IERecipeSerializer;
-import com.google.gson.JsonObject;
+import blusunrize.immersiveengineering.api.utils.codec.IEDualCodecs;
+import malte0811.dualcodecs.DualCodecs;
+import malte0811.dualcodecs.DualCompositeMapCodecs;
+import malte0811.dualcodecs.DualMapCodec;
+import mctmods.immersivetechnology.common.multiblocks.metal.recipe.serializer.ITRecipeSerializerCodecs;
 import mctmods.immersivetechnology.common.multiblocks.stone.recipe.CoolingTowerRecipe;
 import mctmods.immersivetechnology.core.registration.ITMultiblockProvider;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraftforge.common.crafting.conditions.ICondition;
-import net.minecraftforge.fluids.FluidStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class CoolingTowerRecipeSerializer extends IERecipeSerializer<CoolingTowerRecipe> {
-    @Override public net.minecraft.world.item.ItemStack getIcon() { return ITMultiblockProvider.COOLING_TOWER.iconStack(); }
+    public static final DualMapCodec<RegistryFriendlyByteBuf, CoolingTowerRecipe> CODECS = DualCompositeMapCodecs.composite(
+            IEDualCodecs.FLUID_STACK.optionalFieldOf("output0", FluidStack.EMPTY), recipe -> ITRecipeSerializerCodecs.nullToEmpty(recipe.fluidOutput0),
+            IEDualCodecs.FLUID_STACK.optionalFieldOf("output1", FluidStack.EMPTY), recipe -> ITRecipeSerializerCodecs.nullToEmpty(recipe.fluidOutput1),
+            IEDualCodecs.FLUID_STACK.optionalFieldOf("output2", FluidStack.EMPTY), recipe -> ITRecipeSerializerCodecs.nullToEmpty(recipe.fluidOutput2),
+            IEDualCodecs.SIZED_FLUID_INGREDIENT.fieldOf("input0"), recipe -> recipe.input0,
+            IEDualCodecs.SIZED_FLUID_INGREDIENT.fieldOf("input1"), recipe -> recipe.input1,
+            DualCodecs.INT.fieldOf("time"), CoolingTowerRecipe::getTotalProcessTime,
+            (output0, output1, output2, input0, input1, time) -> new CoolingTowerRecipe(
+                    ITRecipeSerializerCodecs.emptyToNull(output0),
+                    ITRecipeSerializerCodecs.emptyToNull(output1),
+                    ITRecipeSerializerCodecs.emptyToNull(output2),
+                    input0,
+                    input1,
+                    time
+            )
+    );
 
-    @Override public CoolingTowerRecipe readFromJson(ResourceLocation recipeID, JsonObject json, ICondition.IContext iContext) {
-        FluidTagInput input0 = FluidTagInput.deserialize(GsonHelper.getAsJsonObject(json, "input0"));
-        FluidTagInput input1 = FluidTagInput.deserialize(GsonHelper.getAsJsonObject(json, "input1"));
-        FluidStack output0 = json.has("output0") ? ApiUtils.jsonDeserializeFluidStack(GsonHelper.getAsJsonObject(json, "output0")) : null;
-        FluidStack output1 = json.has("output1") ? ApiUtils.jsonDeserializeFluidStack(GsonHelper.getAsJsonObject(json, "output1")) : null;
-        FluidStack output2 = json.has("output2") ? ApiUtils.jsonDeserializeFluidStack(GsonHelper.getAsJsonObject(json, "output2")) : null;
-        int time = GsonHelper.getAsInt(json, "time");
-        return new CoolingTowerRecipe(recipeID, output0, output1, output2, input0, input1, time);
-    }
+    @Override public ItemStack getIcon() { return ITMultiblockProvider.COOLING_TOWER.iconStack(); }
 
-    @Override @Nullable public CoolingTowerRecipe fromNetwork(@NotNull ResourceLocation recipeId, @NotNull FriendlyByteBuf buffer) {
-        FluidTagInput input0 = FluidTagInput.read(buffer);
-        FluidTagInput input1 = FluidTagInput.read(buffer);
-        FluidStack output0 = buffer.readBoolean() ? buffer.readFluidStack() : null;
-        FluidStack output1 = buffer.readBoolean() ? buffer.readFluidStack() : null;
-        FluidStack output2 = buffer.readBoolean() ? buffer.readFluidStack() : null;
-        int time = buffer.readInt();
-        return new CoolingTowerRecipe(recipeId, output0, output1, output2, input0, input1, time);
-    }
-
-    @Override public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull CoolingTowerRecipe recipe) {
-        recipe.input0.write(buffer);
-        recipe.input1.write(buffer);
-        buffer.writeBoolean(recipe.fluidOutput0 != null);
-        if (recipe.fluidOutput0 != null) buffer.writeFluidStack(recipe.fluidOutput0);
-        buffer.writeBoolean(recipe.fluidOutput1 != null);
-        if (recipe.fluidOutput1 != null) buffer.writeFluidStack(recipe.fluidOutput1);
-        buffer.writeBoolean(recipe.fluidOutput2 != null);
-        if (recipe.fluidOutput2 != null) buffer.writeFluidStack(recipe.fluidOutput2);
-        buffer.writeInt(recipe.getTotalProcessTime());
-    }
+    @Override protected DualMapCodec<RegistryFriendlyByteBuf, CoolingTowerRecipe> codecs() { return CODECS; }
 }

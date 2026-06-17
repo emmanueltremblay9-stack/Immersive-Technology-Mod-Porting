@@ -1,6 +1,7 @@
 package mctmods.immersivetechnology.core.proxy;
 
 import mctmods.immersivetechnology.core.lib.ITLib;
+import mctmods.immersivetechnology.common.multiblocks.helper.ITMultiblockBuilder;
 import mctmods.immersivetechnology.core.registration.ITBlockEntities;
 import mctmods.immersivetechnology.core.registration.ITBlocks;
 import mctmods.immersivetechnology.core.registration.ITCreativeTab;
@@ -13,18 +14,21 @@ import mctmods.immersivetechnology.core.registration.ITRecipeTypes;
 import mctmods.immersivetechnology.core.registration.ITSounds;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.neoforged.bus.api.IEventBus;
 
 @SuppressWarnings("unused")
 public class CommonProxy {
     public static void modConstruction(IEventBus event) {
         ITLib.IT_LOGGER.info("Registering IT Content!");
         ITMultiblockProvider.forceClassLoad();
+        ITMultiblockBuilder.registerDeferredEventHandlers(event);
         ITMenuTypes.REGISTER.register(event);
         ITRecipeTypes.init(event);
         ITSounds.init(event);
         ITParticles.REGISTER.register(event);
         ITBlockEntities.init(event);
+        event.addListener(ITBlockEntities::registerCapabilities);
+        event.addListener(ITFluids::registerCapabilities);
         ITBlocks.init(event);
         ITItems.init(event);
         ITFluids.REGISTER.register(event);

@@ -9,8 +9,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.joml.Matrix4f;
 
 public class ITGuiHelper {
@@ -64,9 +64,9 @@ public class ITGuiHelper {
         byte nx = 0;
         byte ny = 0;
         byte nz = 127;
-        builder.vertex(mat, x, y + h, 0).color(ir, ig, ib, ia).uv(u0, v1).uv2(light).normal(nx, ny, nz).endVertex();
-        builder.vertex(mat, x + w, y + h, 0).color(ir, ig, ib, ia).uv(u1, v1).uv2(light).normal(nx, ny, nz).endVertex();
-        builder.vertex(mat, x + w, y, 0).color(ir, ig, ib, ia).uv(u1, v0).uv2(light).normal(nx, ny, nz).endVertex();
-        builder.vertex(mat, x, y, 0).color(ir, ig, ib, ia).uv(u0, v0).uv2(light).normal(nx, ny, nz).endVertex();
+        builder.addVertex(mat, x, y + h, 0).setColor(ir, ig, ib, ia).setUv(u0, v1).setLight(light).setNormal(nx, ny, nz);
+        builder.addVertex(mat, x + w, y + h, 0).setColor(ir, ig, ib, ia).setUv(u1, v1).setLight(light).setNormal(nx, ny, nz);
+        builder.addVertex(mat, x + w, y, 0).setColor(ir, ig, ib, ia).setUv(u1, v0).setLight(light).setNormal(nx, ny, nz);
+        builder.addVertex(mat, x, y, 0).setColor(ir, ig, ib, ia).setUv(u0, v0).setLight(light).setNormal(nx, ny, nz);
     }
 }

@@ -3,8 +3,8 @@ package mctmods.immersivetechnology.common.data.generators;
 import mctmods.immersivetechnology.core.lib.ITLib;
 import mctmods.immersivetechnology.core.registration.ITSounds;
 import net.minecraft.data.PackOutput;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.common.data.SoundDefinitionsProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.SoundDefinitionsProvider;
 
 public class ITSoundProvider extends SoundDefinitionsProvider {
     public ITSoundProvider(PackOutput output, ExistingFileHelper helper) { super(output, ITLib.MODID, helper); }

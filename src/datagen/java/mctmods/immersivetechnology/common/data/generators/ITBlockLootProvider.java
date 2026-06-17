@@ -4,20 +4,21 @@ import mctmods.immersivetechnology.core.util.loot.ITBEDropLootEntry;
 import mctmods.immersivetechnology.core.registration.ITBlocks;
 import mctmods.immersivetechnology.core.registration.ITFluids;
 import mctmods.immersivetechnology.core.registration.ITMultiblockProvider;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ITBlockLootProvider extends BlockLootSubProvider {
-    public ITBlockLootProvider() { super(Set.of(), FeatureFlags.REGISTRY.allFlags()); }
+    public ITBlockLootProvider(HolderLookup.Provider registries) { super(Set.of(), FeatureFlags.REGISTRY.allFlags(), registries); }
 
     @Override protected void generate() {
         registerEntity(ITBlocks.Metal.BARREL_CREATIVE.getRegObject());
@@ -42,7 +43,7 @@ public class ITBlockLootProvider extends BlockLootSubProvider {
         ITFluids.ALL_ENTRIES.forEach(entry -> add(entry.getBlock(), noDrop()));
     }
 
-    private void registerEntity(RegistryObject<? extends Block> block) {
+    private void registerEntity(DeferredHolder<Block, ? extends Block> block) {
         LootPool.Builder pool = createPoolBuilder().add(ITBEDropLootEntry.builder());
         add(block.get(), LootTable.lootTable().withPool(pool));
     }
@@ -65,5 +66,5 @@ public class ITBlockLootProvider extends BlockLootSubProvider {
 
     private LootPool.Builder createPoolBuilder() { return LootPool.lootPool().when(ExplosionCondition.survivesExplosion()); }
 
-    @Override @NotNull protected Set<Block> getKnownBlocks() { return ITBlocks.REGISTER.getEntries().stream().map(RegistryObject::get).collect(Collectors.toSet()); }
+    @Override @NotNull protected Set<Block> getKnownBlocks() { return ITBlocks.REGISTER.getEntries().stream().map(DeferredHolder::get).collect(Collectors.toSet()); }
 }

@@ -1,8 +1,8 @@
 package mctmods.immersivetechnology.core.util.inventory;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -37,7 +37,7 @@ public class ITInventoryHandler implements IItemHandlerModifiable {
                         if (!simulate) { this.inv.getInventory().set(offsetSlot, stack.copy()); this.inv.doGraphicalUpdates(); }
                         return ItemStack.EMPTY;
                     }
-                } else if (!ItemHandlerHelper.canItemStacksStack(stack, currentStack)) { return stack; }
+                } else if (!ItemStack.isSameItemSameComponents(stack, currentStack)) { return stack; }
                 else {
                     int accepted = Math.min(stack.getMaxStackSize(), this.inv.getSlotLimit(offsetSlot)) - currentStack.getCount();
                     if (accepted < stack.getCount()) {

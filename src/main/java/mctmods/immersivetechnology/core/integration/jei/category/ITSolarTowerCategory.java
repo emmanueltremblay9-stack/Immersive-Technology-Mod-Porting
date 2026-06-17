@@ -6,7 +6,7 @@ import mctmods.immersivetechnology.core.integration.jei.JEIRecipeTypes;
 import mctmods.immersivetechnology.core.util.TranslationKey;
 import mctmods.immersivetechnology.core.lib.ITLib;
 import mctmods.immersivetechnology.core.registration.ITMultiblockProvider;
-import mezz.jei.api.forge.ForgeTypes;
+import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -16,12 +16,12 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -50,43 +50,43 @@ public class ITSolarTowerCategory extends ITRecipeCategory<SolarTowerRecipe> {
     public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull SolarTowerRecipe recipe, @NotNull IFocusGroup focuses) {
         int tankCapacity = getTankCapacity(recipe);
 
-        List<FluidStack> inputs = recipe.input.getMatchingFluidStacks().stream()
+        List<FluidStack> inputs = java.util.Arrays.stream(recipe.input.getFluids())
                 .map(fs -> {
                     FluidStack copy = fs.copy();
-                    copy.setAmount(recipe.input.getAmount());
+                    copy.setAmount(recipe.input.amount());
                     return copy;
                 })
                 .toList();
 
         if (inputs.isEmpty()) {
             ResourceLocation biodieselRl = ResourceLocation.fromNamespaceAndPath("immersiveengineering", "biodiesel");
-            var biodieselFluid = ForgeRegistries.FLUIDS.getValue(biodieselRl);
+            var biodieselFluid = BuiltInRegistries.FLUID.get(biodieselRl);
             FluidStack dummy = new FluidStack(
                     biodieselFluid != null && biodieselFluid != Fluids.EMPTY ? biodieselFluid : Fluids.LAVA,
-                    recipe.input.getAmount()
+                    recipe.input.amount()
             );
             inputs = List.of(dummy);
         }
 
         builder.addSlot(RecipeIngredientRole.INPUT, 102, 21)
-                .addIngredients(ForgeTypes.FLUID_STACK, inputs)
+                .addIngredients(NeoForgeTypes.FLUID_STACK, inputs)
                 .setFluidRenderer(tankCapacity, false, 16, 47)
                 .addRichTooltipCallback((slotView, tooltip) ->
-                        slotView.getDisplayedIngredient(ForgeTypes.FLUID_STACK).ifPresent(fs ->
-                                ITFluidInfoArea.fillTooltip(fs, recipe.input.getAmount(), tooltip::add)));
+                        slotView.getDisplayedIngredient(NeoForgeTypes.FLUID_STACK).ifPresent(fs ->
+                                ITFluidInfoArea.fillTooltip(fs, recipe.input.amount(), tooltip::add)));
 
         if (recipe.fluidOutput != null && !recipe.fluidOutput.isEmpty()) {
             builder.addSlot(RecipeIngredientRole.OUTPUT, 126, 21)
-                    .addIngredient(ForgeTypes.FLUID_STACK, recipe.fluidOutput)
+                    .addIngredient(NeoForgeTypes.FLUID_STACK, recipe.fluidOutput)
                     .setFluidRenderer(tankCapacity, false, 16, 47)
                     .addRichTooltipCallback((slotView, tooltip) ->
-                            slotView.getDisplayedIngredient(ForgeTypes.FLUID_STACK).ifPresent(fs ->
+                            slotView.getDisplayedIngredient(NeoForgeTypes.FLUID_STACK).ifPresent(fs ->
                                     ITFluidInfoArea.fillTooltip(fs, recipe.fluidOutput.getAmount(), tooltip::add)));
         }
     }
 
     private int getTankCapacity(@NotNull SolarTowerRecipe recipe) {
-        int tankCapacity = recipe.input.getAmount();
+        int tankCapacity = recipe.input.amount();
         if (recipe.fluidOutput != null && !recipe.fluidOutput.isEmpty()) {
             tankCapacity = Math.max(tankCapacity, recipe.fluidOutput.getAmount());
         }
@@ -102,7 +102,7 @@ public class ITSolarTowerCategory extends ITRecipeCategory<SolarTowerRecipe> {
 
         Font font = Minecraft.getInstance().font;
 
-        Component timeComponent = Component.translatable(TranslationKey.CATEGORY_SOLAR_TOWER_TIME.getLocation(), recipe.getTotalProcessTime(), recipe.input.getAmount())
+        Component timeComponent = Component.translatable(TranslationKey.CATEGORY_SOLAR_TOWER_TIME.getLocation(), recipe.getTotalProcessTime(), recipe.input.amount())
                 .withStyle(style -> style.withColor(TextColor.fromRgb(0xAAAAAA)));
         int timeWidth = font.width(timeComponent);
         int timeX = 122 - timeWidth / 2;

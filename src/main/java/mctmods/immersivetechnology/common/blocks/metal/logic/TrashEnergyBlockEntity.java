@@ -7,23 +7,14 @@ import mctmods.immersivetechnology.core.registration.ITBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
-import javax.annotation.Nonnull;
 
 public class TrashEnergyBlockEntity extends OSDCommonBlockEntity implements IEnergyStorage, TrashCanShape {
     public TrashEnergyBlockEntity(BlockPos pos, BlockState state) { super(ITBlockEntities.TRASH_ENERGY.get(), pos, state); }
 
-    @SuppressWarnings("unchecked")
-    @Override @Nonnull public <T>LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction facing) {
-        if (capability == ForgeCapabilities.ENERGY) { return LazyOptional.of(() -> (T) this); }
-        return super.getCapability(capability, facing);
-    }
+    public IEnergyStorage getEnergyStorage(@Nullable Direction facing) { return this; }
 
     @Override public int receiveEnergy(int maxReceive, boolean simulate) {
         if (!simulate) { acceptedAmount += maxReceive; }

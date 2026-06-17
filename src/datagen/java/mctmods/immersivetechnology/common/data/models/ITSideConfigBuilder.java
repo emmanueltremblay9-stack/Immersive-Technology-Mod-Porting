@@ -4,9 +4,9 @@ import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
 import mctmods.immersivetechnology.client.models.helper.ITModelConfigurableSides;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.model.generators.CustomLoaderBuilder;
-import net.minecraftforge.client.model.generators.ModelBuilder;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.client.model.generators.CustomLoaderBuilder;
+import net.neoforged.neoforge.client.model.generators.ModelBuilder;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class ITSideConfigBuilder<T extends ModelBuilder<T>> extends CustomLoaderBuilder<T> {
     public static <T extends ModelBuilder<T>> ITSideConfigBuilder<T> begin(T parent, ExistingFileHelper existingFileHelper) {
@@ -14,7 +14,7 @@ public class ITSideConfigBuilder<T extends ModelBuilder<T>> extends CustomLoader
     }
 
     protected ITSideConfigBuilder(T parent, ExistingFileHelper existingFileHelper) {
-        super(ITModelConfigurableSides.Loader.NAME, parent, existingFileHelper);
+        super(ITModelConfigurableSides.Loader.NAME, parent, existingFileHelper, false);
     }
 
     private ITModelConfigurableSides.Type type;

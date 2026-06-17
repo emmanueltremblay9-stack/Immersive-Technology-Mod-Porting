@@ -2,38 +2,24 @@ package mctmods.immersivetechnology.common.multiblocks.metal.recipe.serializer;
 
 import blusunrize.immersiveengineering.api.crafting.IERecipeSerializer;
 import blusunrize.immersiveengineering.api.crafting.IngredientWithSize;
-import com.google.gson.JsonObject;
+import malte0811.dualcodecs.DualCodecs;
+import malte0811.dualcodecs.DualCompositeMapCodecs;
+import malte0811.dualcodecs.DualMapCodec;
 import mctmods.immersivetechnology.common.multiblocks.metal.logic.BoilerSolidLogic;
 import mctmods.immersivetechnology.common.multiblocks.metal.recipe.BoilerSolidRecipe;
 import mctmods.immersivetechnology.core.registration.ITMultiblockProvider;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.crafting.conditions.ICondition;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class BoilerSolidRecipeSerializer extends IERecipeSerializer<BoilerSolidRecipe> {
+    public static final DualMapCodec<RegistryFriendlyByteBuf, BoilerSolidRecipe> CODECS = DualCompositeMapCodecs.composite(
+            IngredientWithSize.CODECS.fieldOf("input"), recipe -> recipe.input,
+            DualCodecs.DOUBLE.fieldOf("heatPerTick"), BoilerSolidRecipe::getHeatPerTick,
+            DualCodecs.DOUBLE.optionalFieldOf("targetHeat", BoilerSolidLogic.DEFAULT_WORKING_HEAT_LEVEL), BoilerSolidRecipe::getTargetHeat,
+            BoilerSolidRecipe::new
+    );
+
     @Override public ItemStack getIcon() { return ITMultiblockProvider.BOILER_SOLID.iconStack(); }
 
-    @Override public BoilerSolidRecipe readFromJson(ResourceLocation recipeId, JsonObject json, ICondition.IContext context) {
-        IngredientWithSize input = IngredientWithSize.deserialize(GsonHelper.getAsJsonObject(json, "input"));
-        double heatPerTick = GsonHelper.getAsDouble(json, "heatPerTick");
-        double targetHeat = GsonHelper.getAsDouble(json, "targetHeat", BoilerSolidLogic.DEFAULT_WORKING_HEAT_LEVEL);
-        return new BoilerSolidRecipe(recipeId, input, heatPerTick, targetHeat);
-    }
-
-    @Override @Nullable public BoilerSolidRecipe fromNetwork(@NotNull ResourceLocation recipeId, @NotNull FriendlyByteBuf buffer) {
-        IngredientWithSize input = IngredientWithSize.read(buffer);
-        double heatPerTick = buffer.readDouble();
-        double targetHeat = buffer.readDouble();
-        return new BoilerSolidRecipe(recipeId, input, heatPerTick, targetHeat);
-    }
-
-    @Override public void toNetwork(@NotNull FriendlyByteBuf buffer, BoilerSolidRecipe recipe) {
-        recipe.input.write(buffer);
-        buffer.writeDouble(recipe.getHeatPerTick());
-        buffer.writeDouble(recipe.getTargetHeat());
-    }
+    @Override protected DualMapCodec<RegistryFriendlyByteBuf, BoilerSolidRecipe> codecs() { return CODECS; }
 }

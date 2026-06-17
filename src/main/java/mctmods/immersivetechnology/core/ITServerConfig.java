@@ -1,92 +1,92 @@
 package mctmods.immersivetechnology.core;
 
 import mctmods.immersivetechnology.core.lib.ITLib;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.config.ModConfigEvent;
 
-@Mod.EventBusSubscriber(modid = ITLib.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = ITLib.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ITServerConfig {
-    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
-    public static final ForgeConfigSpec.EnumValue<DisassemblyMode> DISASSEMBLY_MODE;
-    public static final ForgeConfigSpec.DoubleValue ALTERNATOR_POWER_FACTOR;
+    public static final ModConfigSpec.EnumValue<DisassemblyMode> DISASSEMBLY_MODE;
+    public static final ModConfigSpec.DoubleValue ALTERNATOR_POWER_FACTOR;
 
-    public static final ForgeConfigSpec.IntValue ALTERNATOR_ENERGY_CAPACITY;
-    public static final ForgeConfigSpec.DoubleValue ALTERNATOR_BASE_MASS;
-    public static final ForgeConfigSpec.DoubleValue ALTERNATOR_FRICTION;
-    public static final ForgeConfigSpec.IntValue ALTERNATOR_MAX_OUTPUT;
+    public static final ModConfigSpec.IntValue ALTERNATOR_ENERGY_CAPACITY;
+    public static final ModConfigSpec.DoubleValue ALTERNATOR_BASE_MASS;
+    public static final ModConfigSpec.DoubleValue ALTERNATOR_FRICTION;
+    public static final ModConfigSpec.IntValue ALTERNATOR_MAX_OUTPUT;
 
-    public static final ForgeConfigSpec.IntValue CONFIG_BURN_TIME_DIVIDER;
-    public static final ForgeConfigSpec.IntValue CONFIG_CREATIVE_BARREL_OUTPUT_AMOUNT;
+    public static final ModConfigSpec.IntValue CONFIG_BURN_TIME_DIVIDER;
+    public static final ModConfigSpec.IntValue CONFIG_CREATIVE_BARREL_OUTPUT_AMOUNT;
 
     // Liquid Boiler
-    public static final ForgeConfigSpec.IntValue BOILER_LIQUID_TANK_CAPACITY;
-    public static final ForgeConfigSpec.DoubleValue BOILER_LIQUID_HEAT_LOSS_PER_TICK;
-    public static final ForgeConfigSpec.DoubleValue BOILER_LIQUID_PILOT_HEAT;
+    public static final ModConfigSpec.IntValue BOILER_LIQUID_TANK_CAPACITY;
+    public static final ModConfigSpec.DoubleValue BOILER_LIQUID_HEAT_LOSS_PER_TICK;
+    public static final ModConfigSpec.DoubleValue BOILER_LIQUID_PILOT_HEAT;
 
     // Solid Boiler
-    public static final ForgeConfigSpec.DoubleValue BOILER_SOLID_HEAT_LOSS_PER_TICK;
-    public static final ForgeConfigSpec.DoubleValue BOILER_SOLID_PILOT_HEAT;
-    public static final ForgeConfigSpec.IntValue BOILER_SOLID_PILOT_MULTIPLIER;
-    public static final ForgeConfigSpec.DoubleValue BOILER_SOLID_DEFAULT_HEAT_PER_TICK;
+    public static final ModConfigSpec.DoubleValue BOILER_SOLID_HEAT_LOSS_PER_TICK;
+    public static final ModConfigSpec.DoubleValue BOILER_SOLID_PILOT_HEAT;
+    public static final ModConfigSpec.IntValue BOILER_SOLID_PILOT_MULTIPLIER;
+    public static final ModConfigSpec.DoubleValue BOILER_SOLID_DEFAULT_HEAT_PER_TICK;
 
     // Tank Boiler
-    public static final ForgeConfigSpec.IntValue BOILER_TANK_CAPACITY;
-    public static final ForgeConfigSpec.IntValue BOILER_TANK_PROGRESS_LOSS_PER_TICK;
+    public static final ModConfigSpec.IntValue BOILER_TANK_CAPACITY;
+    public static final ModConfigSpec.IntValue BOILER_TANK_PROGRESS_LOSS_PER_TICK;
 
     // Distiller
-    public static final ForgeConfigSpec.IntValue DISTILLER_TANK_CAPACITY;
-    public static final ForgeConfigSpec.IntValue DISTILLER_ENERGY_CAPACITY;
+    public static final ModConfigSpec.IntValue DISTILLER_TANK_CAPACITY;
+    public static final ModConfigSpec.IntValue DISTILLER_ENERGY_CAPACITY;
 
     // Gas Turbine
-    public static final ForgeConfigSpec.IntValue GAS_TURBINE_TANK_CAPACITY;
-    public static final ForgeConfigSpec.IntValue GAS_TURBINE_ENERGY_CAPACITY_HV;
-    public static final ForgeConfigSpec.IntValue GAS_TURBINE_ENERGY_CAPACITY_MV;
-    public static final ForgeConfigSpec.IntValue GAS_TURBINE_STARTER_CONSUMPTION;
-    public static final ForgeConfigSpec.IntValue GAS_TURBINE_SPARKPLUG_CONSUMPTION;
-    public static final ForgeConfigSpec.DoubleValue GAS_TURBINE_BASE_MASS;
-    public static final ForgeConfigSpec.DoubleValue GAS_TURBINE_DRIVE_TORQUE;
-    public static final ForgeConfigSpec.DoubleValue GAS_TURBINE_FRICTION;
-    public static final ForgeConfigSpec.DoubleValue GAS_TURBINE_MAX_SPEED_FACTOR;
+    public static final ModConfigSpec.IntValue GAS_TURBINE_TANK_CAPACITY;
+    public static final ModConfigSpec.IntValue GAS_TURBINE_ENERGY_CAPACITY_HV;
+    public static final ModConfigSpec.IntValue GAS_TURBINE_ENERGY_CAPACITY_MV;
+    public static final ModConfigSpec.IntValue GAS_TURBINE_STARTER_CONSUMPTION;
+    public static final ModConfigSpec.IntValue GAS_TURBINE_SPARKPLUG_CONSUMPTION;
+    public static final ModConfigSpec.DoubleValue GAS_TURBINE_BASE_MASS;
+    public static final ModConfigSpec.DoubleValue GAS_TURBINE_DRIVE_TORQUE;
+    public static final ModConfigSpec.DoubleValue GAS_TURBINE_FRICTION;
+    public static final ModConfigSpec.DoubleValue GAS_TURBINE_MAX_SPEED_FACTOR;
 
     // Heat Exchanger
-    public static final ForgeConfigSpec.IntValue HEAT_EXCHANGER_INPUT_TANK_CAPACITY;
-    public static final ForgeConfigSpec.IntValue HEAT_EXCHANGER_OUTPUT_TANK_CAPACITY;
-    public static final ForgeConfigSpec.IntValue HEAT_EXCHANGER_ENERGY_CAPACITY;
-    public static final ForgeConfigSpec.IntValue HEAT_EXCHANGER_ENERGY_MAX_IO;
+    public static final ModConfigSpec.IntValue HEAT_EXCHANGER_INPUT_TANK_CAPACITY;
+    public static final ModConfigSpec.IntValue HEAT_EXCHANGER_OUTPUT_TANK_CAPACITY;
+    public static final ModConfigSpec.IntValue HEAT_EXCHANGER_ENERGY_CAPACITY;
+    public static final ModConfigSpec.IntValue HEAT_EXCHANGER_ENERGY_MAX_IO;
 
     // Solar Melter
-    public static final ForgeConfigSpec.DoubleValue SOLAR_MELTER_DAY_MIN_HEAT_LOSS;
-    public static final ForgeConfigSpec.DoubleValue SOLAR_MELTER_LOSS_PER_SECTION_DROP;
-    public static final ForgeConfigSpec.DoubleValue SOLAR_MELTER_TEMP_DEPENDENT_LOSS_FACTOR;
-    public static final ForgeConfigSpec.DoubleValue SOLAR_MELTER_HEAT_INCREASE_FACTOR;
-    public static final ForgeConfigSpec.DoubleValue SOLAR_MELTER_TEMP_TO_MIN_REFLECTORS_DIVISOR;
-    public static final ForgeConfigSpec.DoubleValue SOLAR_MELTER_REFLECTOR_TIER_OFFSET;
-    public static final ForgeConfigSpec.IntValue SOLAR_MELTER_PROGRESS_LOSS_OFF_TEMP;
-    public static final ForgeConfigSpec.DoubleValue SOLAR_MELTER_SPEED_MULTIPLIER;
+    public static final ModConfigSpec.DoubleValue SOLAR_MELTER_DAY_MIN_HEAT_LOSS;
+    public static final ModConfigSpec.DoubleValue SOLAR_MELTER_LOSS_PER_SECTION_DROP;
+    public static final ModConfigSpec.DoubleValue SOLAR_MELTER_TEMP_DEPENDENT_LOSS_FACTOR;
+    public static final ModConfigSpec.DoubleValue SOLAR_MELTER_HEAT_INCREASE_FACTOR;
+    public static final ModConfigSpec.DoubleValue SOLAR_MELTER_TEMP_TO_MIN_REFLECTORS_DIVISOR;
+    public static final ModConfigSpec.DoubleValue SOLAR_MELTER_REFLECTOR_TIER_OFFSET;
+    public static final ModConfigSpec.IntValue SOLAR_MELTER_PROGRESS_LOSS_OFF_TEMP;
+    public static final ModConfigSpec.DoubleValue SOLAR_MELTER_SPEED_MULTIPLIER;
 
     // Solar Tower
-    public static final ForgeConfigSpec.DoubleValue SOLAR_TOWER_DAY_MIN_HEAT_LOSS;
-    public static final ForgeConfigSpec.DoubleValue SOLAR_TOWER_LOSS_PER_SECTION_DROP;
-    public static final ForgeConfigSpec.DoubleValue SOLAR_TOWER_TEMP_DEPENDENT_LOSS_FACTOR;
-    public static final ForgeConfigSpec.DoubleValue SOLAR_TOWER_HEAT_INCREASE_FACTOR;
-    public static final ForgeConfigSpec.DoubleValue SOLAR_TOWER_TEMP_TO_MIN_REFLECTORS_DIVISOR;
-    public static final ForgeConfigSpec.DoubleValue SOLAR_TOWER_REFLECTOR_TIER_OFFSET;
-    public static final ForgeConfigSpec.IntValue SOLAR_TOWER_PROGRESS_LOSS_OFF_TEMP;
-    public static final ForgeConfigSpec.DoubleValue SOLAR_TOWER_SPEED_MULTIPLIER;
+    public static final ModConfigSpec.DoubleValue SOLAR_TOWER_DAY_MIN_HEAT_LOSS;
+    public static final ModConfigSpec.DoubleValue SOLAR_TOWER_LOSS_PER_SECTION_DROP;
+    public static final ModConfigSpec.DoubleValue SOLAR_TOWER_TEMP_DEPENDENT_LOSS_FACTOR;
+    public static final ModConfigSpec.DoubleValue SOLAR_TOWER_HEAT_INCREASE_FACTOR;
+    public static final ModConfigSpec.DoubleValue SOLAR_TOWER_TEMP_TO_MIN_REFLECTORS_DIVISOR;
+    public static final ModConfigSpec.DoubleValue SOLAR_TOWER_REFLECTOR_TIER_OFFSET;
+    public static final ModConfigSpec.IntValue SOLAR_TOWER_PROGRESS_LOSS_OFF_TEMP;
+    public static final ModConfigSpec.DoubleValue SOLAR_TOWER_SPEED_MULTIPLIER;
 
     // Steam Turbine
-    public static final ForgeConfigSpec.IntValue STEAM_TURBINE_TANK_CAPACITY;
-    public static final ForgeConfigSpec.DoubleValue STEAM_TURBINE_BASE_MASS;
-    public static final ForgeConfigSpec.DoubleValue STEAM_TURBINE_DRIVE_TORQUE;
-    public static final ForgeConfigSpec.DoubleValue STEAM_TURBINE_FRICTION;
-    public static final ForgeConfigSpec.DoubleValue STEAM_TURBINE_MAX_SPEED_FACTOR;
+    public static final ModConfigSpec.IntValue STEAM_TURBINE_TANK_CAPACITY;
+    public static final ModConfigSpec.DoubleValue STEAM_TURBINE_BASE_MASS;
+    public static final ModConfigSpec.DoubleValue STEAM_TURBINE_DRIVE_TORQUE;
+    public static final ModConfigSpec.DoubleValue STEAM_TURBINE_FRICTION;
+    public static final ModConfigSpec.DoubleValue STEAM_TURBINE_MAX_SPEED_FACTOR;
 
     // Steel Sheetmetal Tank
-    public static final ForgeConfigSpec.IntValue STEEL_SHEETMETAL_TANK_CAPACITY;
-    public static final ForgeConfigSpec.IntValue STEEL_SHEETMETAL_TANK_TRANSFER_SPEED;
+    public static final ModConfigSpec.IntValue STEEL_SHEETMETAL_TANK_CAPACITY;
+    public static final ModConfigSpec.IntValue STEEL_SHEETMETAL_TANK_TRANSFER_SPEED;
 
     public static DisassemblyMode disassemblyMode = DisassemblyMode.PROCESS_QUEUE;
     public static double alternatorPowerFactor = 1.0D;
@@ -296,7 +296,7 @@ public class ITServerConfig {
         BUILDER.pop();
     }
 
-    public static final ForgeConfigSpec SPEC = BUILDER.build();
+    public static final ModConfigSpec SPEC = BUILDER.build();
 
     @SubscribeEvent
     public static void onConfig(final ModConfigEvent event) {

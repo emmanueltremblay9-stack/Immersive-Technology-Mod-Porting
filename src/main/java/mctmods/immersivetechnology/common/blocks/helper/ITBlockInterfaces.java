@@ -35,6 +35,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class ITBlockInterfaces {
@@ -146,7 +147,7 @@ public class ITBlockInterfaces {
                         .withOptionalParameter(LootContextParams.BLOCK_STATE, world.getBlockState(tile.getBlockPos()))
                         .withOptionalParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(tile.getBlockPos()))
                         .create(LootContextParamSets.BLOCK);
-                LootContext var10001 = (new LootContext.Builder(parms)).create(ITLib.rl("pick_block"));
+                LootContext var10001 = (new LootContext.Builder(parms)).create(Optional.of(ITLib.rl("pick_block")));
                 Objects.requireNonNull(drop);
                 getBlockEntityDrop(var10001, drop::setValue);
             }

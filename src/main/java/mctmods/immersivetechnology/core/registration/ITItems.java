@@ -4,13 +4,13 @@ import mctmods.immersivetechnology.common.items.helper.ITBaseItem;
 import mctmods.immersivetechnology.common.items.FormationTool;
 import mctmods.immersivetechnology.core.lib.ITLib;
 import net.minecraft.Util;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
@@ -19,18 +19,18 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class ITItems {
-    public static final DeferredRegister<Item> REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, ITLib.MODID);
+    public static final DeferredRegister<Item> REGISTER = DeferredRegister.create(Registries.ITEM, ITLib.MODID);
 
-    private static final HashMap<String, RegistryObject<? extends Item>> ITEM_REGISTRY_MAP = new HashMap<>();
+    private static final HashMap<String, DeferredHolder<Item, ? extends Item>> ITEM_REGISTRY_MAP = new HashMap<>();
 
-    public static HashMap<String, RegistryObject<? extends Item>> getItemRegistryMap() { return ITEM_REGISTRY_MAP; }
+    public static HashMap<String, DeferredHolder<Item, ? extends Item>> getItemRegistryMap() { return ITEM_REGISTRY_MAP; }
 
     public static final ItemRegObject<FormationTool> FORMATION_TOOL = register("formation_tool", FormationTool::new);
     public static final ItemRegObject<ITBaseItem> SALT = simple();
 
     public static void initItems() { }
 
-    public static List<Item> getITItems() { return REGISTER.getEntries().stream().map(RegistryObject::get).collect(Collectors.toList()); }
+    public static List<Item> getITItems() { return REGISTER.getEntries().stream().map(DeferredHolder::get).collect(Collectors.toList()); }
 
     public static void init(IEventBus event) {
         initItems();
@@ -45,7 +45,7 @@ public class ITItems {
 
     static <T extends Item> ITItems.ItemRegObject<T> register(String name, Supplier<? extends T> make) { return new ITItems.ItemRegObject<>(REGISTER.register(name, make)); }
 
-    public record ItemRegObject<T extends Item>(RegistryObject<T> regObject) implements Supplier<T>, ItemLike {
+    public record ItemRegObject<T extends Item>(DeferredHolder<Item, T> regObject) implements Supplier<T>, ItemLike {
         @Override @Nonnull public T get() { return regObject.get(); }
 
         @Override @Nonnull public Item asItem() { return regObject.get(); }

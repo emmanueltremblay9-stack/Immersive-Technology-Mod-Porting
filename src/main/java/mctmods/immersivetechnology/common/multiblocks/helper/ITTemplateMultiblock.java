@@ -43,7 +43,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
@@ -139,7 +138,7 @@ public abstract class ITTemplateMultiblock extends TemplateMultiblock {
             if (masterHelper != null && dropItems) { dropInventory(masterHelper, inventoryDrops::add); }
 
             var templateData = getTemplate(world);
-            var rawBlocks = templateData.template().palettes.get(0).blocks();
+            var rawBlocks = getTemplateBlocks(templateData.template());
 
             for (StructureBlockInfo info : rawBlocks) {
                 BlockPos actualPos = withSettingsAndOffset(origin, info.pos(), mirror, rot);
@@ -153,7 +152,7 @@ public abstract class ITTemplateMultiblock extends TemplateMultiblock {
             if (breakingPlayer != null) {
                 Vec3 eyePos = breakingPlayer.getEyePosition();
                 Vec3 look = breakingPlayer.getViewVector(1.0F);
-                double reach = breakingPlayer.getAttributeValue(ForgeMod.BLOCK_REACH.get());
+                double reach = breakingPlayer.blockInteractionRange();
                 Vec3 end = eyePos.add(look.scale(reach + 2));
                 ClipContext ctx = new ClipContext(eyePos, end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, breakingPlayer);
                 BlockHitResult hit = serverLevel.clip(ctx);
@@ -342,7 +341,7 @@ public abstract class ITTemplateMultiblock extends TemplateMultiblock {
         StructureTemplate template = getTemplate(world).template();
         StructurePlaceSettings settings = new StructurePlaceSettings().setRotation(rot).setMirror(mirrorForSettings);
         boolean mirrored = mirrorForSettings != Mirror.NONE;
-        for (StructureBlockInfo info : template.palettes.get(0).blocks()) {
+        for (StructureBlockInfo info : getTemplateBlocks(template)) {
             BlockPos actualPos = origin.offset(StructureTemplate.calculateRelativePosition(settings, info.pos()));
             Vec3i offsetFromMaster = info.pos().subtract(masterFromOrigin);
             replaceStructureBlock(info, world, actualPos, mirrored, side, offsetFromMaster);
@@ -351,6 +350,18 @@ public abstract class ITTemplateMultiblock extends TemplateMultiblock {
 
     private <S extends IMultiblockState> void dropInventory(IMultiblockBEHelperMaster<S> helper, Consumer<ItemStack> dropIt) {
         helper.getMultiblock().logic().dropExtraItems(helper.getState(), dropIt);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static List<StructureBlockInfo> getTemplateBlocks(StructureTemplate template) {
+        try {
+            var palettesField = StructureTemplate.class.getDeclaredField("palettes");
+            palettesField.setAccessible(true);
+            List<StructureTemplate.Palette> palettes = (List<StructureTemplate.Palette>) palettesField.get(template);
+            return palettes.isEmpty() ? List.of() : palettes.get(0).blocks();
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("Unable to read structure template palette", e);
+        }
     }
 
     @Override public Component getDisplayName() { return this.logic.block().get().getName(); }

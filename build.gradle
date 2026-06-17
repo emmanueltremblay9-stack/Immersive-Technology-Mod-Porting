@@ -100,7 +100,7 @@ def jsonPatterns = ["**/*.json", "**/*.mcmeta"]
 processResources {
     duplicatesStrategy = DuplicatesStrategy.FAIL
     inputs.properties(version_replaces())
-    filesMatching("META-INF/mods.toml") {
+    filesMatching("META-INF/neoforge.mods.toml") {
         expand version_replaces()
     }
     exclude ".cache"
@@ -178,8 +178,6 @@ repositories {
     maven { name = 'ParchmentMC' ; url = 'https://ldtteam.jfrog.io/artifactory/parchmentmc-public/' }
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-
 configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
@@ -189,8 +187,12 @@ dependencies {
     compileOnly "mezz.jei:jei-${version_minecraft}-neoforge-api:${version_jei}"
     localRuntime "mezz.jei:jei-${version_minecraft}-neoforge:${version_jei}"
 
+    implementation "malte0811:DualCodecs:0.1.2"
+    implementation "malte0811:BlockModelSplitter:2.0.1"
+
     implementation "curse.maven:immersive-engineering-231951:6733669"
 
+    compileOnly "curse.maven:the-one-probe-245211:7292875"
     implementation "curse.maven:jade-324717:7545219"
 }
 
@@ -255,11 +257,6 @@ tasks.register('optimizePng') {
     }
 }
 
-processResources.dependsOn bumpVersion
-jar.dependsOn bumpVersion
-datagenJar.dependsOn bumpVersion
-sourcesJar.dependsOn bumpVersion
-
 tasks.register('genIntellijRunsDummy') {}
 
 jar {
@@ -275,5 +272,3 @@ publishing {
     publications { register('mavenJava', MavenPublication) { from components.java } }
     repositories { maven { url = "file://${project.projectDir}/repo" } }
 }
-
-build.dependsOn bumpVersion

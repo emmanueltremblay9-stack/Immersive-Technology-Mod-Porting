@@ -45,7 +45,7 @@ public abstract class MixerLogicDebounceMixin {
             ItemStack current = state.inventory.getStackInSlot(i);
             ItemStack previous = last.get(i);
 
-            if (!ItemStack.isSameItemSameTags(current, previous)) {
+            if (!ItemStack.isSameItemSameComponents(current, previous)) {
                 playerChange = true;
                 break;
             }

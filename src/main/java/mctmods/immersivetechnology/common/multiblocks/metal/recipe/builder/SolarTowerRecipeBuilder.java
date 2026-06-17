@@ -4,7 +4,7 @@ import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
 import mctmods.immersivetechnology.common.multiblocks.metal.recipe.SolarTowerRecipe;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class SolarTowerRecipeBuilder extends IEFinishedRecipe<SolarTowerRecipeBuilder> {
     private SolarTowerRecipeBuilder() { super(SolarTowerRecipe.SERIALIZER.get()); }

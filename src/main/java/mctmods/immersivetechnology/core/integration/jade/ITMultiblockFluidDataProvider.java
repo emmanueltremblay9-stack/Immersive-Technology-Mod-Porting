@@ -6,10 +6,8 @@ import mctmods.immersivetechnology.common.multiblocks.helper.ITDisplayContext;
 import mctmods.immersivetechnology.core.lib.ITLib;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.IFluidTank;
 import snownee.jade.api.Accessor;
 import snownee.jade.api.view.*;
 import snownee.jade.api.fluid.JadeFluidObject;
@@ -18,11 +16,12 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ITMultiblockFluidDataProvider implements IServerExtensionProvider<Object, CompoundTag>, IClientExtensionProvider<CompoundTag, FluidView> {
+public class ITMultiblockFluidDataProvider implements IServerExtensionProvider<CompoundTag>, IClientExtensionProvider<CompoundTag, FluidView> {
 
     @Override
     @Nullable
-    public List<ViewGroup<CompoundTag>> getGroups(ServerPlayer serverPlayer, ServerLevel serverLevel, Object target, boolean b) {
+    public List<ViewGroup<CompoundTag>> getGroups(Accessor<?> accessor) {
+        Object target = accessor.getTarget();
         if (!(target instanceof IMultiblockBE<?> multiblockBE)) {
             return null;
         }
@@ -33,7 +32,7 @@ public class ITMultiblockFluidDataProvider implements IServerExtensionProvider<O
                 List<CompoundTag> list = new ArrayList<>();
                 for (IFluidTank tank : tanks) {
                     FluidStack fs = tank.getFluid();
-                    JadeFluidObject fluidObject = JadeFluidObject.of(fs.getFluid(), fs.getAmount(), fs.getTag());
+                    JadeFluidObject fluidObject = JadeFluidObject.of(fs.getFluid(), fs.getAmount(), fs.getComponentsPatch());
                     CompoundTag tag = FluidView.writeDefault(fluidObject, tank.getCapacity());
                     list.add(tag);
                 }

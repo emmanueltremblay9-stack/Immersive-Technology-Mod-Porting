@@ -11,8 +11,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.ChunkRenderTypeSet;
-import net.minecraftforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.ChunkRenderTypeSet;
+import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.common.util.TriState;
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -41,7 +42,7 @@ public class ITCompositeBakedModel<T extends BakedModel> implements BakedModel {
 
     @NotNull public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData data, @Nullable RenderType renderType) { return this.base.getQuads(state, side, rand, data, renderType); }
 
-    public boolean useAmbientOcclusion(@NotNull BlockState state) { return this.base.useAmbientOcclusion(state); }
+    public TriState useAmbientOcclusion(@NotNull BlockState state, @NotNull ModelData data, @Nullable RenderType renderType) { return this.base.useAmbientOcclusion(state, data, renderType); }
 
     @NotNull public ModelData getModelData(@NotNull BlockAndTintGetter world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) { return this.base.getModelData(world, pos, state, tileData); }
 

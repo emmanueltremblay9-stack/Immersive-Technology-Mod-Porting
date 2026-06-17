@@ -1,42 +1,35 @@
 modLoader="javafml"
-loaderVersion="[47,)"
-license="LGPL-3.0"
+loaderVersion="[3,)"
+license="${mod_license}"
 
 [[mods]]
 modId = "immersivetechnology"
 version = "${version}"
 displayName = "Immersive Technology"
-description = "An in development version of Immersive Technology for 1.20.1."
+description = "An in development version of Immersive Technology for Minecraft 1.21.1 on NeoForge."
 authors = "tgstyle, MagneticPrism"
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/mct-immersive-technology"
 logoFile = "ITlogo.png"
 credits = "tgstyle (author), Peter (new models), MagneticPrism (started the port), KHAZ (new sounds), and the Immersive Engineering Team (code dependencies)"
 
 [[dependencies.immersivetechnology]]
-modId="forge"
-mandatory=true
-versionRange="[47.1.106,)"
+modId="neoforge"
+type="required"
+versionRange="[${version_neoforge},)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.immersivetechnology]]
 modId="minecraft"
-mandatory=true
+type="required"
 versionRange="[${version_mc}]"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.immersivetechnology]]
 modId="immersiveengineering"
-mandatory=true
+type="required"
 versionRange="[${version_ie},]"
-ordering="NONE"
-side="BOTH"
-
-[[dependencies.immersivetechnology]]
-modId="immersiveconvergence"
-mandatory=true
-versionRange="[${version_ic},]"
 ordering="NONE"
 side="BOTH"
 

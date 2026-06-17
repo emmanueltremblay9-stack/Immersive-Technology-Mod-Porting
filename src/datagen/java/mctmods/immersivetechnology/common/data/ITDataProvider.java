@@ -6,18 +6,18 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraftforge.common.data.BlockTagsProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.common.data.BlockTagsProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = ITLib.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = ITLib.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ITDataProvider {
     public static Logger log = LogManager.getLogger(ITLib.MODID + "/DataGenerator");
 
@@ -39,8 +39,8 @@ public class ITDataProvider {
             generator.addProvider(true, new ITItemModelProvider(generator, helper));
             generator.addProvider(true, new ITItemTags(out, lookup, blockTags.contentsGetter(), helper));
             generator.addProvider(true, new ITParticleProvider(out));
-            generator.addProvider(true, new ITRecipes(out));
-            generator.addProvider(true, new LootTableProvider(out, Collections.emptySet(), List.of(new LootTableProvider.SubProviderEntry(ITBlockLootProvider::new, LootContextParamSets.BLOCK))));
+            generator.addProvider(true, new ITRecipes(out, lookup));
+            generator.addProvider(true, new LootTableProvider(out, Collections.emptySet(), List.of(new LootTableProvider.SubProviderEntry(ITBlockLootProvider::new, LootContextParamSets.BLOCK)), lookup));
         }
     }
 }

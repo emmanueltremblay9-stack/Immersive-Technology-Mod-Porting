@@ -7,7 +7,7 @@ import mctmods.immersivetechnology.core.util.TranslationKey;
 import mctmods.immersivetechnology.core.lib.ITLib;
 import mctmods.immersivetechnology.core.registration.ITMultiblockProvider;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.forge.ForgeTypes;
+import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -17,7 +17,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -40,29 +40,29 @@ public class ITDistillerCategory extends ITRecipeCategory<DistillerRecipe> {
     public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull DistillerRecipe recipe, @NotNull IFocusGroup focuses) {
         int tankCapacity = getTankCapacity(recipe);
 
-        List<FluidStack> inputs = recipe.input.getMatchingFluidStacks().stream()
+        List<FluidStack> inputs = java.util.Arrays.stream(recipe.input.getFluids())
                 .map(fs -> {
                     FluidStack copy = fs.copy();
-                    copy.setAmount(recipe.input.getAmount());
+                    copy.setAmount(recipe.input.amount());
                     return copy;
                 })
                 .toList();
 
         var inputSlot = builder.addSlot(RecipeIngredientRole.INPUT, 58, 21)
-                .addIngredients(ForgeTypes.FLUID_STACK, inputs)
+                .addIngredients(NeoForgeTypes.FLUID_STACK, inputs)
                 .setFluidRenderer(tankCapacity, false, 16, 47);
 
         inputSlot.addRichTooltipCallback((slotView, tooltip) ->
-                slotView.getDisplayedIngredient(ForgeTypes.FLUID_STACK).ifPresent(fs ->
-                        ITFluidInfoArea.fillTooltip(fs, recipe.input.getAmount(), tooltip::add)));
+                slotView.getDisplayedIngredient(NeoForgeTypes.FLUID_STACK).ifPresent(fs ->
+                        ITFluidInfoArea.fillTooltip(fs, recipe.input.amount(), tooltip::add)));
 
         if (recipe.fluidOutput != null) {
             var outputSlot = builder.addSlot(RecipeIngredientRole.OUTPUT, 112, 21)
-                    .addIngredient(ForgeTypes.FLUID_STACK, recipe.fluidOutput)
+                    .addIngredient(NeoForgeTypes.FLUID_STACK, recipe.fluidOutput)
                     .setFluidRenderer(tankCapacity, false, 16, 47);
 
             outputSlot.addRichTooltipCallback((slotView, tooltip) ->
-                    slotView.getDisplayedIngredient(ForgeTypes.FLUID_STACK).ifPresent(fs ->
+                    slotView.getDisplayedIngredient(NeoForgeTypes.FLUID_STACK).ifPresent(fs ->
                             ITFluidInfoArea.fillTooltip(fs, recipe.fluidOutput.getAmount(), tooltip::add)));
         }
 
@@ -78,7 +78,7 @@ public class ITDistillerCategory extends ITRecipeCategory<DistillerRecipe> {
     }
 
     private int getTankCapacity(DistillerRecipe recipe) {
-        int tankCapacity = recipe.input.getAmount();
+        int tankCapacity = recipe.input.amount();
         if (recipe.fluidOutput != null && !recipe.fluidOutput.isEmpty()) tankCapacity = Math.max(tankCapacity, recipe.fluidOutput.getAmount());
         return tankCapacity;
     }

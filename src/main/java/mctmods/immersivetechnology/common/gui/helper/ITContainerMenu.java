@@ -20,11 +20,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.event.entity.player.PlayerContainerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-@EventBusSubscriber(modid = ITLib.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = ITLib.MODID, bus = EventBusSubscriber.Bus.GAME)
 public abstract class ITContainerMenu extends AbstractContainerMenu {
     protected final List<ITGenericContainerData<?>> genericData = new ArrayList<>();
     protected final List<ServerPlayer> usingPlayers = new ArrayList<>();
@@ -77,20 +77,20 @@ public abstract class ITContainerMenu extends AbstractContainerMenu {
             if (dragType == 1) amount = 1;
             if (stackSlot.isEmpty()) {
                 if (!stackHeld.isEmpty() && slot.mayPlace(stackHeld)) {
-                    slot.set(ItemHandlerHelper.copyStackWithSize(stackHeld, amount));
+                    slot.set(stackHeld.copyWithCount(amount));
                 }
             } else if (stackHeld.isEmpty()) { slot.set(ItemStack.EMPTY); }
             else if (slot.mayPlace(stackHeld)) {
                 if (ItemStack.isSameItem(stackSlot, stackHeld)) {
                     stackSlot.grow(amount);
                     slot.set(stackSlot);
-                } else slot.set(ItemHandlerHelper.copyStackWithSize(stackHeld, amount));
+                } else slot.set(stackHeld.copyWithCount(amount));
             }
             if (stackSlot.getCount() > slot.getMaxStackSize()) stackSlot.setCount(slot.getMaxStackSize());
         } else if (dragType == 5) {
             ItemStack stackHeld = getCarried();
             int amount = Math.min(slot.getMaxStackSize(), stackHeld.getCount());
-            if (!slot.hasItem()) slot.set(ItemHandlerHelper.copyStackWithSize(stackHeld, amount));
+            if (!slot.hasItem()) slot.set(stackHeld.copyWithCount(amount));
         }
     }
 

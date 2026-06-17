@@ -1,26 +1,27 @@
 package mctmods.immersivetechnology.common.multiblocks.metal.recipe;
 
-import blusunrize.immersiveengineering.api.crafting.FluidTagInput;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import blusunrize.immersiveengineering.api.crafting.IERecipeSerializer;
 import blusunrize.immersiveengineering.api.crafting.IESerializableRecipe;
+import blusunrize.immersiveengineering.api.crafting.TagOutput;
 import blusunrize.immersiveengineering.api.crafting.cache.CachedRecipeList;
 import mctmods.immersivetechnology.core.registration.ITRecipeTypes;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.Lazy;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.common.util.Lazy;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
 public class SteamTurbineRecipe extends IESerializableRecipe {
-    public static RegistryObject<IERecipeSerializer<SteamTurbineRecipe>> SERIALIZER;
+    public static DeferredHolder<net.minecraft.world.item.crafting.RecipeSerializer<?>, IERecipeSerializer<SteamTurbineRecipe>> SERIALIZER;
     public static final CachedRecipeList<SteamTurbineRecipe> RECIPES = new CachedRecipeList<>(ITRecipeTypes.STEAM_TURBINE);
 
-    public final FluidTagInput input;
+    public final SizedFluidIngredient input;
     @Nullable public final FluidStack fluidOutput;
     /**
      * Dimensionless torque multiplier applied to mechanical output while this recipe is used.
@@ -31,8 +32,8 @@ public class SteamTurbineRecipe extends IESerializableRecipe {
     private final int time;
     Lazy<Integer> totalProcessTime;
 
-    public SteamTurbineRecipe(ResourceLocation id, FluidTagInput input, @Nullable FluidStack fluidOutput, int time, float torque) {
-        super(LAZY_EMPTY, ITRecipeTypes.STEAM_TURBINE, id);
+    public SteamTurbineRecipe(SizedFluidIngredient input, @Nullable FluidStack fluidOutput, int time, float torque) {
+        super(TagOutput.EMPTY, ITRecipeTypes.STEAM_TURBINE);
         this.input = input;
         this.fluidOutput = fluidOutput;
         this.time = time;
@@ -43,13 +44,13 @@ public class SteamTurbineRecipe extends IESerializableRecipe {
     @Override
     protected IERecipeSerializer<?> getIESerializer() { return SERIALIZER.get(); }
 
-    @Override @NotNull public ItemStack getResultItem(@NotNull RegistryAccess registryAccess) { return ItemStack.EMPTY; }
+    @Override @NotNull public ItemStack getResultItem(@NotNull HolderLookup.Provider provider) { return ItemStack.EMPTY; }
 
     public boolean matches(FluidStack fluid) { return input.test(fluid); }
 
     public static SteamTurbineRecipe findRecipe(Level level, FluidStack fluid, @Nullable SteamTurbineRecipe hint) {
         if (hint != null && hint.matches(fluid)) return hint;
-        for (SteamTurbineRecipe recipe : RECIPES.getRecipes(level)) { if (recipe.matches(fluid)) return recipe; }
+        for (var holder : RECIPES.getRecipes(level)) { SteamTurbineRecipe recipe = holder.value(); if (recipe.matches(fluid)) return recipe; }
         return null;
     }
 

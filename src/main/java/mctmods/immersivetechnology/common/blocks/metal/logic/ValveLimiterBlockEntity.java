@@ -15,13 +15,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 import static mctmods.immersivetechnology.common.blocks.metal.ValveLimiterBlock.OPEN;
@@ -86,30 +83,17 @@ public class ValveLimiterBlockEntity extends ValveCommonBlockEntity implements I
         updateRedstoneState();
     }
 
-    private LazyOptional<IItemHandler> myCapability = null;
+    private final IItemHandler outputHandler = new OutputItemHandler(this);
 
-    private LazyOptional<IItemHandler> dummyCapability = null;
-
-    @Override public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction facing) {
-        if (facing == null) return super.getCapability(capability, null);
+    public IItemHandler getItemHandler(Direction facing) {
+        if (facing == null) return null;
         BlockState state = getBlockState();
         Direction blockFacing = state.getValue(ITProperties.FACING_ALL);
-        if (capability == ForgeCapabilities.ITEM_HANDLER && facing.getAxis() == blockFacing.getAxis()) {
-            if (facing == blockFacing) {
-                if (myCapability == null || !myCapability.isPresent()) myCapability = LazyOptional.of(() -> this);
-                return myCapability.cast();
-            } else if (facing == blockFacing.getOpposite()) {
-                if (dummyCapability == null || !dummyCapability.isPresent()) dummyCapability = LazyOptional.of(() -> new OutputItemHandler(this));
-                return dummyCapability.cast();
-            }
+        if (facing.getAxis() == blockFacing.getAxis()) {
+            if (facing == blockFacing) return this;
+            if (facing == blockFacing.getOpposite()) return outputHandler;
         }
-        return super.getCapability(capability, facing);
-    }
-
-    @Override public void invalidateCaps() {
-        super.invalidateCaps();
-        if (myCapability != null) { myCapability.invalidate(); myCapability = null; }
-        if (dummyCapability != null) { dummyCapability.invalidate(); dummyCapability = null; }
+        return null;
     }
 
     @Override public void setFacing(@NotNull Direction facing) {
@@ -180,12 +164,7 @@ public class ValveLimiterBlockEntity extends ValveCommonBlockEntity implements I
         BlockState state = getBlockState();
         Direction blockFacing = state.getValue(ITProperties.FACING_ALL);
         BlockPos dstPos = worldPosition.relative(blockFacing.getOpposite());
-        BlockEntity dst = level.getBlockEntity(dstPos);
-        if (dst != null) {
-            LazyOptional<IItemHandler> cap = dst.getCapability(ForgeCapabilities.ITEM_HANDLER, blockFacing);
-            return cap.resolve().orElse(null);
-        }
-        return null;
+        return level.getCapability(Capabilities.ItemHandler.BLOCK, dstPos, blockFacing);
     }
 
     public IItemHandler getSource() {
@@ -193,12 +172,7 @@ public class ValveLimiterBlockEntity extends ValveCommonBlockEntity implements I
         BlockState state = getBlockState();
         Direction blockFacing = state.getValue(ITProperties.FACING_ALL);
         BlockPos srcPos = worldPosition.relative(blockFacing);
-        BlockEntity src = level.getBlockEntity(srcPos);
-        if (src != null) {
-            LazyOptional<IItemHandler> cap = src.getCapability(ForgeCapabilities.ITEM_HANDLER, blockFacing.getOpposite());
-            return cap.resolve().orElse(null);
-        }
-        return null;
+        return level.getCapability(Capabilities.ItemHandler.BLOCK, srcPos, blockFacing.getOpposite());
     }
 
     @Override

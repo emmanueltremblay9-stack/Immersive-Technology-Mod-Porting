@@ -3,10 +3,10 @@ package mctmods.immersivetechnology.common.multiblocks.metal.recipe.builder;
 import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
 import com.google.gson.JsonObject;
 import mctmods.immersivetechnology.common.multiblocks.metal.recipe.SteamTurbineRecipe;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.Objects;
 
@@ -27,7 +27,7 @@ public class SteamTurbineRecipeBuilder extends IEFinishedRecipe<SteamTurbineReci
     public SteamTurbineRecipeBuilder addOutput(FluidStack fluidStack) {
         return this.addWriter((jsonObject) -> {
             JsonObject obj = new JsonObject();
-            obj.addProperty("fluid", Objects.requireNonNull(ForgeRegistries.FLUIDS.getKey(fluidStack.getFluid())).toString());
+            obj.addProperty("fluid", Objects.requireNonNull(BuiltInRegistries.FLUID.getKey(fluidStack.getFluid())).toString());
             obj.addProperty("amount", fluidStack.getAmount());
             jsonObject.add("output", obj);
         });

@@ -18,17 +18,26 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraftforge.registries.DeferredRegister;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredRegister;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableObject;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ITMultiblockBuilder<S extends IMultiblockState> extends MultiblockRegistrationBuilder<S, ITMultiblockBuilder<S>> {
+    private static final List<Consumer<IEventBus>> DEFERRED_EVENT_HANDLERS = new ArrayList<>();
     private Supplier<MultiblockRegistration<S>> regSupplier = () -> { throw new IllegalStateException("Accessed multiblock registration too early"); };
 
     public ITMultiblockBuilder(IMultiblockLogic<S> logic, String name) { super(logic, ITLib.rl(name)); }
+
+    public static void registerDeferredEventHandlers(IEventBus modBus) {
+        DEFERRED_EVENT_HANDLERS.forEach(handler -> handler.accept(modBus));
+    }
 
     public ITMultiblockBuilder<S> gui(ITMenuTypes.MultiblockContainer<S, ?> menu) { return component(new ITMultiblockGui<>(menu)); }
 
@@ -78,5 +87,5 @@ public class ITMultiblockBuilder<S extends IMultiblockState> extends MultiblockR
 
     @Override protected ITMultiblockBuilder<S> self() { return this; }
 
-    @Override public MultiblockRegistration<S> build() { MultiblockRegistration<S> reg = super.build(); regSupplier = () -> reg; return reg; }
+    public MultiblockRegistration<S> build() { MultiblockRegistration<S> reg = super.build(DEFERRED_EVENT_HANDLERS::add); regSupplier = () -> reg; return reg; }
 }

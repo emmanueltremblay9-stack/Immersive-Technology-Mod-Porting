@@ -8,8 +8,8 @@ import mctmods.immersivetechnology.core.registration.ITTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -25,7 +25,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiFunction;
@@ -67,10 +66,9 @@ public class ValveFluidBlock extends ITEntityBlock<ValveFluidBlockEntity> {
         if (be instanceof ValveCommonBlockEntity valve) { valve.updateRedstoneState(); }
     }
 
-    @Override @NotNull public InteractionResult use(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
-        ItemStack heldItem = player.getItemInHand(hand);
-        if (heldItem.is(ITTags.formationTools)) return super.use(state, level, pos, player, hand, hit);
-        if (level.isClientSide) return InteractionResult.SUCCESS;
+    @Override @NotNull public ItemInteractionResult useItemOn(@NotNull ItemStack heldItem, @NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+        if (heldItem.is(ITTags.formationTools)) return super.useItemOn(heldItem, state, level, pos, player, hand, hit);
+        if (level.isClientSide) return ItemInteractionResult.SUCCESS;
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof ValveCommonBlockEntity valve) {
             if (player.isCrouching()) {
@@ -78,11 +76,11 @@ public class ValveFluidBlock extends ITEntityBlock<ValveFluidBlockEntity> {
                 valve.updateRedstoneState();
                 valve.efficientSetChanged();
             } else {
-                NetworkHooks.openScreen((ServerPlayer) player, valve, buf -> buf.writeBlockPos(pos));
+                ((ServerPlayer) player).openMenu(valve, buf -> buf.writeBlockPos(pos));
             }
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override public BlockState getStateForPlacement(BlockPlaceContext context) {

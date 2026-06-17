@@ -11,7 +11,7 @@ import mctmods.immersivetechnology.client.renderer.helper.ITRenderTypes;
 import mctmods.immersivetechnology.common.multiblocks.metal.logic.SteelSheetmetalTankLogic.State;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
@@ -38,10 +38,10 @@ public class SteelSheetmetalTankRenderer extends ITBaseBlockEntityRenderer<Multi
             matrixStack.translate(xx, 0, zz);
             Matrix4f mat = matrixStack.last().pose();
             final VertexConsumer builder = bufferIn.getBuffer(ITRenderTypes.TRANSLUCENT_POSITION_COLOR);
-            builder.vertex(mat, 6, 0, 0).color(0x22, 0x22, 0x22, 0xff).endVertex();
-            builder.vertex(mat, 6, 16, 0).color(0x22, 0x22, 0x22, 0xff).endVertex();
-            builder.vertex(mat, 10, 16, 0).color(0x22, 0x22, 0x22, 0xff).endVertex();
-            builder.vertex(mat, 10, 0, 0).color(0x22, 0x22, 0x22, 0xff).endVertex();
+            builder.addVertex(mat, 6, 0, 0).setColor(0x22, 0x22, 0x22, 0xff);
+            builder.addVertex(mat, 6, 16, 0).setColor(0x22, 0x22, 0x22, 0xff);
+            builder.addVertex(mat, 10, 16, 0).setColor(0x22, 0x22, 0x22, 0xff);
+            builder.addVertex(mat, 10, 0, 0).setColor(0x22, 0x22, 0x22, 0xff);
             if (!fs.isEmpty()) {
                 float h = fs.getAmount() / (float) state.tank.getCapacity();
                 matrixStack.translate(0, 0, .0001f);

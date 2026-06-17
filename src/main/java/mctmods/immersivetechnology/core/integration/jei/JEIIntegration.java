@@ -13,7 +13,7 @@ import mctmods.immersivetechnology.core.registration.ITMultiblockProvider;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.forge.ForgeTypes;
+import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.handlers.IGuiClickableArea;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
@@ -32,8 +32,8 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.IFluidTank;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -104,7 +104,7 @@ import static mctmods.immersivetechnology.client.gui.helper.ITFluidInfoArea.fill
                 }
                 if (fs != null && fs.getAmount() > 0) {
                     Rect2i finalArea = area;
-                    return ingredientManager.createTypedIngredient(ForgeTypes.FLUID_STACK, fs).map(typed -> new IClickableIngredient<FluidStack>() {
+                    return ingredientManager.createTypedIngredient(NeoForgeTypes.FLUID_STACK, fs).map(typed -> new IClickableIngredient<FluidStack>() {
                         @SuppressWarnings("removal")
                         @Override @NotNull public ITypedIngredient<FluidStack> getTypedIngredient() {return typed;}
 
@@ -168,7 +168,7 @@ import static mctmods.immersivetechnology.client.gui.helper.ITFluidInfoArea.fill
                 }
                 if (fs != null && fs.getAmount() > 0) {
                     Rect2i finalArea = area;
-                    return ingredientManager.createTypedIngredient(ForgeTypes.FLUID_STACK, fs).map(typed -> new IClickableIngredient<FluidStack>() {
+                    return ingredientManager.createTypedIngredient(NeoForgeTypes.FLUID_STACK, fs).map(typed -> new IClickableIngredient<FluidStack>() {
                         @SuppressWarnings("removal")
                         @Override @NotNull public ITypedIngredient<FluidStack> getTypedIngredient() {return typed;}
 
@@ -201,7 +201,7 @@ import static mctmods.immersivetechnology.client.gui.helper.ITFluidInfoArea.fill
                 }
                 if (fs != null && fs.getAmount() > 0) {
                     Rect2i finalArea = area;
-                    return ingredientManager.createTypedIngredient(ForgeTypes.FLUID_STACK, fs).map(typed -> new IClickableIngredient<FluidStack>() {
+                    return ingredientManager.createTypedIngredient(NeoForgeTypes.FLUID_STACK, fs).map(typed -> new IClickableIngredient<FluidStack>() {
                         @SuppressWarnings("removal")
                         @Override @NotNull public ITypedIngredient<FluidStack> getTypedIngredient() {return typed;}
 
@@ -234,7 +234,7 @@ import static mctmods.immersivetechnology.client.gui.helper.ITFluidInfoArea.fill
                 }
                 if (fs != null && fs.getAmount() > 0) {
                     Rect2i finalArea = area;
-                    return ingredientManager.createTypedIngredient(ForgeTypes.FLUID_STACK, fs).map(typed -> new IClickableIngredient<FluidStack>() {
+                    return ingredientManager.createTypedIngredient(NeoForgeTypes.FLUID_STACK, fs).map(typed -> new IClickableIngredient<FluidStack>() {
                         @SuppressWarnings("removal")
                         @Override @NotNull public ITypedIngredient<FluidStack> getTypedIngredient() {return typed;}
 
@@ -314,14 +314,14 @@ import static mctmods.immersivetechnology.client.gui.helper.ITFluidInfoArea.fill
 
     @Override public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) { ingredientManager = jeiRuntime.getIngredientManager(); }
 
-    private List<BoilerLiquidRecipe> getBoilerLiquidRecipes() { assert Minecraft.getInstance().level != null; return new ArrayList<>(BoilerLiquidRecipe.RECIPES.getRecipes(Minecraft.getInstance().level)); }
-    private List<BoilerSolidRecipe> getBoilerSolidRecipes() { assert Minecraft.getInstance().level != null; return new ArrayList<>(BoilerSolidRecipe.RECIPES.getRecipes(Minecraft.getInstance().level)); }
-    private List<BoilerTankRecipe> getBoilerRecipes() { assert Minecraft.getInstance().level != null; return new ArrayList<>(BoilerTankRecipe.RECIPES.getRecipes(Minecraft.getInstance().level)); }
-    private List<CoolingTowerRecipe> getCoolingTowerRecipes() { assert Minecraft.getInstance().level != null; return new ArrayList<>(CoolingTowerRecipe.RECIPES.getRecipes(Minecraft.getInstance().level)); }
-    private List<DistillerRecipe> getDistillerRecipes() { assert Minecraft.getInstance().level != null; return new ArrayList<>(DistillerRecipe.RECIPES.getRecipes(Minecraft.getInstance().level)); }
-    private List<GasTurbineRecipe> getGasTurbineRecipes() { assert Minecraft.getInstance().level != null; return new ArrayList<>(GasTurbineRecipe.RECIPES.getRecipes(Minecraft.getInstance().level)); }
-    private List<HeatExchangerRecipe> getHeatExchangerRecipes() { assert Minecraft.getInstance().level != null; return new ArrayList<>(HeatExchangerRecipe.RECIPES.getRecipes(Minecraft.getInstance().level)); }
-    private List<SolarMelterRecipe> getSolarMelterRecipes() { assert Minecraft.getInstance().level != null; return new ArrayList<>(SolarMelterRecipe.RECIPES.getRecipes(Minecraft.getInstance().level)); }
-    private List<SolarTowerRecipe> getSolarTowerRecipes() { assert Minecraft.getInstance().level != null; return new ArrayList<>(SolarTowerRecipe.RECIPES.getRecipes(Minecraft.getInstance().level)); }
-    private List<SteamTurbineRecipe> getSteamTurbineRecipes() { assert Minecraft.getInstance().level != null; return new ArrayList<>(SteamTurbineRecipe.RECIPES.getRecipes(Minecraft.getInstance().level)); }
+    private List<BoilerLiquidRecipe> getBoilerLiquidRecipes() { assert Minecraft.getInstance().level != null; return BoilerLiquidRecipe.RECIPES.getRecipes(Minecraft.getInstance().level).stream().map(holder -> holder.value()).toList(); }
+    private List<BoilerSolidRecipe> getBoilerSolidRecipes() { assert Minecraft.getInstance().level != null; return BoilerSolidRecipe.RECIPES.getRecipes(Minecraft.getInstance().level).stream().map(holder -> holder.value()).toList(); }
+    private List<BoilerTankRecipe> getBoilerRecipes() { assert Minecraft.getInstance().level != null; return BoilerTankRecipe.RECIPES.getRecipes(Minecraft.getInstance().level).stream().map(holder -> holder.value()).toList(); }
+    private List<CoolingTowerRecipe> getCoolingTowerRecipes() { assert Minecraft.getInstance().level != null; return CoolingTowerRecipe.RECIPES.getRecipes(Minecraft.getInstance().level).stream().map(holder -> holder.value()).toList(); }
+    private List<DistillerRecipe> getDistillerRecipes() { assert Minecraft.getInstance().level != null; return DistillerRecipe.RECIPES.getRecipes(Minecraft.getInstance().level).stream().map(holder -> holder.value()).toList(); }
+    private List<GasTurbineRecipe> getGasTurbineRecipes() { assert Minecraft.getInstance().level != null; return GasTurbineRecipe.RECIPES.getRecipes(Minecraft.getInstance().level).stream().map(holder -> holder.value()).toList(); }
+    private List<HeatExchangerRecipe> getHeatExchangerRecipes() { assert Minecraft.getInstance().level != null; return HeatExchangerRecipe.RECIPES.getRecipes(Minecraft.getInstance().level).stream().map(holder -> holder.value()).toList(); }
+    private List<SolarMelterRecipe> getSolarMelterRecipes() { assert Minecraft.getInstance().level != null; return SolarMelterRecipe.RECIPES.getRecipes(Minecraft.getInstance().level).stream().map(holder -> holder.value()).toList(); }
+    private List<SolarTowerRecipe> getSolarTowerRecipes() { assert Minecraft.getInstance().level != null; return SolarTowerRecipe.RECIPES.getRecipes(Minecraft.getInstance().level).stream().map(holder -> holder.value()).toList(); }
+    private List<SteamTurbineRecipe> getSteamTurbineRecipes() { assert Minecraft.getInstance().level != null; return SteamTurbineRecipe.RECIPES.getRecipes(Minecraft.getInstance().level).stream().map(holder -> holder.value()).toList(); }
 }

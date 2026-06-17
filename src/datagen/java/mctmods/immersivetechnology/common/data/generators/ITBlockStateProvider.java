@@ -28,12 +28,14 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -45,10 +47,9 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import net.minecraftforge.client.model.generators.*;
-import net.minecraftforge.client.model.generators.VariantBlockStateBuilder.PartialBlockstate;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.client.model.generators.*;
+import net.neoforged.neoforge.client.model.generators.VariantBlockStateBuilder.PartialBlockstate;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -129,7 +130,7 @@ public class ITBlockStateProvider extends BlockStateProvider {
         private String mtlOverride;
         private final Map<String, Boolean> visibility = new HashMap<>();
 
-        public ITObjModelBuilder(T parent, ExistingFileHelper existingFileHelper) { super(ITLib.rl("obj"), parent, existingFileHelper); }
+        public ITObjModelBuilder(T parent, ExistingFileHelper existingFileHelper) { super(ITLib.rl("obj"), parent, existingFileHelper, false); }
 
         public ITObjModelBuilder<T> modelLocation(ResourceLocation modelLocation) { this.modelLocation = modelLocation; return this; }
 
@@ -198,7 +199,7 @@ public class ITBlockStateProvider extends BlockStateProvider {
 
     private CompletableFuture<?> saveBlockState(Block owner, JsonObject stateJson, CachedOutput cache) {
         return CompletableFuture.runAsync(() -> {
-            ResourceLocation blockName = Preconditions.checkNotNull(ForgeRegistries.BLOCKS.getKey(owner));
+            ResourceLocation blockName = Preconditions.checkNotNull(BuiltInRegistries.BLOCK.getKey(owner));
             ResourceLocation outputLocation = extendWithFolder(blockName);
             Path path = packOutput.getOutputFolder().resolve("assets/" + outputLocation.getNamespace() + "/" + outputLocation.getPath() + ".json");
             try {
@@ -480,7 +481,7 @@ public class ITBlockStateProvider extends BlockStateProvider {
         try {
             final Resource resource = existingFileHelper.getResource(shortLoc, PackType.SERVER_DATA, "", prefix);
             try (final InputStream input = resource.open()) {
-                final CompoundTag nbt = NbtIo.readCompressed(input);
+                final CompoundTag nbt = NbtIo.readCompressed(input, NbtAccounter.unlimitedHeap());
                 final StructureTemplate template = new StructureTemplate();
                 template.load(VanillaRegistries.createLookup().lookupOrThrow(Registries.BLOCK), nbt);
                 ITTemplateMultiblock.SYNCED_CLIENT_TEMPLATES.put(name, template);

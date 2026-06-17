@@ -10,6 +10,7 @@ import mctmods.immersivetechnology.core.network.ITOSDRequestMessage;
 import mctmods.immersivetechnology.core.util.TranslationKey;
 import mctmods.immersivetechnology.core.ITClientConfig;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -32,9 +33,13 @@ public abstract class OSDCommonBlockEntity extends ITBaseBlockEntity implements 
         if (descPacket) { lastAcceptedAmount = nbt.getLong("lastAcceptedAmount"); }
     }
 
+    @Override public void readCustomNBT(CompoundTag nbt, boolean descPacket, HolderLookup.Provider provider) { readCustomNBT(nbt, descPacket); }
+
     @Override public void writeCustomNBT(CompoundTag nbt, boolean descPacket) {
         if (descPacket) { nbt.putLong("lastAcceptedAmount", lastAcceptedAmount); }
     }
+
+    @Override public void writeCustomNBT(CompoundTag nbt, boolean descPacket, HolderLookup.Provider provider) { writeCustomNBT(nbt, descPacket); }
 
     @Override public void tickServer() {
         if (++secondCounter < 20) { return; }

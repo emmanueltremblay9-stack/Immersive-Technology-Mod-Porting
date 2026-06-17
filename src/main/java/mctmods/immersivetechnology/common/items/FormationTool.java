@@ -44,7 +44,7 @@ public class FormationTool extends Item {
 
     @Override @NotNull public Component getName(@NotNull ItemStack pStack) { return Component.translatable(this.getDescriptionId(pStack)); }
 
-    @Override public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    @Override public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         addInfo(tooltip, Lib.DESC_INFO + "multiblocksAllowed", stack, "multiblockPermission");
         addInfo(tooltip, Lib.DESC_INFO + "multiblockForbidden", stack, "multiblockInterdiction");
     }
@@ -52,7 +52,7 @@ public class FormationTool extends Item {
     private void addInfo(List<Component> list, String titleKey, ItemStack stack, String nbtKey) {
         if (!ItemNBTHelper.hasKey(stack, nbtKey, Tag.TAG_LIST)) { return; }
         MutableComponent title = Component.translatable(titleKey);
-        ListTag tagList = stack.getOrCreateTag().getList(nbtKey, Tag.TAG_STRING);
+        ListTag tagList = ItemNBTHelper.getTag(stack).getList(nbtKey, Tag.TAG_STRING);
         if (!Screen.hasShiftDown()) { list.add(title.append(" ").append(Component.translatable(Lib.DESC_INFO + "holdShift"))); }
         else {
             list.add(title);
@@ -73,12 +73,12 @@ public class FormationTool extends Item {
         List<ResourceLocation> permittedMultiblocks = null;
         List<ResourceLocation> interdictedMultiblocks = null;
         if (ItemNBTHelper.hasKey(stack, "multiblockPermission")) {
-            ListTag list = stack.getOrCreateTag().getList("multiblockPermission", Tag.TAG_STRING);
+            ListTag list = ItemNBTHelper.getTag(stack).getList("multiblockPermission", Tag.TAG_STRING);
             permittedMultiblocks = parseMultiblockNames(list, player, "permission");
             if (permittedMultiblocks == null) { return InteractionResult.FAIL; }
         }
         if (ItemNBTHelper.hasKey(stack, "multiblockInterdiction")) {
-            ListTag list = stack.getOrCreateTag().getList("multiblockInterdiction", Tag.TAG_STRING);
+            ListTag list = ItemNBTHelper.getTag(stack).getList("multiblockInterdiction", Tag.TAG_STRING);
             interdictedMultiblocks = parseMultiblockNames(list, player, "interdiction");
             if (interdictedMultiblocks == null) { return InteractionResult.FAIL; }
         }
@@ -146,8 +146,13 @@ public class FormationTool extends Item {
 
     @Override @NotNull public ItemStack getCraftingRemainingItem(@NotNull ItemStack stack) {
         ItemStack container = stack.copy();
-        if (container.hurt(1, ApiUtils.RANDOM_SOURCE, null)) { return ItemStack.EMPTY; }
+        if (container.isDamageableItem()) {
+            int nextDamage = container.getDamageValue() + 1;
+            if (nextDamage >= container.getMaxDamage()) { return ItemStack.EMPTY; }
+            container.setDamageValue(nextDamage);
+        }
         else { return container; }
+        return container;
     }
 
     @Override public boolean isEnchantable(@NotNull ItemStack stack) { return false; }
@@ -156,5 +161,5 @@ public class FormationTool extends Item {
 
     @Override public boolean isBookEnchantable(ItemStack stack, ItemStack book) { return false; }
 
-    @Override public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) { return false; }
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) { return false; }
 }

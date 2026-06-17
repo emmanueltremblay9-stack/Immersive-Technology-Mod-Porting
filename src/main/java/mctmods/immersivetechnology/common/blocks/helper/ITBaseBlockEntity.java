@@ -3,6 +3,7 @@ package mctmods.immersivetechnology.common.blocks.helper;
 import com.google.common.base.Preconditions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -14,7 +15,7 @@ import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -29,38 +30,42 @@ public abstract class ITBaseBlockEntity extends BlockEntity implements ITBlockIn
 
     public ITBaseBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) { super(type, pos, state); }
 
-    @Override public void load(@NotNull CompoundTag nbtIn) {
-        super.load(nbtIn);
-        readCustomNBT(nbtIn, false);
+    @Override protected void loadAdditional(@NotNull CompoundTag nbtIn, HolderLookup.Provider provider) {
+        super.loadAdditional(nbtIn, provider);
+        readCustomNBT(nbtIn, false, provider);
     }
 
     public abstract void readCustomNBT(CompoundTag nbt, boolean descPacket);
 
-    @Override protected void saveAdditional(@NotNull CompoundTag nbt) {
-        super.saveAdditional(nbt);
-        writeCustomNBT(nbt, false);
+    public void readCustomNBT(CompoundTag nbt, boolean descPacket, HolderLookup.Provider provider) { readCustomNBT(nbt, descPacket); }
+
+    @Override protected void saveAdditional(@NotNull CompoundTag nbt, HolderLookup.Provider provider) {
+        super.saveAdditional(nbt, provider);
+        writeCustomNBT(nbt, false, provider);
     }
 
     public abstract void writeCustomNBT(CompoundTag nbt, boolean descPacket);
 
+    public void writeCustomNBT(CompoundTag nbt, boolean descPacket, HolderLookup.Provider provider) { writeCustomNBT(nbt, descPacket); }
+
     @Override public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this, be -> {
+        return ClientboundBlockEntityDataPacket.create(this, (be, provider) -> {
             CompoundTag nbtTagCompound = new CompoundTag();
-            writeCustomNBT(nbtTagCompound, true);
+            writeCustomNBT(nbtTagCompound, true, provider);
             return nbtTagCompound;
         });
     }
 
-    @Override public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+    @Override public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider provider) {
         CompoundTag nonNullTag = pkt.getTag() != null ? pkt.getTag() : new CompoundTag();
-        readCustomNBT(nonNullTag, true);
+        readCustomNBT(nonNullTag, true, provider);
     }
 
-    @Override public void handleUpdateTag(CompoundTag tag) { readCustomNBT(tag, true); }
+    @Override public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider provider) { readCustomNBT(tag, true, provider); }
 
-    @Override @NotNull public CompoundTag getUpdateTag() {
-        CompoundTag nbt = super.getUpdateTag();
-        writeCustomNBT(nbt, true);
+    @Override @NotNull public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+        CompoundTag nbt = super.getUpdateTag(provider);
+        writeCustomNBT(nbt, true, provider);
         return nbt;
     }
 
@@ -93,8 +98,6 @@ public abstract class ITBaseBlockEntity extends BlockEntity implements ITBlockIn
         if (!isUnloaded) { setRemovedIE(); }
         super.setRemoved();
     }
-
-    @Override public void invalidateCaps() { super.invalidateCaps(); }
 
     private boolean isUnloaded = false;
 

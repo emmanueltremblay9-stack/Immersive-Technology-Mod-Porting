@@ -29,7 +29,6 @@ import mctmods.immersivetechnology.core.registration.ITMenuTypes;
 import mctmods.immersivetechnology.core.registration.ITMultiblockProvider;
 import mctmods.immersivetechnology.core.registration.ITParticles;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -42,20 +41,36 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.function.Supplier;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ITLib.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.CLIENT, modid = ITLib.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ClientProxy extends CommonProxy {
+
+    @SubscribeEvent public static void registerMenuScreens(RegisterMenuScreensEvent event) {
+        event.register(ITMenuTypes.BOILER_LIQUID_MENU.getType(), BoilerLiquidScreen::new);
+        event.register(ITMenuTypes.BOILER_SOLID_MENU.getType(), BoilerSolidScreen::new);
+        event.register(ITMenuTypes.BOILER_TANK_MENU.getType(), BoilerTankScreen::new);
+        event.register(ITMenuTypes.CRATE_CREATIVE.getType(), CrateCreativeScreen::new);
+        event.register(ITMenuTypes.DISTILLER_MENU.getType(), DistillerScreen::new);
+        event.register(ITMenuTypes.TRASH_ITEM.getType(), TrashItemScreen::new);
+        event.register(ITMenuTypes.SOLAR_MELTER_MENU.getType(), SolarScreen::new);
+        event.register(ITMenuTypes.SOLAR_TOWER_MENU.getType(), SolarScreen::new);
+        event.register(ITMenuTypes.ROTOR_CREATIVE.getType(), (RotorCreativeMenu menu, Inventory inv, Component title) -> new RotorCreativeScreen(menu, inv));
+        event.register(ITMenuTypes.VALVE_FLUID.getType(), (ValveFluidMenu menu, Inventory inv, Component title) -> new ValveFluidScreen(menu, inv));
+        event.register(ITMenuTypes.VALVE_LIMITER.getType(), (ValveLimiterMenu menu, Inventory inv, Component title) -> new ValveLimiterScreen(menu, inv));
+        event.register(ITMenuTypes.VALVE_LOAD.getType(), (ValveLoadMenu menu, Inventory inv, Component title) -> new ValveLoadScreen(menu, inv));
+    }
 
     @SubscribeEvent public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
@@ -63,21 +78,6 @@ public class ClientProxy extends CommonProxy {
                 ItemBlockRenderTypes.setRenderLayer(entry.getStill(), RenderType.translucent());
                 ItemBlockRenderTypes.setRenderLayer(entry.getFlowing(), RenderType.translucent());
             }
-
-            MenuScreens.register(ITMenuTypes.BOILER_LIQUID_MENU.getType(), BoilerLiquidScreen::new);
-            MenuScreens.register(ITMenuTypes.BOILER_SOLID_MENU.getType(), BoilerSolidScreen::new);
-            MenuScreens.register(ITMenuTypes.BOILER_TANK_MENU.getType(), BoilerTankScreen::new);
-            MenuScreens.register(ITMenuTypes.CRATE_CREATIVE.getType(), CrateCreativeScreen::new);
-            MenuScreens.register(ITMenuTypes.DISTILLER_MENU.getType(), DistillerScreen::new);
-            MenuScreens.register(ITMenuTypes.TRASH_ITEM.getType(), TrashItemScreen::new);
-            MenuScreens.register(ITMenuTypes.SOLAR_MELTER_MENU.getType(), SolarScreen::new);
-            MenuScreens.register(ITMenuTypes.SOLAR_TOWER_MENU.getType(), SolarScreen::new);
-
-            MenuScreens.register(ITMenuTypes.ROTOR_CREATIVE.getType(), (RotorCreativeMenu menu, Inventory inv, Component title) -> new RotorCreativeScreen(menu, inv));
-
-            MenuScreens.register(ITMenuTypes.VALVE_FLUID.getType(), (ValveFluidMenu menu, Inventory inv, Component title) -> new ValveFluidScreen(menu, inv));
-            MenuScreens.register(ITMenuTypes.VALVE_LIMITER.getType(), (ValveLimiterMenu menu, Inventory inv, Component title) -> new ValveLimiterScreen(menu, inv));
-            MenuScreens.register(ITMenuTypes.VALVE_LOAD.getType(), (ValveLoadMenu menu, Inventory inv, Component title) -> new ValveLoadScreen(menu, inv));
 
             ManualInstance instance = ManualHelper.getManual();
             InnerNode<ResourceLocation, ManualEntry> parent_category = instance.getRoot().getOrCreateSubnode(ITLib.rl("main"), 99);
@@ -133,7 +133,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @SubscribeEvent public static void onItemColor(RegisterColorHandlersEvent.Item event) {
-        for (RegistryObject<? extends Item> holder : ITItems.getItemRegistryMap().values()) {
+        for (DeferredHolder<Item, ? extends Item> holder : ITItems.getItemRegistryMap().values()) {
             Item i = holder.get();
             if (i instanceof ITFlagItem) {
                 event.register((stack, tintIndex) -> {
@@ -165,10 +165,10 @@ public class ClientProxy extends CommonProxy {
     @Override public Player getClientPlayer() { return Minecraft.getInstance().player; }
 
     @SubscribeEvent public static void registerModelLoaders(ModelEvent.RegisterGeometryLoaders ev) {
-        ev.register("obj", ITObjLoader.INSTANCE);
-        ev.register(ITModelConfigurableSides.Loader.NAME.getPath(), new ITModelConfigurableSides.Loader());
-        ev.register(ITMirroredModelLoader.ID.getPath(), new ITMirroredModelLoader());
-        ev.register(ITSplitModelLoader.LOCATION.getPath(), new ITSplitModelLoader());
+        ev.register(ITLib.rl("obj"), ITObjLoader.INSTANCE);
+        ev.register(ITModelConfigurableSides.Loader.NAME, new ITModelConfigurableSides.Loader());
+        ev.register(ITMirroredModelLoader.ID, new ITMirroredModelLoader());
+        ev.register(ITSplitModelLoader.LOCATION, new ITSplitModelLoader());
         RotorModels.ROTOR = new ITDynamicModel("rotor");
         RotorModels.ROTOR_EAST_WEST = new ITDynamicModel("rotor_east_west");
         SolarReflectorModels.SUPPORT = new ITDynamicModel("solar_reflector_support");

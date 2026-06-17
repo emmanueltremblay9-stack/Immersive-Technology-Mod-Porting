@@ -1,31 +1,32 @@
 package mctmods.immersivetechnology.common.multiblocks.metal.recipe;
 
-import blusunrize.immersiveengineering.api.crafting.FluidTagInput;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import blusunrize.immersiveengineering.api.crafting.IERecipeSerializer;
 import blusunrize.immersiveengineering.api.crafting.MultiblockRecipe;
+import blusunrize.immersiveengineering.api.crafting.TagOutput;
 import blusunrize.immersiveengineering.api.crafting.cache.CachedRecipeList;
 import com.google.common.collect.Lists;
 import mctmods.immersivetechnology.core.registration.ITRecipeTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.Lazy;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.common.util.Lazy;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import javax.annotation.Nullable;
 
 public class SolarMelterRecipe extends MultiblockRecipe {
-    public static RegistryObject<IERecipeSerializer<SolarMelterRecipe>> SERIALIZER;
+    public static DeferredHolder<net.minecraft.world.item.crafting.RecipeSerializer<?>, IERecipeSerializer<SolarMelterRecipe>> SERIALIZER;
     public static final CachedRecipeList<SolarMelterRecipe> RECIPES = new CachedRecipeList<>(ITRecipeTypes.SOLAR_MELTER);
 
-    public final FluidTagInput input;
+    public final SizedFluidIngredient input;
     public final FluidStack fluidOutput;
     private final int time;
     public final double requiredTemp;
 
-    public SolarMelterRecipe(ResourceLocation id, FluidTagInput input, @Nullable FluidStack fluidOutput, int time, double requiredTemp) {
-        super(Lazy.of(() -> ItemStack.EMPTY), ITRecipeTypes.SOLAR_MELTER, id);
+    public SolarMelterRecipe(SizedFluidIngredient input, @Nullable FluidStack fluidOutput, int time, double requiredTemp) {
+        super(TagOutput.EMPTY, ITRecipeTypes.SOLAR_MELTER, 0, time, ITRecipeTypes.NO_MULTIPLIERS);
         this.input = input;
         this.fluidOutput = fluidOutput;
         this.time = time;
@@ -36,8 +37,8 @@ public class SolarMelterRecipe extends MultiblockRecipe {
 
     @Nullable public static SolarMelterRecipe findRecipe(Level level, FluidStack fluid) {
         if (fluid == null || fluid.isEmpty()) return null;
-        for (SolarMelterRecipe recipe : RECIPES.getRecipes(level)) {
-            if (recipe.input.testIgnoringAmount(fluid) && fluid.getAmount() >= recipe.input.getAmount()) return recipe;
+        for (var holder : RECIPES.getRecipes(level)) { SolarMelterRecipe recipe = holder.value();
+            if (recipe.input.ingredient().test(fluid) && fluid.getAmount() >= recipe.input.amount()) return recipe;
         }
         return null;
     }

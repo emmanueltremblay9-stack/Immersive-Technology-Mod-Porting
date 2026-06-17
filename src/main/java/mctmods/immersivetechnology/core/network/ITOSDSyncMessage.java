@@ -6,12 +6,10 @@ import mctmods.immersivetechnology.common.blocks.metal.logic.ValveCommonBlockEnt
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record ITOSDSyncMessage(BlockPos pos, long lastAccepted, long average, int packetAverage) implements ITMessage {
     public ITOSDSyncMessage(FriendlyByteBuf buf) {
@@ -25,23 +23,21 @@ public record ITOSDSyncMessage(BlockPos pos, long lastAccepted, long average, in
         buf.writeInt(packetAverage);
     }
 
-    @Override public void process(Supplier<NetworkEvent.Context> context) {
-        NetworkEvent.Context ctx = context.get();
-        ctx.enqueueWork(() -> {
-            if (ctx.getDirection() == NetworkDirection.PLAY_TO_CLIENT) {
-                if (Minecraft.getInstance().level != null) {
-                    BlockEntity te = Minecraft.getInstance().level.getBlockEntity(pos);
-                    if (te instanceof OSDCommonBlockEntity osd) {
-                        osd.lastAcceptedAmount = lastAccepted;
-                    }
-                    if (te instanceof ValveCommonBlockEntity valve) {
-                        valve.lastAcceptedAmount = lastAccepted;
-                        valve.average = average;
-                        valve.packetAverage = packetAverage;
-                    }
+    @Override public void process(IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (Minecraft.getInstance().level != null) {
+                BlockEntity te = Minecraft.getInstance().level.getBlockEntity(pos);
+                if (te instanceof OSDCommonBlockEntity osd) {
+                    osd.lastAcceptedAmount = lastAccepted;
+                }
+                if (te instanceof ValveCommonBlockEntity valve) {
+                    valve.lastAcceptedAmount = lastAccepted;
+                    valve.average = average;
+                    valve.packetAverage = packetAverage;
                 }
             }
         });
-        ctx.setPacketHandled(true);
     }
+
+    @Override public CustomPacketPayload.Type<ITOSDSyncMessage> type() { return ITPacketHandler.OSD_SYNC; }
 }

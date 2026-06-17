@@ -1,11 +1,14 @@
 package mctmods.immersivetechnology.common.multiblocks.helper;
 
 import blusunrize.immersiveengineering.common.util.Utils;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 import java.util.Iterator;
@@ -13,6 +16,8 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class ITSlotwiseItemHandler implements IItemHandlerModifiable, Iterable<ItemStack> {
+    private static final HolderLookup.Provider BUILTIN_PROVIDER = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
+
     private final ItemStackHandler rawHandler;
     private final List<IOConstraint> slotConstraints;
 
@@ -36,7 +41,7 @@ public class ITSlotwiseItemHandler implements IItemHandlerModifiable, Iterable<I
         if (!allowInsert) return stack;
         ItemStack current = getStackInSlot(slot);
         if (!current.isEmpty()) {
-            if (!ItemStack.isSameItemSameTags(current, stack)) return stack;
+            if (!ItemStack.isSameItemSameComponents(current, stack)) return stack;
         }
         ItemStack result = rawHandler.insertItem(slot, stack, simulate);
         if (!simulate) {
@@ -67,9 +72,13 @@ public class ITSlotwiseItemHandler implements IItemHandlerModifiable, Iterable<I
         rawHandler.setStackInSlot(slot, toSet);
     }
 
-    public Tag serializeNBT() { return rawHandler.serializeNBT(); }
+    public Tag serializeNBT() { return serializeNBT(BUILTIN_PROVIDER); }
 
-    public void deserializeNBT(CompoundTag nbt) { rawHandler.deserializeNBT(nbt); }
+    public Tag serializeNBT(HolderLookup.Provider provider) { return rawHandler.serializeNBT(provider); }
+
+    public void deserializeNBT(CompoundTag nbt) { deserializeNBT(BUILTIN_PROVIDER, nbt); }
+
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) { rawHandler.deserializeNBT(provider, nbt); }
 
     public ItemStackHandler getRawHandler() { return rawHandler; }
 

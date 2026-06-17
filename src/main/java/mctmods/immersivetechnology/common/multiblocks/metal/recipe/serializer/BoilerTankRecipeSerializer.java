@@ -1,49 +1,26 @@
 package mctmods.immersivetechnology.common.multiblocks.metal.recipe.serializer;
 
-import blusunrize.immersiveengineering.api.ApiUtils;
-import blusunrize.immersiveengineering.api.crafting.FluidTagInput;
 import blusunrize.immersiveengineering.api.crafting.IERecipeSerializer;
-
-import com.google.gson.JsonObject;
-
+import blusunrize.immersiveengineering.api.utils.codec.IEDualCodecs;
+import malte0811.dualcodecs.DualCodecs;
+import malte0811.dualcodecs.DualCompositeMapCodecs;
+import malte0811.dualcodecs.DualMapCodec;
 import mctmods.immersivetechnology.common.multiblocks.metal.logic.BoilerTankLogic;
 import mctmods.immersivetechnology.common.multiblocks.metal.recipe.BoilerTankRecipe;
 import mctmods.immersivetechnology.core.registration.ITMultiblockProvider;
-
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 
-import net.minecraftforge.common.crafting.conditions.ICondition;
-import net.minecraftforge.fluids.FluidStack;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 public class BoilerTankRecipeSerializer extends IERecipeSerializer<BoilerTankRecipe> {
+    public static final DualMapCodec<RegistryFriendlyByteBuf, BoilerTankRecipe> CODECS = DualCompositeMapCodecs.composite(
+            IEDualCodecs.SIZED_FLUID_INGREDIENT.fieldOf("input"), recipe -> recipe.input,
+            IEDualCodecs.FLUID_STACK.fieldOf("result"), recipe -> recipe.output,
+            DualCodecs.INT.optionalFieldOf("time", 1), BoilerTankRecipe::getTotalProcessTime,
+            DualCodecs.DOUBLE.optionalFieldOf("requiredHeat", BoilerTankLogic.DEFAULT_WORKING_HEAT_LEVEL), recipe -> recipe.requiredHeat,
+            BoilerTankRecipe::new
+    );
+
     @Override public ItemStack getIcon() { return ITMultiblockProvider.BOILER_TANK.iconStack(); }
 
-    @Override public BoilerTankRecipe readFromJson(ResourceLocation recipeID, JsonObject json, ICondition.IContext iContext) {
-        FluidTagInput input = FluidTagInput.deserialize(GsonHelper.getAsJsonObject(json, "input"));
-        FluidStack output = ApiUtils.jsonDeserializeFluidStack(GsonHelper.getAsJsonObject(json, "result"));
-        int time = GsonHelper.getAsInt(json, "time", 1);
-        double requiredHeat = GsonHelper.getAsDouble(json, "requiredHeat", BoilerTankLogic.DEFAULT_WORKING_HEAT_LEVEL);
-        return new BoilerTankRecipe(recipeID, input, output, time, requiredHeat);
-    }
-
-    @Override @Nullable public BoilerTankRecipe fromNetwork(@NotNull ResourceLocation recipeId, @NotNull FriendlyByteBuf buffer) {
-        FluidTagInput input = FluidTagInput.read(buffer);
-        FluidStack output = buffer.readFluidStack();
-        int time = buffer.readInt();
-        double requiredHeat = buffer.readDouble();
-        return new BoilerTankRecipe(recipeId, input, output, time, requiredHeat);
-    }
-
-    @Override public void toNetwork(@NotNull FriendlyByteBuf buffer, BoilerTankRecipe recipe) {
-        recipe.input.write(buffer);
-        buffer.writeFluidStack(recipe.output);
-        buffer.writeInt(recipe.getTotalProcessTime());
-        buffer.writeDouble(recipe.requiredHeat);
-    }
+    @Override protected DualMapCodec<RegistryFriendlyByteBuf, BoilerTankRecipe> codecs() { return CODECS; }
 }

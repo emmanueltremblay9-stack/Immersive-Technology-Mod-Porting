@@ -3,6 +3,7 @@ package mctmods.immersivetechnology.core.util.solarregistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.saveddata.SavedData;
 
 import java.util.*;
 
@@ -25,7 +26,7 @@ public class SolarRegistry {
         public int groupSize = 1;
     }
 
-    public static SolarRegistryData getData(Level level) { return ((ServerLevel)level).getDataStorage().computeIfAbsent(SolarRegistryData::load, SolarRegistryData::new, "it_solar_registry"); }
+    public static SolarRegistryData getData(Level level) { return ((ServerLevel)level).getDataStorage().computeIfAbsent(new SavedData.Factory<>(SolarRegistryData::new, SolarRegistryData::load), "it_solar_registry"); }
 
     public static synchronized RegisterResult registerTower(Level level, BlockPos base) {
         RegisterResult result = new RegisterResult();
