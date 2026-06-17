@@ -7,6 +7,11 @@
 
   "manual.immersivetechnology.main": "몰입형 기술",
   "manual.immersivetechnology.it_multiblocks": "멀티블록",
+  "manual.immersivetechnology.power_generation": "전력 생산",
+  "manual.immersivetechnology.boiler_systems": "보일러 시스템",
+  "manual.immersivetechnology.fluid_processing": "유체 처리",
+  "manual.immersivetechnology.solar_thermal": "태양열",
+  "manual.immersivetechnology.storage": "저장",
 
   "block.immersivetechnology.barrel_creative": "크리에이티브 유체 통",
   "block.immersivetechnology.barrel_open": "개방형 금속 통",

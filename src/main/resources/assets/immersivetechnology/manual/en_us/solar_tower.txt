@@ -1,10 +1,11 @@
 Solar Tower
-Sunny Boiler!
-<&multiblock>The Solar Tower is a multiblock machine that turns water into steam during the daytime.
+Sunlight to heat
+<&multiblock>The Solar Tower gathers reflected sunlight and uses it to heat fluids. It can turn water or distilled water into steam, and it can heat supported slurry fluids for later processing.
 
-
+Recipes only progress while the tower has enough heat, so reflector placement and open sky matter.<np>
 
 §lOperation§r
-    - §lFluids§r to be heated are input in the front.
-    - §lHeated Fluids§r are output in the back.
-    - Must be 44 blocks away from other towers.
+    - Pipe fluids to be heated into the front input.
+    - Pull heated fluids or steam from the back output.
+    - JEI lists the required temperature for each Solar Tower recipe.
+    - Keep Solar Tower and Solar Melting Crucible bases about 44 blocks apart; the in-game warning gives the exact move distance if one is too close.

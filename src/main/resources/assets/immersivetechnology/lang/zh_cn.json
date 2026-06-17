@@ -7,6 +7,11 @@
 
   "manual.immersivetechnology.main": "沉浸式技术",
   "manual.immersivetechnology.it_multiblocks": "多方块结构",
+  "manual.immersivetechnology.power_generation": "发电",
+  "manual.immersivetechnology.boiler_systems": "锅炉系统",
+  "manual.immersivetechnology.fluid_processing": "流体处理",
+  "manual.immersivetechnology.solar_thermal": "太阳热能",
+  "manual.immersivetechnology.storage": "储存",
 
   "block.immersivetechnology.barrel_creative": "创造模式流体桶",
   "block.immersivetechnology.barrel_open": "开放式金属桶",

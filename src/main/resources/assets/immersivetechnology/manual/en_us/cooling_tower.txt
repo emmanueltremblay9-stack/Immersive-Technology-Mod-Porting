@@ -1,13 +1,11 @@
 Cooling Tower
-Chill!
-<&multiblock>The Cooling Tower cools §lExhaust Steam§r back into water.
+Recover water
+<&multiblock>The Cooling Tower condenses Exhaust Steam back into water. It helps close the loop after a Steam Turbine.
 
-
-
-
-
+Provide a water feed and Exhaust Steam, then extract the recovered water from the outputs.<np>
 
 §lOperation§r
-    - §lWater§r is input at one input.
-    - §lExhaust Steam§r is input at the other input.
-    - §lWater§r is output from all outputs.
+    - Pipe water into the water input.
+    - Pipe Exhaust Steam into the steam input.
+    - Pull water from the output ports.
+    - JEI lists the exact water and Exhaust Steam amounts for the cooling recipe.

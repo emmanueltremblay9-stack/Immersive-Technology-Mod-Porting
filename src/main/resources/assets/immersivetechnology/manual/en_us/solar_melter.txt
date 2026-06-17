@@ -1,10 +1,11 @@
-Solar Melter
-Melting!
-<&multiblock>The Solar Melter melts solids into their molten form for processing.
+Solar Melting Crucible
+Solar heat to molten fluids
+<&multiblock>The Solar Melting Crucible uses reflected sunlight to process already-heated slurry fluids into molten outputs.
 
-
+It is the high-temperature end of the solar processing chain, not a general solid-item melter.<np>
 
 §lOperation§r
-    - §lHeated Fluids§r are input in the front.
-    - §lMolten Fluids§r are output in the back.
-    - Must be 44 blocks away from other towers.
+    - Pipe heated slurry fluids into the front input.
+    - Pull molten fluids from the back output.
+    - JEI lists the required temperature and valid Solar Melting Crucible recipes.
+    - Keep Solar Tower and Solar Melting Crucible bases about 44 blocks apart; the in-game warning gives the exact move distance if one is too close.

@@ -1,9 +1,11 @@
 Distiller
-Evaporation!
-<&multiblock>The Distiller evaporates water into §lDistilled Water§r with salt as a byproduct.
+Clean water and salt
+<&multiblock>The Distiller processes water into Distilled Water, with salt available as a byproduct.
 
+Use it when a recipe calls for a cleaner water input, or when you want salt without relying on other resource paths.<np>
 
 §lOperation§r
-    - §lWater§r is input on the left.
-    - §lDistilled Water§r is output on the right.
-    - Salt is output in the back.
+    - Pipe water into the fluid input.
+    - Extract Distilled Water from the fluid output.
+    - Pull salt from the item output.
+    - JEI shows exact processing time, water amount, and byproduct chance.

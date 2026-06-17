@@ -1,11 +1,11 @@
 Gas Turbine
-GAS GAS GAS!
-<&multiblock>The Gas Turbine uses a fuel and an ignition source from the combustors inside the turbine to make hot, high-velocity gas. The hot, high-velocity gas turns the turbine blades to create rotational energy.
+Liquid fuel into rotation
+<&multiblock>The Gas Turbine burns liquid fuel to create hot, high-velocity gas. That gas turns the turbine blades and provides rotational power for machines such as the Alternator.
 
+Flue gas exits below the rotor and can be used as a hot fluid in the Heat Exchanger.<np>
 
 §lOperation§r
-    - §lLiquid Fuel§r is input by the pipe.
-    - §lFlue Gas§r is output under the rotor.
-    - The side with MV energy input is the spark plug, which can be powered at all times.
-    - The side with HV energy input is the starter, which needs power until the spark plug ignites the fuel. Once ignited, you must remove power from the starter.
-    - You need to attach a multiblock to the rotor that uses mechanical power for the turbine to work.
+    - Pipe valid liquid fuel into the fuel input; JEI lists supported fuels.
+    - The MV energy input is the spark plug and may stay powered.
+    - The HV energy input is the starter and only needs power until ignition.
+    - Attach a mechanical consumer to the rotor output for the turbine to run usefully.

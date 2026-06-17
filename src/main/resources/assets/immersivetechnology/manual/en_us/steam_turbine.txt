@@ -1,10 +1,10 @@
 Steam Turbine
-Spinny Spin!
-<&multiblock>The Steam Turbine uses steam pressure to turn the turbine blades and create rotational energy.
+Pressure into rotation
+<&multiblock>The Steam Turbine consumes steam and produces rotational power for machines such as the Alternator.
 
-
+Exhaust steam exits through the fluid output and can be cooled back into water in a Cooling Tower.<np>
 
 §lOperation§r
-    - §lSteam§r is input by the pipe.
-    - §lExhaust Steam§r is output under the rotor.
-    - You need to attach a multiblock to the rotor that uses mechanical power for the turbine to work.
+    - Pipe steam into the fluid input.
+    - Connect a mechanical consumer to the rotor output.
+    - JEI lists valid steam recipes, including this mod's steam and tagged steam from other mods.

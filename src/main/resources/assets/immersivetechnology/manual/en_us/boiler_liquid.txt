@@ -1,15 +1,10 @@
 Boiler Liquid Fuel Burner
-Getting steamy in here!
-<&multiblock>The Boiler is a multiblock machine used to §lboil water§r into steam.
+Liquid-fired heat
+<&multiblock>The Liquid Fuel Burner supplies heat to an attached Boiler Tank. It does not make steam by itself; the tank performs the water-to-steam recipe.
 
-
-
-
+Feed valid liquid fuel into the burner and ignite the top exhaust area with a torch or flint and steel.<np>
 
 §lOperation§r
-    - §lLiquid Fuel§r is input below the combustion chamber.
-    - Ignite the §lBoiler§r with a torch or flint and steel on the top meshed exhaust.
-    - Boiler will run in pilot mode when not active and consume a small amount of fuel.
-    - §lWater§r must be in an attached §lBoiler Tank§r.
-
-§lTip:§r The Boiler can process a decent amount of water.
+    - Uses liquid fuels such as biodiesel, diesel, gasoline, and kerosene when those recipes are available.
+    - Consumes a small pilot amount while lit but idle.
+    - If steam is not producing, check fuel, ignition, redstone state, and the connected Boiler Tank.

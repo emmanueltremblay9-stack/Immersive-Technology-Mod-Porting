@@ -1,13 +1,10 @@
 Boiler Tank
-Getting steamy in here!
-<&multiblock>The Boiler is a multiblock machine used to §lboil water§r into steam.
+Water to steam
+<&multiblock>The Boiler Tank is the vessel at the center of the boiler system. It receives heat from an attached Liquid Fuel Burner or Solid Fuel Burner and turns water or distilled water into steam.
 
-
-
+Feed water into the tank input and pull steam from the steam output.<np>
 
 §lOperation§r
-    - §lWater§r is input near the tank on the §lleft side§r.
-    - §lSteam§r is output from the §ltop§r of the multiblock.
-    - §lWater§r must be in the tank for an attached §lBoiler Burner§r to work.
-
-§lTip:§r The Boiler can process a decent amount of water.
+    - Must be placed so a Boiler Burner can supply heat to the tank.
+    - Valid recipes include water and distilled water; JEI lists exact amounts and timings.
+    - If steam is not producing, check the burner fuel, ignition, redstone state, and the tank's water supply.

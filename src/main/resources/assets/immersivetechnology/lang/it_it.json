@@ -7,6 +7,11 @@
 
   "manual.immersivetechnology.main": "Tecnologia Immersiva",
   "manual.immersivetechnology.it_multiblocks": "Multiblocchi",
+  "manual.immersivetechnology.power_generation": "Generazione di energia",
+  "manual.immersivetechnology.boiler_systems": "Sistemi caldaia",
+  "manual.immersivetechnology.fluid_processing": "Lavorazione fluidi",
+  "manual.immersivetechnology.solar_thermal": "Solare termico",
+  "manual.immersivetechnology.storage": "Stoccaggio",
 
   "block.immersivetechnology.barrel_creative": "Barile di fluidi creativo",
   "block.immersivetechnology.barrel_open": "Barile metallico aperto",

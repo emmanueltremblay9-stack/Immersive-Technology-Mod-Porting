@@ -7,6 +7,11 @@
 
   "manual.immersivetechnology.main": "Immersive Technology",
   "manual.immersivetechnology.it_multiblocks": "マルチブロック",
+  "manual.immersivetechnology.power_generation": "発電",
+  "manual.immersivetechnology.boiler_systems": "ボイラーシステム",
+  "manual.immersivetechnology.fluid_processing": "流体処理",
+  "manual.immersivetechnology.solar_thermal": "太陽熱",
+  "manual.immersivetechnology.storage": "貯蔵",
 
   "block.immersivetechnology.barrel_creative": "クリエイティブ液体バレル",
   "block.immersivetechnology.barrel_open": "開いた金属バレル",

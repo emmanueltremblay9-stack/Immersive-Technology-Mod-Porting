@@ -7,6 +7,11 @@
 
   "manual.immersivetechnology.main": "Immersive Technologie",
   "manual.immersivetechnology.it_multiblocks": "Multiblöcke",
+  "manual.immersivetechnology.power_generation": "Energieerzeugung",
+  "manual.immersivetechnology.boiler_systems": "Kesselsysteme",
+  "manual.immersivetechnology.fluid_processing": "Flüssigkeitsverarbeitung",
+  "manual.immersivetechnology.solar_thermal": "Solarthermie",
+  "manual.immersivetechnology.storage": "Lagerung",
 
   "block.immersivetechnology.barrel_creative": "Kreatives Flüssigkeitsfass",
   "block.immersivetechnology.barrel_open": "Offenes Metallfass",

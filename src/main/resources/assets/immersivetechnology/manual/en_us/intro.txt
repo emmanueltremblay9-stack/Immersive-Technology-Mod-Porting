@@ -1,8 +1,11 @@
 Immersive Technology
-Power Generation with style!
+Power systems for Immersive Engineering
 
-Immersive Technology is a Power Technology add on complimenting Immersive Engineering.
+Immersive Technology adds large multiblock machines for steam, solar heat, turbines, heat exchange, and bulk fluid storage.
 
-Credits: tgstyle, MagneticPrism, Cordyceps22
+The pages in this section focus on building each structure and understanding the ports, fuels, fluids, and machine loops. JEI shows the current processing recipes and exact amounts for each machine category.<np>
 
-Special Thanks to: MuddyKat, Crimson Twilight, MC7
+§lCredits§r
+Original Immersive Technology: tgstyle, MagneticPrism, Cordyceps22
+
+Special thanks: MuddyKat, Crimson Twilight, MC7

@@ -1,11 +1,11 @@
-Steel Tank
-Fill it up!
-<&multiblock>The Steel Tank is just a larger version of the Tank.
+Steel Fluid Tank
+Bulk fluid storage
+<&multiblock>The Steel Fluid Tank is a large multiblock fluid store for Immersive Technology production lines.
 
-
-
-
+Use it as a buffer for steam, water, fuels, slurry fluids, molten salt, or other compatible fluids. It is storage and IO, not a machine that converts steam into exhaust steam.<np>
 
 §lOperation§r
-    - §lSteam§r is input on the top.
-    - §lExhaust Steam§r is output on the bottom.
+    - Pipe fluids into the tank through valid input ports.
+    - Extract fluids from valid output or IO ports.
+    - Use redstone and comparators where supported to control or measure stored fluid.
+    - Place it near boilers, turbines, or solar systems when a loop needs a large buffer.

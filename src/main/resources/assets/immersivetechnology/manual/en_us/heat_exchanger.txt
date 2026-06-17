@@ -1,6 +1,11 @@
 Heat Exchanger
-Is it hot or is it cool?
-<&multiblock>The Heat Exchanger is a multiblock machine used to transfer heat from hot fluids.
+Move heat between fluids
+<&multiblock>The Heat Exchanger transfers heat from a hot fluid into another fluid. In a steam setup, it can use hot fluids such as flue gas or molten salt to turn water or distilled water into steam.
+
+This is useful when you want to recover heat from a Gas Turbine loop or move solar heat into steam production.<np>
 
 §lOperation§r
-    - The §lHeat Exchanger§r needs hot fluids to make other fluids.
+    - Pipe the hot fluid into the hot-side input.
+    - Pipe the fluid to heat into the cold-side input.
+    - Extract both outputs from their matching sides.
+    - JEI lists which hot fluids, cold fluids, and outputs are valid.

@@ -79,52 +79,41 @@ public class ClientProxy extends CommonProxy {
                 ItemBlockRenderTypes.setRenderLayer(entry.getFlowing(), RenderType.translucent());
             }
 
-            ManualInstance instance = ManualHelper.getManual();
-            InnerNode<ResourceLocation, ManualEntry> parent_category = instance.getRoot().getOrCreateSubnode(ITLib.rl("main"), 99);
-            ManualEntry.ManualEntryBuilder builder = new ManualEntry.ManualEntryBuilder(ManualHelper.getManual());
-            builder.readFromFile(ITLib.rl("intro"));
-            instance.addEntry(parent_category, builder.create());
-            InnerNode<ResourceLocation, ManualEntry> multiblock_category = parent_category.getOrCreateSubnode(ITLib.rl("it_multiblocks"), 0);
-            ManualEntry.ManualEntryBuilder multiblock = new ManualEntry.ManualEntryBuilder(ManualHelper.getManual());
-            multiblock.readFromFile(ITLib.rl("alternator"));
-            instance.addEntry(multiblock_category, multiblock.create());
-            multiblock = new ManualEntry.ManualEntryBuilder(ManualHelper.getManual());
-            multiblock.readFromFile(ITLib.rl("boiler_liquid"));
-            instance.addEntry(multiblock_category, multiblock.create());
-            multiblock = new ManualEntry.ManualEntryBuilder(ManualHelper.getManual());
-            multiblock.readFromFile(ITLib.rl("boiler_solid"));
-            instance.addEntry(multiblock_category, multiblock.create());
-            multiblock = new ManualEntry.ManualEntryBuilder(ManualHelper.getManual());
-            multiblock.readFromFile(ITLib.rl("boiler_tank"));
-            instance.addEntry(multiblock_category, multiblock.create());
-            multiblock = new ManualEntry.ManualEntryBuilder(ManualHelper.getManual());
-            multiblock.readFromFile(ITLib.rl("cooling_tower"));
-            instance.addEntry(multiblock_category, multiblock.create());
-            multiblock = new ManualEntry.ManualEntryBuilder(ManualHelper.getManual());
-            multiblock.readFromFile(ITLib.rl("distiller"));
-            instance.addEntry(multiblock_category, multiblock.create());
-            multiblock = new ManualEntry.ManualEntryBuilder(ManualHelper.getManual());
-            multiblock.readFromFile(ITLib.rl("gas_turbine"));
-            instance.addEntry(multiblock_category, multiblock.create());
-            multiblock = new ManualEntry.ManualEntryBuilder(ManualHelper.getManual());
-            multiblock.readFromFile(ITLib.rl("heat_exchanger"));
-            instance.addEntry(multiblock_category, multiblock.create());
-            multiblock = new ManualEntry.ManualEntryBuilder(ManualHelper.getManual());
-            multiblock.readFromFile(ITLib.rl("solar_melter"));
-            instance.addEntry(multiblock_category, multiblock.create());
-            multiblock = new ManualEntry.ManualEntryBuilder(ManualHelper.getManual());
-            multiblock.readFromFile(ITLib.rl("solar_reflector"));
-            instance.addEntry(multiblock_category, multiblock.create());
-            multiblock = new ManualEntry.ManualEntryBuilder(ManualHelper.getManual());
-            multiblock.readFromFile(ITLib.rl("solar_tower"));
-            instance.addEntry(multiblock_category, multiblock.create());
-            multiblock = new ManualEntry.ManualEntryBuilder(ManualHelper.getManual());
-            multiblock.readFromFile(ITLib.rl("steam_turbine"));
-            instance.addEntry(multiblock_category, multiblock.create());
-            multiblock = new ManualEntry.ManualEntryBuilder(ManualHelper.getManual());
-            multiblock.readFromFile(ITLib.rl("steel_sheetmetal_tank"));
-            instance.addEntry(multiblock_category, multiblock.create());
+            registerManualEntries();
         });
+    }
+
+    private static void registerManualEntries() {
+        ManualInstance instance = ManualHelper.getManual();
+        InnerNode<ResourceLocation, ManualEntry> main = instance.getRoot().getOrCreateSubnode(ITLib.rl("main"), 99);
+        addManualEntry(instance, main, "intro", 0);
+
+        InnerNode<ResourceLocation, ManualEntry> power = main.getOrCreateSubnode(ITLib.rl("power_generation"), 10);
+        addManualEntry(instance, power, "steam_turbine", 10);
+        addManualEntry(instance, power, "gas_turbine", 20);
+        addManualEntry(instance, power, "alternator", 30);
+
+        InnerNode<ResourceLocation, ManualEntry> boilers = main.getOrCreateSubnode(ITLib.rl("boiler_systems"), 20);
+        addManualEntry(instance, boilers, "boiler_tank", 10);
+        addManualEntry(instance, boilers, "boiler_liquid", 20);
+        addManualEntry(instance, boilers, "boiler_solid", 30);
+
+        InnerNode<ResourceLocation, ManualEntry> fluidProcessing = main.getOrCreateSubnode(ITLib.rl("fluid_processing"), 30);
+        addManualEntry(instance, fluidProcessing, "distiller", 10);
+        addManualEntry(instance, fluidProcessing, "heat_exchanger", 20);
+        addManualEntry(instance, fluidProcessing, "cooling_tower", 30);
+
+        InnerNode<ResourceLocation, ManualEntry> solarThermal = main.getOrCreateSubnode(ITLib.rl("solar_thermal"), 40);
+        addManualEntry(instance, solarThermal, "solar_reflector", 10);
+        addManualEntry(instance, solarThermal, "solar_tower", 20);
+        addManualEntry(instance, solarThermal, "solar_melter", 30);
+
+        InnerNode<ResourceLocation, ManualEntry> storage = main.getOrCreateSubnode(ITLib.rl("storage"), 50);
+        addManualEntry(instance, storage, "steel_sheetmetal_tank", 10);
+    }
+
+    private static void addManualEntry(ManualInstance instance, InnerNode<ResourceLocation, ManualEntry> category, String path, int weight) {
+        instance.addEntry(category, ITLib.rl(path), weight);
     }
 
     @SubscribeEvent public static void registerParticleProviders(RegisterParticleProvidersEvent event) {

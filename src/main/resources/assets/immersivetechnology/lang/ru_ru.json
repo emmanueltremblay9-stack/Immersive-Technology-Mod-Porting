@@ -7,6 +7,11 @@
 
   "manual.immersivetechnology.main": "Immersive Technology",
   "manual.immersivetechnology.it_multiblocks": "Мультиблоки",
+  "manual.immersivetechnology.power_generation": "Производство энергии",
+  "manual.immersivetechnology.boiler_systems": "Котельные системы",
+  "manual.immersivetechnology.fluid_processing": "Обработка жидкостей",
+  "manual.immersivetechnology.solar_thermal": "Солнечное тепло",
+  "manual.immersivetechnology.storage": "Хранение",
 
   "block.immersivetechnology.barrel_creative": "Творческая бочка для жидкостей",
   "block.immersivetechnology.barrel_open": "Открытая металлическая бочка",

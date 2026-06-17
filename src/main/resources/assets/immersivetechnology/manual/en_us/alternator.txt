@@ -1,7 +1,10 @@
 Alternator
-Big and Powerful!
-<&multiblock>The Alternator is a multiblock machine used to generate a lot of energy, aiding in powering many more machines than the §lDiesel Generator§r!
+Rotational power to Flux
+<&multiblock>The Alternator converts rotational power from a Steam Turbine or Gas Turbine into IF energy.
 
+Connect the rotor input to the mechanical output of a turbine, then route energy from the Alternator's output connectors.<np>
 
 §lOperation§r
-    - The §lAlternator§r needs rotational input from a mechanical energy provider like the §lSteam Turbine§r or §lGas Turbine§r.
+    - Requires a valid mechanical power provider on its rotor input.
+    - Produces energy while the connected turbine is running.
+    - Higher turbine speed and torque improve generation; check the machine UI and JEI category displays for current values.
