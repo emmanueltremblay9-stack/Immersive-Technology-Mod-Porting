@@ -1,6 +1,6 @@
 package mctmods.immersivetechnology.common.multiblocks.stone.recipe.builder;
 
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
+import mctmods.immersivetechnology.core.compat.ie.IEFinishedRecipe;
 import com.google.gson.JsonObject;
 import mctmods.immersivetechnology.common.multiblocks.stone.recipe.CoolingTowerRecipe;
 import net.minecraft.core.registries.BuiltInRegistries;

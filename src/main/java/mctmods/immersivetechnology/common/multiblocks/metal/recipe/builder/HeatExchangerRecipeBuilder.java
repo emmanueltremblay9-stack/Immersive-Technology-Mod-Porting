@@ -2,7 +2,7 @@ package mctmods.immersivetechnology.common.multiblocks.metal.recipe.builder;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
+import mctmods.immersivetechnology.core.compat.ie.IEFinishedRecipe;
 import mctmods.immersivetechnology.common.multiblocks.metal.recipe.HeatExchangerRecipe;
 import net.neoforged.neoforge.fluids.FluidStack;
 

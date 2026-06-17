@@ -1,7 +1,7 @@
 package mctmods.immersivetechnology.common.multiblocks.metal.recipe.builder;
 
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
+import mctmods.immersivetechnology.core.compat.ie.IEFinishedRecipe;
 import mctmods.immersivetechnology.common.multiblocks.metal.recipe.DistillerRecipe;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;

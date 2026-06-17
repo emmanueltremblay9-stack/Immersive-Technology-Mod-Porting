@@ -5,7 +5,7 @@ import blusunrize.immersiveengineering.api.EnumMetals;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import blusunrize.immersiveengineering.api.crafting.IngredientWithSize;
 import blusunrize.immersiveengineering.api.crafting.MixerRecipe;
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
+import mctmods.immersivetechnology.core.compat.ie.IEFinishedRecipe;
 import blusunrize.immersiveengineering.common.register.IEBlocks;
 import blusunrize.immersiveengineering.common.register.IEItems;
 import com.google.gson.JsonArray;

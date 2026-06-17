@@ -1,4 +1,4 @@
-package blusunrize.immersiveengineering.api.crafting.builders;
+package mctmods.immersivetechnology.core.compat.ie;
 
 import blusunrize.immersiveengineering.api.crafting.IngredientWithSize;
 import com.google.gson.JsonElement;

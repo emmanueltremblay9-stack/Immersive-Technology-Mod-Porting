@@ -3,7 +3,7 @@ package mctmods.immersivetechnology.common.items.helper;
 import blusunrize.immersiveengineering.api.client.TextUtils;
 import blusunrize.immersiveengineering.api.multiblocks.blocks.registry.MultiblockPartBlock;
 import blusunrize.immersiveengineering.common.util.EnergyHelper;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import mctmods.immersivetechnology.core.compat.ie.ItemNBTHelper;
 import mctmods.immersivetechnology.common.blocks.helper.ITBlock;
 import mctmods.immersivetechnology.common.blocks.helper.ITBaseBlock;
 import mctmods.immersivetechnology.common.blocks.helper.ITProperties;

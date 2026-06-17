@@ -4,7 +4,7 @@ import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.Lib;
 import blusunrize.immersiveengineering.api.client.TextUtils;
 import blusunrize.immersiveengineering.api.multiblocks.MultiblockHandler;
-import blusunrize.immersiveengineering.common.util.ItemNBTHelper;
+import mctmods.immersivetechnology.core.compat.ie.ItemNBTHelper;
 import mctmods.immersivetechnology.common.blocks.helper.ITBlockInterfaces;
 import mctmods.immersivetechnology.core.util.ITAdvancements;
 import mctmods.immersivetechnology.core.util.ITRotationUtil;

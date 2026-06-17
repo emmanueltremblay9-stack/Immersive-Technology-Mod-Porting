@@ -1,6 +1,6 @@
 package mctmods.immersivetechnology.common.multiblocks.metal.recipe.builder;
 
-import blusunrize.immersiveengineering.api.crafting.builders.IEFinishedRecipe;
+import mctmods.immersivetechnology.core.compat.ie.IEFinishedRecipe;
 import mctmods.immersivetechnology.common.multiblocks.metal.recipe.SolarTowerRecipe;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
