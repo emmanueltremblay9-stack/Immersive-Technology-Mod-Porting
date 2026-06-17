@@ -3,12 +3,9 @@ package mctmods.immersivetechnology.common.multiblocks.stone.recipe.builder;
 import mctmods.immersivetechnology.core.compat.ie.IEFinishedRecipe;
 import com.google.gson.JsonObject;
 import mctmods.immersivetechnology.common.multiblocks.stone.recipe.CoolingTowerRecipe;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
-
-import java.util.Objects;
 
 public class CoolingTowerRecipeBuilder extends IEFinishedRecipe<CoolingTowerRecipeBuilder> {
     private int inputCount = 0;
@@ -32,12 +29,7 @@ public class CoolingTowerRecipeBuilder extends IEFinishedRecipe<CoolingTowerReci
     public CoolingTowerRecipeBuilder addOutput(FluidStack fluidStack) {
         String key = "output" + outputCount;
         outputCount++;
-        return this.addWriter((jsonObject) -> {
-            JsonObject obj = new JsonObject();
-            obj.addProperty("fluid", Objects.requireNonNull(BuiltInRegistries.FLUID.getKey(fluidStack.getFluid())).toString());
-            obj.addProperty("amount", fluidStack.getAmount());
-            jsonObject.add(key, obj);
-        });
+        return addFluid(key, fluidStack);
     }
 
     public CoolingTowerRecipeBuilder addOutput(Fluid fluid, int amount) { return addOutput(new FluidStack(fluid, amount)); }

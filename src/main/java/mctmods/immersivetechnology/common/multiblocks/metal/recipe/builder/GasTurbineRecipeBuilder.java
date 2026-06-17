@@ -3,12 +3,9 @@ package mctmods.immersivetechnology.common.multiblocks.metal.recipe.builder;
 import mctmods.immersivetechnology.core.compat.ie.IEFinishedRecipe;
 import com.google.gson.JsonObject;
 import mctmods.immersivetechnology.common.multiblocks.metal.recipe.GasTurbineRecipe;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
-
-import java.util.Objects;
 
 public class GasTurbineRecipeBuilder extends IEFinishedRecipe<GasTurbineRecipeBuilder> {
     public GasTurbineRecipeBuilder() { super(GasTurbineRecipe.SERIALIZER.get()); }
@@ -25,12 +22,7 @@ public class GasTurbineRecipeBuilder extends IEFinishedRecipe<GasTurbineRecipeBu
     }
 
     public GasTurbineRecipeBuilder addOutput(FluidStack fluidStack) {
-        return this.addWriter((jsonObject) -> {
-            JsonObject obj = new JsonObject();
-            obj.addProperty("fluid", Objects.requireNonNull(BuiltInRegistries.FLUID.getKey(fluidStack.getFluid())).toString());
-            obj.addProperty("amount", fluidStack.getAmount());
-            jsonObject.add("output", obj);
-        });
+        return addFluid("output", fluidStack);
     }
 
     public GasTurbineRecipeBuilder addOutput(Fluid fluid, int amount) { return addOutput(new FluidStack(fluid, amount)); }

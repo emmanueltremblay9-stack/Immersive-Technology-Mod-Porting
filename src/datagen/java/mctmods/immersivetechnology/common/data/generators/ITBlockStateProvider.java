@@ -10,6 +10,7 @@ import mctmods.immersivetechnology.client.models.helper.ITModelConfigurableSides
 import mctmods.immersivetechnology.common.blocks.helper.ITEnums.IOSideConfig;
 import mctmods.immersivetechnology.common.blocks.helper.ITProperties;
 import mctmods.immersivetechnology.common.blocks.metal.BarrelOpenBlock;
+import mctmods.immersivetechnology.common.blocks.metal.RotorCreativeBlock;
 import mctmods.immersivetechnology.common.blocks.metal.ValveFluidBlock;
 import mctmods.immersivetechnology.common.blocks.metal.ValveLimiterBlock;
 import mctmods.immersivetechnology.common.blocks.metal.ValveLoadBlock;
@@ -367,7 +368,7 @@ public class ITBlockStateProvider extends BlockStateProvider {
         ModelFile rotorNS = new ModelFile.UncheckedModelFile(modLoc("dynamic/rotor"));
         ModelFile rotorEW = new ModelFile.UncheckedModelFile(modLoc("dynamic/rotor_east_west"));
         rotorBuilder.forAllStates(state -> {
-            Direction facing = state.getValue(ITProperties.FACING_HORIZONTAL);
+            Direction facing = state.getValue(RotorCreativeBlock.FACING);
             ModelFile modelFile = (facing == Direction.NORTH || facing == Direction.SOUTH) ? rotorNS : rotorEW;
             int yRot = 0;
             if (facing == Direction.SOUTH || facing == Direction.WEST) yRot = 180;
@@ -609,12 +610,12 @@ public class ITBlockStateProvider extends BlockStateProvider {
         VariantBlockStateBuilder builder = getVariantBuilder(b.get());
         EnumProperty<Direction> facing = ITProperties.FACING_HORIZONTAL;
         builder.forAllStates(state -> {
-            Direction dir = state.getValue(facing);
+            Direction dir = state.hasProperty(facing) ? state.getValue(facing) : Direction.NORTH;
             int angleY = getAngle(dir);
             int angleX = 0;
-            if (facing.getPossibleValues().contains(Direction.UP)) { angleX = -90 * dir.getStepY(); angleY = dir.getAxis() != Direction.Axis.Y ? getAngle(dir) : 0; }
-            boolean mirrored = (mirroredState != null) ? state.getValue(mirroredState) : false;
-            boolean active = (activeState != null) ? state.getValue(activeState) : false;
+            if (state.hasProperty(facing) && facing.getPossibleValues().contains(Direction.UP)) { angleX = -90 * dir.getStepY(); angleY = dir.getAxis() != Direction.Axis.Y ? getAngle(dir) : 0; }
+            boolean mirrored = (mirroredState != null && state.hasProperty(mirroredState)) ? state.getValue(mirroredState) : false;
+            boolean active = (activeState != null && state.hasProperty(activeState)) ? state.getValue(activeState) : false;
             ModelFile baseModel = active ? activeMaster : defaultMaster;
             ModelFile model = mirrored ? (active ? activeMirrored : defaultMirrored) : baseModel;
             assert model != null;

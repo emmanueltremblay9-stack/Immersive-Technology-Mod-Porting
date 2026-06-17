@@ -1,6 +1,6 @@
 {
-  "parent": "forge:item/bucket",
+  "parent": "neoforge:item/bucket",
   "flip_gas": false,
   "fluid": "immersivetechnology:heated_salt_slurry",
-  "loader": "forge:fluid_container"
+  "loader": "neoforge:fluid_container"
 }

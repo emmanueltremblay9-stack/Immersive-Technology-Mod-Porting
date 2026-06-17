@@ -71,5 +71,5 @@ public class ITItemModelProvider extends ItemModelProvider {
 
     private String name(ItemLike item) { return Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(item.asItem())).getPath(); }
 
-    private ResourceLocation forgeLoc() { return ResourceLocation.fromNamespaceAndPath("forge", "item/bucket"); }
+    private ResourceLocation forgeLoc() { return ResourceLocation.fromNamespaceAndPath("neoforge", "item/bucket"); }
 }

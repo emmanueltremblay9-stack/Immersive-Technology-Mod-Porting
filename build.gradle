@@ -96,6 +96,11 @@ def version_replaces = { [
 ] as Map<String, Object> }
 
 def jsonPatterns = ["**/*.json", "**/*.mcmeta"]
+def inactiveLegacyResourcePatterns = [
+    "assets/immersivetechnology/sounds/electrolytic_crucible_battery.ogg",
+    "assets/immersivetechnology/sounds/melting_crucible.ogg",
+    "assets/immersivetechnology/textures/gui/electrolytic_crucible_battery_jei.png",
+]
 
 processResources {
     doNotTrackState("Windows OneDrive may materialize copied generated resources as reparse points, which Gradle cannot snapshot reliably.")
@@ -105,6 +110,7 @@ processResources {
         expand version_replaces()
     }
     exclude ".cache"
+    exclude inactiveLegacyResourcePatterns
     doLast {
         fileTree(dir: getOutputs().getFiles().getAsPath(), includes: jsonPatterns).each { File file ->
             file.setText(JsonOutput.toJson(new JsonSlurper().parse(file, 'UTF-8')))

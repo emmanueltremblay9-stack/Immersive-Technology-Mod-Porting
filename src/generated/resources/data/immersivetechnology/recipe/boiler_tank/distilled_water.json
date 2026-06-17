@@ -1,0 +1,12 @@
+{
+  "type": "immersivetechnology:boiler_tank",
+  "input": {
+    "amount": 250,
+    "tag": "immersivetechnology:distilled_water"
+  },
+  "result": {
+    "amount": 500,
+    "id": "immersivetechnology:steam"
+  },
+  "time": 10
+}

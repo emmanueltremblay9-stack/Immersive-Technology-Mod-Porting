@@ -8,6 +8,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
@@ -40,7 +41,7 @@ public class ITBlockLootProvider extends BlockLootSubProvider {
 
         registerMultiblocksNoDrop();
 
-        ITFluids.ALL_ENTRIES.forEach(entry -> add(entry.getBlock(), noDrop()));
+        ITFluids.ALL_ENTRIES.forEach(entry -> addNoDrop(entry.getBlock()));
     }
 
     private void registerEntity(DeferredHolder<Block, ? extends Block> block) {
@@ -49,19 +50,25 @@ public class ITBlockLootProvider extends BlockLootSubProvider {
     }
 
     private void registerMultiblocksNoDrop() {
-        add(ITMultiblockProvider.ALTERNATOR.block().get(), noDrop());
-        add(ITMultiblockProvider.BOILER_LIQUID.block().get(), noDrop());
-        add(ITMultiblockProvider.BOILER_SOLID.block().get(), noDrop());
-        add(ITMultiblockProvider.BOILER_TANK.block().get(), noDrop());
-        add(ITMultiblockProvider.COOLING_TOWER.block().get(), noDrop());
-        add(ITMultiblockProvider.DISTILLER.block().get(), noDrop());
-        add(ITMultiblockProvider.GAS_TURBINE.block().get(), noDrop());
-        add(ITMultiblockProvider.HEAT_EXCHANGER.block().get(), noDrop());
-        add(ITMultiblockProvider.SOLAR_MELTER.block().get(), noDrop());
-        add(ITMultiblockProvider.SOLAR_REFLECTOR.block().get(), noDrop());
-        add(ITMultiblockProvider.SOLAR_TOWER.block().get(), noDrop());
-        add(ITMultiblockProvider.STEAM_TURBINE.block().get(), noDrop());
-        add(ITMultiblockProvider.STEEL_SHEETMETAL_TANK.block().get(), noDrop());
+        addNoDrop(ITMultiblockProvider.ALTERNATOR.block().get());
+        addNoDrop(ITMultiblockProvider.BOILER_LIQUID.block().get());
+        addNoDrop(ITMultiblockProvider.BOILER_SOLID.block().get());
+        addNoDrop(ITMultiblockProvider.BOILER_TANK.block().get());
+        addNoDrop(ITMultiblockProvider.COOLING_TOWER.block().get());
+        addNoDrop(ITMultiblockProvider.DISTILLER.block().get());
+        addNoDrop(ITMultiblockProvider.GAS_TURBINE.block().get());
+        addNoDrop(ITMultiblockProvider.HEAT_EXCHANGER.block().get());
+        addNoDrop(ITMultiblockProvider.SOLAR_MELTER.block().get());
+        addNoDrop(ITMultiblockProvider.SOLAR_REFLECTOR.block().get());
+        addNoDrop(ITMultiblockProvider.SOLAR_TOWER.block().get());
+        addNoDrop(ITMultiblockProvider.STEAM_TURBINE.block().get());
+        addNoDrop(ITMultiblockProvider.STEEL_SHEETMETAL_TANK.block().get());
+    }
+
+    private void addNoDrop(Block block) {
+        if (block.getLootTable() != BuiltInLootTables.EMPTY) {
+            add(block, noDrop());
+        }
     }
 
     private LootPool.Builder createPoolBuilder() { return LootPool.lootPool().when(ExplosionCondition.survivesExplosion()); }
