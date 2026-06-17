@@ -14,7 +14,7 @@ import blusunrize.immersiveengineering.api.multiblocks.blocks.util.*;
 import mctmods.immersivetechnology.core.util.capability.CapabilityReference;
 import blusunrize.immersiveengineering.common.blocks.multiblocks.blockimpl.InitialMultiblockContext;
 import com.google.common.collect.ImmutableList;
-import mctmods.immersivetechnology.client.particles.ColoredSmoke;
+import mctmods.immersivetechnology.common.particles.ColoredSmoke;
 import mctmods.immersivetechnology.common.multiblocks.helper.*;
 import mctmods.immersivetechnology.common.fluids.helper.ITSolarTank;
 import mctmods.immersivetechnology.common.multiblocks.metal.interfaces.ITISolarMultiblockState;

@@ -1,6 +1,6 @@
 package mctmods.immersivetechnology.client.particles.helper;
 
-import mctmods.immersivetechnology.client.particles.ColoredSmoke;
+import mctmods.immersivetechnology.common.particles.ColoredSmoke;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;

@@ -38,6 +38,9 @@ public class ITCommonConfig {
 
     @SubscribeEvent
     public static void onConfig(final ModConfigEvent event) {
+        if (event instanceof ModConfigEvent.Unloading) {
+            return;
+        }
         if (event.getConfig().getSpec() == SPEC) {
             boilerDefaultWorkingHeat = BOILER_DEFAULT_WORKING_HEAT.get();
             solarTowerWorkingHeatLevel = SOLAR_TOWER_WORKING_HEAT_LEVEL.get();

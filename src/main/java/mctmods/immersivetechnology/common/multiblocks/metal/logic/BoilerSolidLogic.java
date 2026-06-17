@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableList;
 import mctmods.immersivetechnology.api.convergence.HeatCapabilities;
 import mctmods.immersivetechnology.api.convergence.capability.IHeatConsumer;
 import mctmods.immersivetechnology.api.convergence.capability.IHeatProvider;
-import mctmods.immersivetechnology.client.particles.ColoredSmoke;
+import mctmods.immersivetechnology.common.particles.ColoredSmoke;
 import mctmods.immersivetechnology.common.blocks.helper.ITProperties;
 import mctmods.immersivetechnology.common.multiblocks.helper.ITDisplayContext;
 import mctmods.immersivetechnology.common.multiblocks.helper.ITMultiBlockInventoryUtils;

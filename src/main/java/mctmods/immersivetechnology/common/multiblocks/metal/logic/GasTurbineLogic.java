@@ -17,7 +17,7 @@ import com.google.common.collect.ImmutableList;
 import mctmods.immersivetechnology.api.convergence.MechanicalCapabilities;
 import mctmods.immersivetechnology.api.convergence.capability.IMechanicalEnergyConsumer;
 import mctmods.immersivetechnology.api.convergence.capability.IMechanicalEnergyProvider;
-import mctmods.immersivetechnology.client.particles.ColoredSmoke;
+import mctmods.immersivetechnology.common.particles.ColoredSmoke;
 import mctmods.immersivetechnology.common.multiblocks.helper.ITDisplayContext;
 import mctmods.immersivetechnology.common.multiblocks.helper.ITPressurizedFluidOutput;
 import mctmods.immersivetechnology.common.multiblocks.metal.recipe.GasTurbineRecipe;

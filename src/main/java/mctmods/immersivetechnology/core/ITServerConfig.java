@@ -300,6 +300,9 @@ public class ITServerConfig {
 
     @SubscribeEvent
     public static void onConfig(final ModConfigEvent event) {
+        if (event instanceof ModConfigEvent.Unloading) {
+            return;
+        }
         if (event.getConfig().getSpec() == SPEC) {
             disassemblyMode = DISASSEMBLY_MODE.get();
             alternatorPowerFactor = ALTERNATOR_POWER_FACTOR.get();
