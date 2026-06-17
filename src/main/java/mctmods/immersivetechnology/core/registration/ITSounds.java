@@ -16,14 +16,12 @@ public class ITSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> coolingTower = registerSound("cooling_tower");
     public static final DeferredHolder<SoundEvent, SoundEvent> dance = registerSound("dance");
     public static final DeferredHolder<SoundEvent, SoundEvent> distiller = registerSound("distiller");
-    public static final DeferredHolder<SoundEvent, SoundEvent> electrolyticCrucibleBattery = registerSound("electrolytic_crucible_battery");
     public static final DeferredHolder<SoundEvent, SoundEvent> gasArc = registerSound("gas_arc");
     public static final DeferredHolder<SoundEvent, SoundEvent> gasIgnite = registerSound("gas_ignite");
     public static final DeferredHolder<SoundEvent, SoundEvent> gasRunning = registerSound("gas_running");
     public static final DeferredHolder<SoundEvent, SoundEvent> gasSpark = registerSound("gas_spark");
     public static final DeferredHolder<SoundEvent, SoundEvent> gasStarter = registerSound("gas_starter");
     public static final DeferredHolder<SoundEvent, SoundEvent> heatExchanger = registerSound("heat_exchanger");
-    public static final DeferredHolder<SoundEvent, SoundEvent> meltingCrucible = registerSound("melting_crucible");
     public static final DeferredHolder<SoundEvent, SoundEvent> pilot = registerSound("pilot");
     public static final DeferredHolder<SoundEvent, SoundEvent> pressure_release = registerSound("pressure_release");
     public static final DeferredHolder<SoundEvent, SoundEvent> steamTurbine = registerSound("steam_turbine");

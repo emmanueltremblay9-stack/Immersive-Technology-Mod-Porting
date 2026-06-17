@@ -114,7 +114,7 @@ processResources {
 tasks.register('copyModsTomlForIntelliJ', Copy) {
     from processResources.destinationDir
     into "$projectDir/out/production/resources"
-    include "META-INF/mods.toml"
+    include "META-INF/neoforge.mods.toml"
     dependsOn processResources
 }
 
