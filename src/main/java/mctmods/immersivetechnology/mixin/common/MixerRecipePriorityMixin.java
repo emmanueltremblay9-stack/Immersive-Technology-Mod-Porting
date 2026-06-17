@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.api.crafting.IngredientWithSize;
 import blusunrize.immersiveengineering.api.crafting.MixerRecipe;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,15 +18,14 @@ import java.util.List;
 public abstract class MixerRecipePriorityMixin {
 
     @Inject(
-            method = "findRecipe(Lnet/minecraft/world/level/Level;Lnet/minecraftforge/fluids/FluidStack;Lnet/minecraft/core/NonNullList;)Lblusunrize/immersiveengineering/api/crafting/MixerRecipe;",
+            method = "findRecipe(Lnet/minecraft/world/level/Level;Lnet/neoforged/neoforge/fluids/FluidStack;Lnet/minecraft/core/NonNullList;)Lnet/minecraft/world/item/crafting/RecipeHolder;",
             at = @At("RETURN"),
             cancellable = true,
             remap = false
     )
-    private static void it$prioritizeHigherIngredients(Level level, FluidStack fluid, NonNullList<ItemStack> components, CallbackInfoReturnable<MixerRecipe> cir) {
-        List<MixerRecipe> allMatching = MixerRecipe.RECIPES.getRecipes(level).stream()
-                .map(holder -> holder.value())
-                .filter(r -> r.matches(fluid, components))
+    private static void it$prioritizeHigherIngredients(Level level, FluidStack fluid, NonNullList<ItemStack> components, CallbackInfoReturnable<RecipeHolder<MixerRecipe>> cir) {
+        List<RecipeHolder<MixerRecipe>> allMatching = MixerRecipe.RECIPES.getRecipes(level).stream()
+                .filter(holder -> holder.value().matches(fluid, components))
                 .toList();
 
         if (allMatching.isEmpty()) {
@@ -33,19 +33,19 @@ public abstract class MixerRecipePriorityMixin {
             return;
         }
 
-        MixerRecipe best = allMatching.stream()
+        RecipeHolder<MixerRecipe> best = allMatching.stream()
                 .max((r1, r2) -> {
                     int sum1 = 0;
-                    for (IngredientWithSize ingr : r1.itemInputs) {
+                    for (IngredientWithSize ingr : r1.value().itemInputs) {
                         if (ingr != null) sum1 += ingr.getCount();
                     }
-                    int count1 = (int) r1.itemInputs.stream().filter(ingr -> ingr != null).count();
+                    int count1 = (int) r1.value().itemInputs.stream().filter(ingr -> ingr != null).count();
 
                     int sum2 = 0;
-                    for (IngredientWithSize ingr : r2.itemInputs) {
+                    for (IngredientWithSize ingr : r2.value().itemInputs) {
                         if (ingr != null) sum2 += ingr.getCount();
                     }
-                    int count2 = (int) r2.itemInputs.stream().filter(ingr -> ingr != null).count();
+                    int count2 = (int) r2.value().itemInputs.stream().filter(ingr -> ingr != null).count();
 
                     int cmp = Integer.compare(sum1, sum2);
                     if (cmp == 0) cmp = Integer.compare(count1, count2);

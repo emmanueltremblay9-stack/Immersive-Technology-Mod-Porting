@@ -29,7 +29,7 @@ side="BOTH"
 [[dependencies.immersivetechnology]]
 modId="immersiveengineering"
 type="required"
-versionRange="[${version_ie},]"
+versionRange="[${version_ie},)"
 ordering="NONE"
 side="BOTH"
 

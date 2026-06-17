@@ -2,11 +2,10 @@ package mctmods.immersivetechnology;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 import mctmods.immersivetechnology.common.multiblocks.helper.ITQueueProcessor;
 import mctmods.immersivetechnology.common.multiblocks.helper.ITTemplateMultiblock;
-import mctmods.immersivetechnology.core.integration.top.OneProbeHelper;
+import mctmods.immersivetechnology.core.integration.top.OneProbeCompat;
 import mctmods.immersivetechnology.core.network.ITPacketHandler;
 import mctmods.immersivetechnology.core.util.loot.ITLootFunctions;
 import mctmods.immersivetechnology.core.ITClientConfig;
@@ -22,7 +21,6 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.InterModComms;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -68,10 +66,7 @@ public class ImmersiveTechnology {
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
         if (ModList.get().isLoaded("theoneprobe")) {
-            InterModComms.sendTo("theoneprobe", "getTheOneProbe", () -> (Function<mcjty.theoneprobe.api.ITheOneProbe, Void>) top -> {
-                OneProbeHelper.register(top);
-                return null;
-            });
+            OneProbeCompat.enqueueIMC();
         }
     }
 
@@ -82,7 +77,7 @@ public class ImmersiveTechnology {
         ITTemplateMultiblock.pendingQueues.removeIf(ITQueueProcessor::isEmpty);
     }
 
-    @SubscribeEvent public void onServerStarting(ServerStartingEvent event) {
+    @SubscribeEvent public static void onServerStarting(ServerStartingEvent event) {
         ITLib.IT_LOGGER.info("HELLO FROM SERVER STARTING");
     }
 }

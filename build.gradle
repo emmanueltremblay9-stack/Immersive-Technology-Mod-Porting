@@ -98,6 +98,7 @@ def version_replaces = { [
 def jsonPatterns = ["**/*.json", "**/*.mcmeta"]
 
 processResources {
+    doNotTrackState("Windows OneDrive may materialize copied generated resources as reparse points, which Gradle cannot snapshot reliably.")
     duplicatesStrategy = DuplicatesStrategy.FAIL
     inputs.properties(version_replaces())
     filesMatching("META-INF/neoforge.mods.toml") {

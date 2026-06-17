@@ -8,12 +8,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryType;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.EventBusSubscriber.Bus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
-@EventBusSubscriber(modid = ITLib.MODID, bus = Bus.MOD)
 public class ITLootFunctions {
     private static final DeferredRegister<LootPoolEntryType> ENTRY_REGISTER;
     public static final DeferredHolder<LootPoolEntryType, LootPoolEntryType> DROP_INVENTORY;
