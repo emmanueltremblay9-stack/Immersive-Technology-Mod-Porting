@@ -271,6 +271,41 @@ jar {
     archiveClassifier.set('')
 }
 
+tasks.register('verifyNoForeignPackages') {
+    dependsOn tasks.named('jar')
+    def jarTask = tasks.named('jar', Jar)
+    inputs.file(jarTask.flatMap { it.archiveFile })
+
+    doLast {
+        File jarFile = jarTask.get().archiveFile.get().asFile
+        def forbiddenPrefix = 'blusunrize/immersiveengineering/'
+        def offendingEntries = []
+
+        new java.util.zip.ZipFile(jarFile).withCloseable { zip ->
+            zip.entries().each { entry ->
+                if (!entry.directory && entry.name.endsWith('.class') && entry.name.startsWith(forbiddenPrefix)) {
+                    offendingEntries << entry.name
+                }
+            }
+        }
+
+        if (!offendingEntries.isEmpty()) {
+            throw new GradleException(
+                    "Foreign Immersive Engineering classes found in ${jarFile.name}:\n" +
+                            offendingEntries.sort().join('\n')
+            )
+        }
+    }
+}
+
+tasks.named('check') {
+    dependsOn tasks.named('verifyNoForeignPackages')
+}
+
+tasks.named('build') {
+    dependsOn tasks.named('verifyNoForeignPackages')
+}
+
 tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
 
 idea { module { downloadSources = true; downloadJavadoc = true } }
