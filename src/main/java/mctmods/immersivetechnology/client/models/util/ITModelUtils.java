@@ -1,7 +1,7 @@
 package mctmods.immersivetechnology.client.models.util;
 
+import blusunrize.immersiveengineering.mixin.accessors.client.SimpleModelAccess;
 import mctmods.immersivetechnology.client.models.helper.ITBakedQuadBuilder;
-import mctmods.immersivetechnology.mixin.client.SimpleModelAccessMixin;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ITModelUtils {
     public static RenderTypeGroup copyTypes(SimpleBakedModel simpleModel) {
-        SimpleModelAccessMixin access = (SimpleModelAccessMixin)simpleModel;
+        SimpleModelAccess access = (SimpleModelAccess)simpleModel;
         ChunkRenderTypeSet blockTypes = access.getBlockRenderTypes();
         if (blockTypes != null && !blockTypes.isEmpty()) {
             List<RenderType> itemTypes = access.getItemRenderTypes();
@@ -26,13 +26,7 @@ public class ITModelUtils {
     }
 
     public static RenderTypeGroup copyTypesFast(SimpleBakedModel simpleModel) {
-        SimpleModelAccessMixin access = (SimpleModelAccessMixin)simpleModel;
-        ChunkRenderTypeSet blockTypes = access.getBlockRenderTypesFast();
-        if (blockTypes != null && !blockTypes.isEmpty()) {
-            List<RenderType> itemTypes = access.getItemRenderTypesFast();
-            List<RenderType> fabulousItemTypes = access.getFabulousItemRenderTypes();
-            return new RenderTypeGroup(blockTypes.iterator().next(), itemTypes.get(0), fabulousItemTypes.get(0));
-        } else { return RenderTypeGroup.EMPTY; }
+        return copyTypes(simpleModel);
     }
 
     public static BakedQuad createBakedQuad(Vec3[] vertices, Direction facing, TextureAtlasSprite sprite, double[] uvs, float[] colour, boolean invert) {

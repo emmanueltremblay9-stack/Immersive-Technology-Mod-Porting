@@ -2,8 +2,8 @@ package mctmods.immersivetechnology.core.integration.jade;
 
 import blusunrize.immersiveengineering.api.multiblocks.blocks.registry.MultiblockBlockEntityDummy;
 import blusunrize.immersiveengineering.api.multiblocks.blocks.registry.MultiblockBlockEntityMaster;
+import mctmods.immersivetechnology.common.multiblocks.helper.ITMultiblockPartBlock;
 import mctmods.immersivetechnology.core.lib.ITLib;
-import mctmods.immersivetechnology.core.registration.ITMultiblockProvider;
 import snownee.jade.api.IWailaClientRegistration;
 import snownee.jade.api.IWailaCommonRegistration;
 import snownee.jade.api.IWailaPlugin;
@@ -16,9 +16,7 @@ public class ITWailaPlugin implements IWailaPlugin {
     @Override
     public void registerClient(IWailaClientRegistration registration) {
         ITLib.IT_LOGGER.info("ITWailaPlugin: Client registration");
-        for (var blockClass : ITMultiblockProvider.getAllBlockClasses()) {
-            registration.registerBlockComponent(ITDisplayProvider.INSTANCE, blockClass);
-        }
+        registration.registerBlockComponent(ITDisplayProvider.INSTANCE, ITMultiblockPartBlock.class);
         registration.registerEnergyStorageClient(new ITMultiblockEnergyDataProvider());
         registration.registerFluidStorageClient(new ITMultiblockFluidDataProvider());
     }
