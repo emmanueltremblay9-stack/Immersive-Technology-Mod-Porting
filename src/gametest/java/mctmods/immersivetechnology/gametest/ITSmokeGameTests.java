@@ -3,6 +3,7 @@ package mctmods.immersivetechnology.gametest;
 import blusunrize.immersiveengineering.common.blocks.metal.FluidPipeBlockEntity;
 import blusunrize.immersiveengineering.common.register.IEBlocks;
 import mctmods.immersivetechnology.core.lib.ITLib;
+import mctmods.immersivetechnology.core.registration.ITMultiblockProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
@@ -14,7 +15,9 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 @PrefixGameTestTemplate(false)
 public class ITSmokeGameTests {
     @GameTest(template = "multiblocks/alternator")
-    public static void modLoadsWithExistingMultiblockTemplate(GameTestHelper helper) {
+    public static void registeredMultiblockTemplatesLoad(GameTestHelper helper) {
+        helper.assertFalse(ITMultiblockProvider.MB_TEMPLATE_MAP.isEmpty(), "No Immersive Technology multiblock templates were registered");
+        ITMultiblockProvider.MB_TEMPLATE_MAP.forEach((name, template) -> template.getTemplate(helper.getLevel()));
         helper.succeed();
     }
 
