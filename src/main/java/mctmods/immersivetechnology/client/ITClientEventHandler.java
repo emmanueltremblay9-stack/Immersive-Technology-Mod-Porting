@@ -16,10 +16,9 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.EventBusSubscriber.Bus;
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 
-@EventBusSubscriber(modid = ITLib.MODID, value = Dist.CLIENT, bus = Bus.GAME)
+@EventBusSubscriber(modid = ITLib.MODID, value = Dist.CLIENT)
 public class ITClientEventHandler {
     @SubscribeEvent
     public static void onRenderOverlayPost(RenderGuiLayerEvent.Post event) {

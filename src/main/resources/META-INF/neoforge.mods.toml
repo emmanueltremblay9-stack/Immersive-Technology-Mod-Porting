@@ -3,30 +3,30 @@ loaderVersion="[3,)"
 license="${mod_license}"
 
 [[mods]]
-modId = "immersivetechnology"
+modId = "${mod_id}"
 version = "${version}"
-displayName = "Immersive Technology"
-description = "An in development version of Immersive Technology for Minecraft 1.21.1 on NeoForge."
+displayName = "${mod_name}"
+description = "${mod_description}"
 authors = "tgstyle, MagneticPrism"
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/mct-immersive-technology"
 logoFile = "ITlogo.png"
 credits = "tgstyle (author), Peter (new models), MagneticPrism (started the port), KHAZ (new sounds), and the Immersive Engineering Team (code dependencies)"
 
-[[dependencies.immersivetechnology]]
+[[dependencies.${mod_id}]]
 modId="neoforge"
 type="required"
 versionRange="[${version_neoforge},)"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.immersivetechnology]]
+[[dependencies.${mod_id}]]
 modId="minecraft"
 type="required"
 versionRange="[${version_mc}]"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.immersivetechnology]]
+[[dependencies.${mod_id}]]
 modId="immersiveengineering"
 type="required"
 versionRange="[${version_ie},)"
@@ -34,4 +34,4 @@ ordering="NONE"
 side="BOTH"
 
 [[mixins]]
-config="mixins.immersivetechnology.json"
+config="mixins.immersive_technology_reforged.json"

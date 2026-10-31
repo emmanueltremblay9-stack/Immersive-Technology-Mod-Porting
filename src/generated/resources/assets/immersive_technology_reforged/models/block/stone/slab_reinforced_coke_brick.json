@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "immersive_technology_reforged:block/stone/reinforced_coke_brick",
+    "side": "immersive_technology_reforged:block/stone/reinforced_coke_brick",
+    "top": "immersive_technology_reforged:block/stone/reinforced_coke_brick"
+  }
+}

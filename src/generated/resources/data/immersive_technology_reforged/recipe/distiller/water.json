@@ -1,0 +1,18 @@
+{
+  "type": "immersive_technology_reforged:distiller",
+  "chance": 0.5,
+  "energy": 10000,
+  "input": {
+    "amount": 1000,
+    "tag": "minecraft:water"
+  },
+  "item_output": {
+    "count": 1,
+    "id": "immersive_technology_reforged:salt"
+  },
+  "result": {
+    "amount": 500,
+    "id": "immersive_technology_reforged:distilled_water"
+  },
+  "time": 20
+}

@@ -1,0 +1,1 @@
+{"variants":{"facing=north":{"model":"immersive_technology_reforged:block/metal/trash_fluid"},"facing=south":{"model":"immersive_technology_reforged:block/metal/trash_fluid","y":180},"facing=west":{"model":"immersive_technology_reforged:block/metal/trash_fluid","y":270},"facing=east":{"model":"immersive_technology_reforged:block/metal/trash_fluid","y":90}}}

@@ -1,0 +1,12 @@
+{
+  "flip_v": true,
+  "loader": "neoforge:obj",
+  "model": "immersive_technology_reforged:models/multiblock/metal/obj/solar_reflector/solar_reflector_support.obj",
+  "transform": {
+    "translation": [
+      1.6,
+      0.0,
+      1.6
+    ]
+  }
+}

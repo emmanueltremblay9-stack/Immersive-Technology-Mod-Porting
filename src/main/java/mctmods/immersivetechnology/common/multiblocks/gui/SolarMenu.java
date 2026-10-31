@@ -68,14 +68,16 @@ public class SolarMenu extends ITContainerMenu {
     @Override public void broadcastChanges() {
         if (mbStateSupplier != null) {
             ITISolarMultiblockState s = mbStateSupplier.get();
-            state.set(0, (int) s.getHeatLevel());
-            if (!this.usingPlayers.isEmpty()) { state.set(1, SolarTowerLogic.getSolarIncidenceAngleSection(this.usingPlayers.get(0).level())); }
-            state.set(2, s.getDirCounts()[0]);
-            state.set(3, s.getDirCounts()[1]);
-            state.set(4, s.getDirCounts()[2]);
-            state.set(5, s.getDirCounts()[3]);
-            state.set(6, s.getProcessProgress());
-            state.set(7, s.isSunVisible() ? 1 : 0);
+            if (s != null) {
+                state.set(0, (int) s.getHeatLevel());
+                if (!this.usingPlayers.isEmpty()) { state.set(1, SolarTowerLogic.getSolarIncidenceAngleSection(this.usingPlayers.get(0).level())); }
+                state.set(2, s.getDirCounts()[0]);
+                state.set(3, s.getDirCounts()[1]);
+                state.set(4, s.getDirCounts()[2]);
+                state.set(5, s.getDirCounts()[3]);
+                state.set(6, s.getProcessProgress());
+                state.set(7, s.isSunVisible() ? 1 : 0);
+            }
         }
         super.broadcastChanges();
     }

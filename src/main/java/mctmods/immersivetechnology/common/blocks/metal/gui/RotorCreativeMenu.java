@@ -26,7 +26,8 @@ public class RotorCreativeMenu extends ITContainerMenu {
     public RotorCreativeMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf buffer) {
         super(ITContainerMenu.clientCtx(type, id));
         BlockPos pos = buffer.readBlockPos();
-        this.tile = (RotorCreativeBlockEntity) inv.player.level().getBlockEntity(pos);
+        var blockEntity = inv.player.level().getBlockEntity(pos);
+        this.tile = blockEntity instanceof RotorCreativeBlockEntity rotor ? rotor : null;
         addDataSlot(new DataSlot() { public int get() { return 0; } public void set(int v) { rpm = v; } });
     }
 
@@ -34,7 +35,7 @@ public class RotorCreativeMenu extends ITContainerMenu {
 
     public static RotorCreativeMenu makeClient(MenuType<RotorCreativeMenu> type, int id, Inventory inv, FriendlyByteBuf buffer) { return new RotorCreativeMenu(type, id, inv, buffer); }
 
-    @Override public boolean stillValid(@NotNull Player player) { return tile.stillValid(player); }
+    @Override public boolean stillValid(@NotNull Player player) { return tile == null || tile.stillValid(player); }
 
     @Override @NotNull public ItemStack quickMoveStack(@NotNull Player pPlayer, int pIndex) {
         if (pIndex < 0 || pIndex >= slots.size()) { return ItemStack.EMPTY; }

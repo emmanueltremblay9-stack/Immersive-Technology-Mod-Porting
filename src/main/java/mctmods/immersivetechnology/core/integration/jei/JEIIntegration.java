@@ -14,18 +14,16 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.neoforge.NeoForgeTypes;
+import mezz.jei.api.gui.builder.IClickableIngredientFactory;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.handlers.IGuiClickableArea;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
-import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.recipe.IFocusFactory;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.runtime.IClickableIngredient;
-import mezz.jei.api.runtime.IIngredientManager;
-import mezz.jei.api.runtime.IJeiRuntime;
 import mezz.jei.api.runtime.IRecipesGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Rect2i;
@@ -47,7 +45,6 @@ import static mctmods.immersivetechnology.client.gui.helper.ITFluidInfoArea.fill
 @JeiPlugin public class JEIIntegration implements IModPlugin {
 
     private static final ResourceLocation ID = ITLib.rl("main");
-    private static IIngredientManager ingredientManager;
 
     @Override @NotNull public ResourceLocation getPluginUid() { return ID; }
 
@@ -93,7 +90,7 @@ import static mctmods.immersivetechnology.client.gui.helper.ITFluidInfoArea.fill
     @Override public void registerGuiHandlers(@NotNull IGuiHandlerRegistration registration) {
         registration.addGuiContainerHandler(BoilerLiquidScreen.class, new IGuiContainerHandler<>() {
             @Override
-            public @NotNull Optional<IClickableIngredient<?>> getClickableIngredientUnderMouse(@NotNull BoilerLiquidScreen gui, double mouseX, double mouseY) {
+            public @NotNull Optional<? extends IClickableIngredient<?>> getClickableIngredientUnderMouse(@NotNull IClickableIngredientFactory builder, @NotNull BoilerLiquidScreen gui, double mouseX, double mouseY) {
                 int relX = (int) (mouseX - gui.getLeftPos());
                 int relY = (int) (mouseY - gui.getTopPos());
                 FluidStack fs = null;
@@ -102,16 +99,7 @@ import static mctmods.immersivetechnology.client.gui.helper.ITFluidInfoArea.fill
                     fs = gui.getMenu().tanks.input1().getFluid();
                     area = new Rect2i(gui.getLeftPos() + 80, gui.getTopPos() + 20, 16, 47);
                 }
-                if (fs != null && fs.getAmount() > 0) {
-                    Rect2i finalArea = area;
-                    return ingredientManager.createTypedIngredient(NeoForgeTypes.FLUID_STACK, fs).map(typed -> new IClickableIngredient<FluidStack>() {
-                        @SuppressWarnings("removal")
-                        @Override @NotNull public ITypedIngredient<FluidStack> getTypedIngredient() {return typed;}
-
-                        @Override @NotNull public Rect2i getArea() {return finalArea;}
-                    });
-                }
-                return Optional.empty();
+                return createFluidClickableIngredient(builder, fs, area);
             }
 
             @Override @NotNull public Collection<IGuiClickableArea> getGuiClickableAreas(@NotNull BoilerLiquidScreen gui, double mouseX, double mouseY) {
@@ -122,7 +110,7 @@ import static mctmods.immersivetechnology.client.gui.helper.ITFluidInfoArea.fill
         });
 
         registration.addGuiContainerHandler(BoilerSolidScreen.class, new IGuiContainerHandler<>() {
-            @Override @NotNull public Optional<IClickableIngredient<?>> getClickableIngredientUnderMouse(@NotNull BoilerSolidScreen gui, double mouseX, double mouseY) {
+            @Override @NotNull public Optional<? extends IClickableIngredient<?>> getClickableIngredientUnderMouse(@NotNull IClickableIngredientFactory builder, @NotNull BoilerSolidScreen gui, double mouseX, double mouseY) {
                 int relX = (int) (mouseX - gui.getLeftPos());
                 int relY = (int) (mouseY - gui.getTopPos());
                 ItemStack is = ItemStack.EMPTY;
@@ -131,19 +119,7 @@ import static mctmods.immersivetechnology.client.gui.helper.ITFluidInfoArea.fill
                     is = gui.getMenu().getSlot(0).getItem();
                     area = new Rect2i(gui.getLeftPos() + 80, gui.getTopPos() + 53, 18, 18);
                 }
-                if (!is.isEmpty()) {
-                    Rect2i finalArea = area;
-                    return ingredientManager.createTypedIngredient(VanillaTypes.ITEM_STACK, is).map(typed -> new IClickableIngredient<ItemStack>() {
-                        @SuppressWarnings("removal")
-                        @Override @NotNull public ITypedIngredient<ItemStack> getTypedIngredient() {return typed;}
-
-                        @Override @NotNull public Rect2i getArea() {
-                            assert finalArea != null;
-                            return finalArea;
-                        }
-                    });
-                }
-                return Optional.empty();
+                return createItemClickableIngredient(builder, is, area);
             }
 
             @Override @NotNull public Collection<IGuiClickableArea> getGuiClickableAreas(@NotNull BoilerSolidScreen gui, double mouseX, double mouseY) {
@@ -154,7 +130,7 @@ import static mctmods.immersivetechnology.client.gui.helper.ITFluidInfoArea.fill
         });
 
         registration.addGuiContainerHandler(DistillerScreen.class, new IGuiContainerHandler<>() {
-            @Override @NotNull public Optional<IClickableIngredient<?>> getClickableIngredientUnderMouse(@NotNull DistillerScreen gui, double mouseX, double mouseY) {
+            @Override @NotNull public Optional<? extends IClickableIngredient<?>> getClickableIngredientUnderMouse(@NotNull IClickableIngredientFactory builder, @NotNull DistillerScreen gui, double mouseX, double mouseY) {
                 int relX = (int) (mouseX - gui.getLeftPos());
                 int relY = (int) (mouseY - gui.getTopPos());
                 FluidStack fs = null;
@@ -166,16 +142,7 @@ import static mctmods.immersivetechnology.client.gui.helper.ITFluidInfoArea.fill
                     fs = gui.getMenu().tanks.output().getFluid();
                     area = new Rect2i(gui.getLeftPos() + 112, gui.getTopPos() + 19, 20, 51);
                 }
-                if (fs != null && fs.getAmount() > 0) {
-                    Rect2i finalArea = area;
-                    return ingredientManager.createTypedIngredient(NeoForgeTypes.FLUID_STACK, fs).map(typed -> new IClickableIngredient<FluidStack>() {
-                        @SuppressWarnings("removal")
-                        @Override @NotNull public ITypedIngredient<FluidStack> getTypedIngredient() {return typed;}
-
-                        @Override @NotNull public Rect2i getArea() {return finalArea;}
-                    });
-                }
-                return Optional.empty();
+                return createFluidClickableIngredient(builder, fs, area);
             }
 
             @Override @NotNull public Collection<IGuiClickableArea> getGuiClickableAreas(@NotNull DistillerScreen gui, double mouseX, double mouseY) {
@@ -187,7 +154,7 @@ import static mctmods.immersivetechnology.client.gui.helper.ITFluidInfoArea.fill
         });
 
         registration.addGuiContainerHandler(BoilerTankScreen.class, new IGuiContainerHandler<>() {
-            @Override @NotNull public Optional<IClickableIngredient<?>> getClickableIngredientUnderMouse(@NotNull BoilerTankScreen gui, double mouseX, double mouseY) {
+            @Override @NotNull public Optional<? extends IClickableIngredient<?>> getClickableIngredientUnderMouse(@NotNull IClickableIngredientFactory builder, @NotNull BoilerTankScreen gui, double mouseX, double mouseY) {
                 int relX = (int) (mouseX - gui.getLeftPos());
                 int relY = (int) (mouseY - gui.getTopPos());
                 FluidStack fs = null;
@@ -199,16 +166,7 @@ import static mctmods.immersivetechnology.client.gui.helper.ITFluidInfoArea.fill
                     fs = gui.getMenu().tanks.output().getFluid();
                     area = new Rect2i(gui.getLeftPos() + 90, gui.getTopPos() + 18, 20, 51);
                 }
-                if (fs != null && fs.getAmount() > 0) {
-                    Rect2i finalArea = area;
-                    return ingredientManager.createTypedIngredient(NeoForgeTypes.FLUID_STACK, fs).map(typed -> new IClickableIngredient<FluidStack>() {
-                        @SuppressWarnings("removal")
-                        @Override @NotNull public ITypedIngredient<FluidStack> getTypedIngredient() {return typed;}
-
-                        @Override @NotNull public Rect2i getArea() {return finalArea;}
-                    });
-                }
-                return Optional.empty();
+                return createFluidClickableIngredient(builder, fs, area);
             }
 
             @Override @NotNull public Collection<IGuiClickableArea> getGuiClickableAreas(@NotNull BoilerTankScreen gui, double mouseX, double mouseY) {
@@ -220,7 +178,7 @@ import static mctmods.immersivetechnology.client.gui.helper.ITFluidInfoArea.fill
         });
 
         registration.addGuiContainerHandler(SolarScreen.class, new IGuiContainerHandler<>() {
-            @Override @NotNull public Optional<IClickableIngredient<?>> getClickableIngredientUnderMouse(@NotNull SolarScreen gui, double mouseX, double mouseY) {
+            @Override @NotNull public Optional<? extends IClickableIngredient<?>> getClickableIngredientUnderMouse(@NotNull IClickableIngredientFactory builder, @NotNull SolarScreen gui, double mouseX, double mouseY) {
                 int relX = (int) (mouseX - gui.getLeftPos());
                 int relY = (int) (mouseY - gui.getTopPos());
                 FluidStack fs = null;
@@ -232,16 +190,7 @@ import static mctmods.immersivetechnology.client.gui.helper.ITFluidInfoArea.fill
                     fs = gui.getMenu().outputTank.getFluid();
                     area = new Rect2i(gui.getLeftPos() + 126, gui.getTopPos() + 21, 16, 47);
                 }
-                if (fs != null && fs.getAmount() > 0) {
-                    Rect2i finalArea = area;
-                    return ingredientManager.createTypedIngredient(NeoForgeTypes.FLUID_STACK, fs).map(typed -> new IClickableIngredient<FluidStack>() {
-                        @SuppressWarnings("removal")
-                        @Override @NotNull public ITypedIngredient<FluidStack> getTypedIngredient() {return typed;}
-
-                        @Override @NotNull public Rect2i getArea() {return finalArea;}
-                    });
-                }
-                return Optional.empty();
+                return createFluidClickableIngredient(builder, fs, area);
             }
 
             @Override @NotNull public Collection<IGuiClickableArea> getGuiClickableAreas(@NotNull SolarScreen gui, double mouseX, double mouseY) {
@@ -251,6 +200,16 @@ import static mctmods.immersivetechnology.client.gui.helper.ITFluidInfoArea.fill
                 return areas;
             }
         });
+    }
+
+    private static Optional<? extends IClickableIngredient<?>> createFluidClickableIngredient(IClickableIngredientFactory builder, FluidStack fluid, Rect2i area) {
+        if (fluid == null || fluid.isEmpty() || area == null) { return Optional.empty(); }
+        return builder.createBuilder(NeoForgeTypes.FLUID_STACK, fluid).buildWithArea(area);
+    }
+
+    private static Optional<? extends IClickableIngredient<?>> createItemClickableIngredient(IClickableIngredientFactory builder, ItemStack stack, Rect2i area) {
+        if (stack.isEmpty() || area == null) { return Optional.empty(); }
+        return builder.createBuilder(VanillaTypes.ITEM_STACK, stack).buildWithArea(area);
     }
 
     private static IGuiClickableArea createBoilerLiquidClickableArea(IFluidTank tank) {
@@ -311,8 +270,6 @@ import static mctmods.immersivetechnology.client.gui.helper.ITFluidInfoArea.fill
             }
         };
     }
-
-    @Override public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) { ingredientManager = jeiRuntime.getIngredientManager(); }
 
     private List<BoilerLiquidRecipe> getBoilerLiquidRecipes() { assert Minecraft.getInstance().level != null; return BoilerLiquidRecipe.RECIPES.getRecipes(Minecraft.getInstance().level).stream().map(holder -> holder.value()).toList(); }
     private List<BoilerSolidRecipe> getBoilerSolidRecipes() { assert Minecraft.getInstance().level != null; return BoilerSolidRecipe.RECIPES.getRecipes(Minecraft.getInstance().level).stream().map(holder -> holder.value()).toList(); }

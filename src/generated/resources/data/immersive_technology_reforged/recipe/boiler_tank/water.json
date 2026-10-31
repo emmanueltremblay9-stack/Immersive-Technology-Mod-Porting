@@ -1,0 +1,12 @@
+{
+  "type": "immersive_technology_reforged:boiler_tank",
+  "input": {
+    "amount": 250,
+    "tag": "minecraft:water"
+  },
+  "result": {
+    "amount": 450,
+    "id": "immersive_technology_reforged:steam"
+  },
+  "time": 10
+}

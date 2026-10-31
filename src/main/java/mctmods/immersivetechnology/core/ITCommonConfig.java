@@ -2,11 +2,8 @@ package mctmods.immersivetechnology.core;
 
 import mctmods.immersivetechnology.core.lib.ITLib;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 
-@EventBusSubscriber(modid = ITLib.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ITCommonConfig {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
@@ -36,7 +33,6 @@ public class ITCommonConfig {
 
     public static final ModConfigSpec SPEC = BUILDER.build();
 
-    @SubscribeEvent
     public static void onConfig(final ModConfigEvent event) {
         if (event instanceof ModConfigEvent.Unloading) {
             return;

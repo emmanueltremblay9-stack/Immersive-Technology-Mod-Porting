@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "immersivepetroleum"
+    }
+  ],
+  "type": "immersive_technology_reforged:gas_turbine",
+  "input": {
+    "amount": 114,
+    "tag": "neoforge:diesel"
+  },
+  "output": {
+    "amount": 1000,
+    "id": "immersive_technology_reforged:flue_gas"
+  },
+  "time": 10
+}

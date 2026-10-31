@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "immersive_technology_reforged:block/wooden/crate_creative"
+  }
+}

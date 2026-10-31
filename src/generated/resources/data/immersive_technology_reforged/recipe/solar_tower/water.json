@@ -1,0 +1,13 @@
+{
+  "type": "immersive_technology_reforged:solar_tower",
+  "input": {
+    "amount": 250,
+    "tag": "minecraft:water"
+  },
+  "output": {
+    "amount": 450,
+    "id": "immersive_technology_reforged:steam"
+  },
+  "requiredTemp": 100.0,
+  "time": 10
+}

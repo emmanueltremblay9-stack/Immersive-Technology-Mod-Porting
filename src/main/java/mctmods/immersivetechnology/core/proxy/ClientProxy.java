@@ -42,22 +42,30 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.function.Supplier;
 
-@EventBusSubscriber(value = Dist.CLIENT, modid = ITLib.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ClientProxy extends CommonProxy {
+    @Override public void registerModEventHandlers(IEventBus event) {
+        event.addListener(ClientProxy::registerMenuScreens);
+        event.addListener(ClientProxy::onClientSetup);
+        event.addListener(ClientProxy::registerParticleProviders);
+        event.addListener(ClientProxy::onItemColor);
+        event.addListener(ClientProxy::onBlockColor);
+        event.addListener(ClientProxy::registerModelLoaders);
+        event.addListener(ClientProxy::registerRenders);
+        event.addListener(ITDynamicModel::registerModels);
+    }
 
-    @SubscribeEvent public static void registerMenuScreens(RegisterMenuScreensEvent event) {
+    public static void registerMenuScreens(RegisterMenuScreensEvent event) {
         event.register(ITMenuTypes.BOILER_LIQUID_MENU.getType(), BoilerLiquidScreen::new);
         event.register(ITMenuTypes.BOILER_SOLID_MENU.getType(), BoilerSolidScreen::new);
         event.register(ITMenuTypes.BOILER_TANK_MENU.getType(), BoilerTankScreen::new);
@@ -72,7 +80,7 @@ public class ClientProxy extends CommonProxy {
         event.register(ITMenuTypes.VALVE_LOAD.getType(), (ValveLoadMenu menu, Inventory inv, Component title) -> new ValveLoadScreen(menu, inv));
     }
 
-    @SubscribeEvent public static void onClientSetup(FMLClientSetupEvent event) {
+    public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             for (ITFluids.FluidEntry entry : ITFluids.ALL_ENTRIES) {
                 ItemBlockRenderTypes.setRenderLayer(entry.getStill(), RenderType.translucent());
@@ -116,12 +124,12 @@ public class ClientProxy extends CommonProxy {
         instance.addEntry(category, ITLib.rl(path), weight);
     }
 
-    @SubscribeEvent public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
+    public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
         event.registerSpriteSet(ITParticles.COLORED_SMOKE.get(), ITColoredSmokeProvider::new);
         event.registerSpriteSet(ITParticles.SMOKE_CUSTOM.get(), ITSmokeCustomProvider::new);
     }
 
-    @SubscribeEvent public static void onItemColor(RegisterColorHandlersEvent.Item event) {
+    public static void onItemColor(RegisterColorHandlersEvent.Item event) {
         for (DeferredHolder<Item, ? extends Item> holder : ITItems.getItemRegistryMap().values()) {
             Item i = holder.get();
             if (i instanceof ITFlagItem) {
@@ -137,7 +145,7 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
-    @SubscribeEvent public static void onBlockColor(RegisterColorHandlersEvent.Block event) {
+    public static void onBlockColor(RegisterColorHandlersEvent.Block event) {
         for (ITFluids.FluidEntry entry : ITFluids.ALL_ENTRIES) {
             final int tint = entry.tintColor();
             event.register((state, level, pos, index) -> tint, entry.block().get());
@@ -153,7 +161,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override public Player getClientPlayer() { return Minecraft.getInstance().player; }
 
-    @SubscribeEvent public static void registerModelLoaders(ModelEvent.RegisterGeometryLoaders ev) {
+    public static void registerModelLoaders(ModelEvent.RegisterGeometryLoaders ev) {
         ev.register(ITLib.rl("obj"), ITObjLoader.INSTANCE);
         ev.register(ITModelConfigurableSides.Loader.NAME, new ITModelConfigurableSides.Loader());
         ev.register(ITMirroredModelLoader.ID, new ITMirroredModelLoader());
@@ -164,7 +172,7 @@ public class ClientProxy extends CommonProxy {
         SolarReflectorModels.MIRROR = new ITDynamicModel("solar_reflector_mirror");
     }
 
-    @SubscribeEvent public static void registerRenders(EntityRenderersEvent.RegisterRenderers event) { registerBERenders(event); }
+    public static void registerRenders(EntityRenderersEvent.RegisterRenderers event) { registerBERenders(event); }
 
     private static <T extends BlockEntity> void registerBERender(EntityRenderersEvent.RegisterRenderers event, Supplier<BlockEntityType<? extends T>> type, BlockEntityRendererProvider<T> provider) { event.registerBlockEntityRenderer(type.get(), provider); }
 

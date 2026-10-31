@@ -1,0 +1,148 @@
+{
+  "parent": "minecraft:block/block",
+  "dynamic": false,
+  "inner_model": {
+    "parent": "minecraft:block/block",
+    "ambientocclusion": false,
+    "automatic_culling": false,
+    "emissive_ambient": true,
+    "flip_v": true,
+    "loader": "immersive_technology_reforged:obj",
+    "model": "immersive_technology_reforged:models/multiblock/metal/obj/solar_reflector/solar_reflector.obj",
+    "shade_quads": true,
+    "textures": {
+      "particle": "immersive_technology_reforged:multiblock/metal/solar_reflector"
+    }
+  },
+  "loader": "immersive_technology_reforged:basic_split",
+  "split_parts": [
+    [
+      0,
+      0,
+      1
+    ],
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      1
+    ],
+    [
+      1,
+      0,
+      2
+    ],
+    [
+      2,
+      0,
+      1
+    ],
+    [
+      0,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      1
+    ],
+    [
+      2,
+      1,
+      1
+    ],
+    [
+      0,
+      2,
+      0
+    ],
+    [
+      0,
+      2,
+      1
+    ],
+    [
+      0,
+      2,
+      2
+    ],
+    [
+      1,
+      2,
+      0
+    ],
+    [
+      1,
+      2,
+      1
+    ],
+    [
+      1,
+      2,
+      2
+    ],
+    [
+      2,
+      2,
+      0
+    ],
+    [
+      2,
+      2,
+      1
+    ],
+    [
+      2,
+      2,
+      2
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      2
+    ],
+    [
+      2,
+      0,
+      0
+    ],
+    [
+      2,
+      0,
+      2
+    ],
+    [
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      2
+    ],
+    [
+      2,
+      1,
+      0
+    ],
+    [
+      2,
+      1,
+      2
+    ]
+  ],
+  "textures": {
+    "particle": "immersive_technology_reforged:multiblock/metal/solar_reflector"
+  }
+}

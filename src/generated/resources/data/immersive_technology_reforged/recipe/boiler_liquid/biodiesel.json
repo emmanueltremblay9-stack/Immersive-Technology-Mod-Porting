@@ -1,0 +1,9 @@
+{
+  "type": "immersive_technology_reforged:boiler_liquid",
+  "heatPerTick": 0.1,
+  "input": {
+    "amount": 10,
+    "tag": "c:biodiesel"
+  },
+  "time": 10
+}

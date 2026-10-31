@@ -1,0 +1,17 @@
+{
+  "type": "immersive_technology_reforged:heat_exchanger",
+  "energy": 640,
+  "input0": {
+    "amount": 250,
+    "tag": "immersive_technology_reforged:distilled_water"
+  },
+  "input1": {
+    "amount": 1000,
+    "tag": "immersive_technology_reforged:flue_gas"
+  },
+  "output0": {
+    "amount": 500,
+    "id": "immersive_technology_reforged:steam"
+  },
+  "time": 10
+}

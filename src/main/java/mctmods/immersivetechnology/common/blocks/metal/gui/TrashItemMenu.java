@@ -47,6 +47,7 @@ public class TrashItemMenu extends ITContainerMenu {
     }
 
     @Override @NotNull public ItemStack quickMoveStack(@NotNull Player pPlayer, int pIndex) {
+        if (pIndex < 0 || pIndex >= this.slots.size()) return ItemStack.EMPTY;
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(pIndex);
         if (slot.hasItem()) {

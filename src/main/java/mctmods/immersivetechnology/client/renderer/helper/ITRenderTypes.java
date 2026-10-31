@@ -3,6 +3,7 @@ package mctmods.immersivetechnology.client.renderer.helper;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import mctmods.immersivetechnology.core.lib.ITLib;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
@@ -38,7 +39,7 @@ public class ITRenderTypes extends RenderStateShard {
                 .setTextureState(BLOCK_SHEET_MIPPED)
                 .setShaderState(RENDERTYPE_POSITION_COLOR)
                 .createCompositeState(false);
-        TRANSLUCENT_POSITION_COLOR = createDefault("immersivetechnology:translucent_pos_color", DefaultVertexFormat.POSITION_COLOR, translucentNoTextureState);
+        TRANSLUCENT_POSITION_COLOR = createDefault(ITLib.MODID + ":translucent_pos_color", DefaultVertexFormat.POSITION_COLOR, translucentNoTextureState);
     }
 
     private ITRenderTypes(String name, Runnable setup, Runnable destroy) { super(name, setup, destroy); }

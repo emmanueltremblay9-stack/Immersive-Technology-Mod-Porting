@@ -1,0 +1,10 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "bottom": "immersive_technology_reforged:block/metal/valve_limiter_bottom",
+    "particle": "immersive_technology_reforged:block/metal/valve_limiter_side",
+    "side": "immersive_technology_reforged:block/metal/valve_limiter_side",
+    "top": "immersive_technology_reforged:block/metal/valve_limiter_top"
+  }
+}

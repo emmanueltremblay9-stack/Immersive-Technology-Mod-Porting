@@ -13,6 +13,7 @@ import mctmods.immersivetechnology.common.blocks.wooden.logic.CrateCreativeBlock
 import mctmods.immersivetechnology.common.gui.helper.ITContainerMenu;
 import mctmods.immersivetechnology.common.multiblocks.gui.*;
 import mctmods.immersivetechnology.common.multiblocks.metal.logic.*;
+import mctmods.immersivetechnology.core.lib.ITLib;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -32,7 +33,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ITMenuTypes {
-    public static final DeferredRegister<MenuType<?>> REGISTER = DeferredRegister.create(Registries.MENU, "immersivetechnology");
+    public static final DeferredRegister<MenuType<?>> REGISTER = DeferredRegister.create(Registries.MENU, ITLib.MODID);
 
     public static final MultiblockContainer<BoilerLiquidLogic.State, BoilerLiquidMenu> BOILER_LIQUID_MENU = registerMultiblock("gui_boiler", BoilerLiquidMenu::makeServer, (type, id, inv, buffer) -> BoilerLiquidMenu.makeClient(type, id, inv));
     public static final MultiblockContainer<BoilerSolidLogic.State, BoilerSolidMenu> BOILER_SOLID_MENU = registerMultiblock("gui_solid", BoilerSolidMenu::makeServer, (type, id, inv, buffer) -> BoilerSolidMenu.makeClient(type, id, inv));

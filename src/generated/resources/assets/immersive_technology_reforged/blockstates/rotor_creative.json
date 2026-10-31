@@ -1,0 +1,1 @@
+{"variants":{"facing=north":{"model":"immersive_technology_reforged:dynamic/rotor"},"facing=south":{"model":"immersive_technology_reforged:dynamic/rotor","y":180},"facing=west":{"model":"immersive_technology_reforged:dynamic/rotor_east_west","y":180},"facing=east":{"model":"immersive_technology_reforged:dynamic/rotor_east_west"}}}

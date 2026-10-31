@@ -1,6 +1,5 @@
 package mctmods.immersivetechnology.common.multiblocks.metal.logic;
 
-import blusunrize.immersiveengineering.api.IETags;
 import blusunrize.immersiveengineering.api.energy.AveragingEnergyStorage;
 import blusunrize.immersiveengineering.api.fluid.FluidUtils;
 import blusunrize.immersiveengineering.api.multiblocks.blocks.component.IMultiblockComponent.CapabilityRegistrar;
@@ -22,6 +21,7 @@ import mctmods.immersivetechnology.common.multiblocks.helper.ITPressurizedFluidO
 import mctmods.immersivetechnology.common.multiblocks.metal.shapes.SteelSheetmetalTankShape;
 import mctmods.immersivetechnology.core.util.TranslationKey;
 import mctmods.immersivetechnology.common.fluids.helper.ITMarkableFluidTank;
+import mctmods.immersivetechnology.core.registration.ITTags;
 import mctmods.immersivetechnology.core.util.multiblock.PoIJSONSchema;
 import mctmods.immersivetechnology.core.ITServerConfig;
 import mctmods.immersivetechnology.core.util.capability.StoredCapability;
@@ -250,7 +250,7 @@ public class SteelSheetmetalTankLogic implements IServerTickableComponent<SteelS
     @Override public Function<BlockPos, VoxelShape> shapeGetter(ShapeType forType) { return SteelSheetmetalTankShape.GETTER; }
 
     @Override public ItemInteractionResult click(IMultiblockContext<State> ctx, BlockPos posInMultiblock, Player player, InteractionHand hand, BlockHitResult absoluteHit, boolean isClient) {
-        if (posInMultiblock.equals(REDSTONE_POI) && player.getItemInHand(hand).is(IETags.screwdrivers)) {
+        if (posInMultiblock.equals(REDSTONE_POI) && player.getItemInHand(hand).is(ITTags.screwdrivers)) {
             if (!isClient) {
                 State state = ctx.getState();
                 try {

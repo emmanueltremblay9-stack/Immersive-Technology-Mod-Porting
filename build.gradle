@@ -1,6 +1,67 @@
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 
+class NormalizeJsonResourcesAction implements Action<Task>, Serializable {
+    private final List<String> fileSuffixes
+
+    NormalizeJsonResourcesAction(List<String> fileSuffixes) {
+        this.fileSuffixes = fileSuffixes
+    }
+
+    @Override
+    void execute(Task task) {
+        task.outputs.files.files.each { File output ->
+            if (!output.exists()) return
+
+            if (output.isDirectory()) {
+                output.eachFileRecurse { File file ->
+                    if (shouldNormalize(file)) normalize(file)
+                }
+            } else if (shouldNormalize(output)) {
+                normalize(output)
+            }
+        }
+    }
+
+    private boolean shouldNormalize(File file) {
+        file.isFile() && fileSuffixes.any { suffix -> file.name.endsWith(suffix) }
+    }
+
+    private static void normalize(File file) {
+        file.setText(JsonOutput.toJson(new JsonSlurper().parse(file, 'UTF-8')), 'UTF-8')
+    }
+}
+
+abstract class VerifyNoForeignPackagesTask extends DefaultTask {
+    @InputFile
+    @PathSensitive(PathSensitivity.NONE)
+    abstract RegularFileProperty getJarFile()
+
+    @Input
+    abstract Property<String> getForbiddenPrefix()
+
+    @TaskAction
+    void verify() {
+        File jar = jarFile.get().asFile
+        def offendingEntries = []
+
+        new java.util.zip.ZipFile(jar).withCloseable { zip ->
+            zip.entries().each { entry ->
+                if (!entry.directory && entry.name.endsWith('.class') && entry.name.startsWith(forbiddenPrefix.get())) {
+                    offendingEntries << entry.name
+                }
+            }
+        }
+
+        if (!offendingEntries.isEmpty()) {
+            throw new GradleException(
+                    "Foreign Immersive Engineering classes found in ${jar.name}:\n" +
+                            offendingEntries.sort().join('\n')
+            )
+        }
+    }
+}
+
 plugins {
     id 'java-library'
     id 'maven-publish'
@@ -81,41 +142,37 @@ ext {
     mod_description = gradleProps['mod_description']
 }
 
-def version_replaces = { [
+def versionReplacements = [
     'version'         : project.version,
     'build_number'    : version_buildnumber,
     'version_mc'      : version_minecraft,
     'version_neoforge': version_neoforge,
     'version_jei'     : version_jei,
+    'mod_id'          : mod_id,
     'mod_license'     : mod_license,
     'mod_name'        : mod_name,
     'mod_authors'     : mod_authors,
     'mod_description' : mod_description,
     'version_ie'      : version_ie,
     'stage'           : stage,
-] as Map<String, Object> }
+] as Map<String, Object>
 
-def jsonPatterns = ["**/*.json", "**/*.mcmeta"]
 def inactiveLegacyResourcePatterns = [
-    "assets/immersivetechnology/sounds/electrolytic_crucible_battery.ogg",
-    "assets/immersivetechnology/sounds/melting_crucible.ogg",
-    "assets/immersivetechnology/textures/gui/electrolytic_crucible_battery_jei.png",
+    "assets/immersive_technology_reforged/sounds/electrolytic_crucible_battery.ogg",
+    "assets/immersive_technology_reforged/sounds/melting_crucible.ogg",
+    "assets/immersive_technology_reforged/textures/gui/electrolytic_crucible_battery_jei.png",
 ]
 
 processResources {
     doNotTrackState("Windows OneDrive may materialize copied generated resources as reparse points, which Gradle cannot snapshot reliably.")
     duplicatesStrategy = DuplicatesStrategy.FAIL
-    inputs.properties(version_replaces())
+    inputs.properties(versionReplacements)
     filesMatching("META-INF/neoforge.mods.toml") {
-        expand version_replaces()
+        expand versionReplacements
     }
     exclude ".cache"
     exclude inactiveLegacyResourcePatterns
-    doLast {
-        fileTree(dir: getOutputs().getFiles().getAsPath(), includes: jsonPatterns).each { File file ->
-            file.setText(JsonOutput.toJson(new JsonSlurper().parse(file, 'UTF-8')))
-        }
-    }
+    doLast(new NormalizeJsonResourcesAction(['.json', '.mcmeta']))
 }
 
 tasks.register('copyModsTomlForIntelliJ', Copy) {
@@ -267,35 +324,14 @@ tasks.register('optimizePng') {
 tasks.register('genIntellijRunsDummy') {}
 
 jar {
-    archiveBaseName.set("MCT-ImmersiveTechnology-${version_minecraft}")
+    archiveBaseName.set("Immersive-Technology-Reforged")
     archiveClassifier.set('')
 }
 
-tasks.register('verifyNoForeignPackages') {
+tasks.register('verifyNoForeignPackages', VerifyNoForeignPackagesTask) {
     dependsOn tasks.named('jar')
-    def jarTask = tasks.named('jar', Jar)
-    inputs.file(jarTask.flatMap { it.archiveFile })
-
-    doLast {
-        File jarFile = jarTask.get().archiveFile.get().asFile
-        def forbiddenPrefix = 'blusunrize/immersiveengineering/'
-        def offendingEntries = []
-
-        new java.util.zip.ZipFile(jarFile).withCloseable { zip ->
-            zip.entries().each { entry ->
-                if (!entry.directory && entry.name.endsWith('.class') && entry.name.startsWith(forbiddenPrefix)) {
-                    offendingEntries << entry.name
-                }
-            }
-        }
-
-        if (!offendingEntries.isEmpty()) {
-            throw new GradleException(
-                    "Foreign Immersive Engineering classes found in ${jarFile.name}:\n" +
-                            offendingEntries.sort().join('\n')
-            )
-        }
-    }
+    jarFile.set(tasks.named('jar', Jar).flatMap { it.archiveFile })
+    forbiddenPrefix.set('blusunrize/immersiveengineering/')
 }
 
 tasks.named('check') {

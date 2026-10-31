@@ -40,6 +40,7 @@ public class ITInventoryHandler implements IItemHandlerModifiable {
                 } else if (!ItemStack.isSameItemSameComponents(stack, currentStack)) { return stack; }
                 else {
                     int accepted = Math.min(stack.getMaxStackSize(), this.inv.getSlotLimit(offsetSlot)) - currentStack.getCount();
+                    if (accepted <= 0) return stack;
                     if (accepted < stack.getCount()) {
                         stack = stack.copy();
                         if (!simulate) { ItemStack newStack = stack.split(accepted); newStack.grow(currentStack.getCount()); this.inv.getInventory().set(offsetSlot, newStack); this.inv.doGraphicalUpdates(); } else { stack.shrink(accepted); }
@@ -54,7 +55,7 @@ public class ITInventoryHandler implements IItemHandlerModifiable {
     }
 
     @NotNull public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if (this.canExtract[slot] && amount != 0) {
+        if (this.canExtract[slot] && amount > 0) {
             int offsetSlot = this.slotOffset + slot;
             ItemStack currentStack = Objects.requireNonNull(this.inv.getInventory()).get(offsetSlot);
             if (currentStack.isEmpty()) { return ItemStack.EMPTY; }
@@ -72,9 +73,9 @@ public class ITInventoryHandler implements IItemHandlerModifiable {
         } else { return ItemStack.EMPTY; }
     }
 
-    public int getSlotLimit(int slot) { return 64; }
+    public int getSlotLimit(int slot) { return this.inv.getSlotLimit(this.slotOffset + slot); }
 
-    public boolean isItemValid(int slot, @Nonnull ItemStack stack) { return this.canInsert[slot] && this.inv.isStackValid(slot, stack); }
+    public boolean isItemValid(int slot, @Nonnull ItemStack stack) { return this.canInsert[slot] && this.inv.isStackValid(this.slotOffset + slot, stack); }
 
     public void setStackInSlot(int slot, @Nonnull ItemStack stack) { Objects.requireNonNull(this.inv.getInventory()).set(this.slotOffset + slot, stack); this.inv.doGraphicalUpdates(); }
 }

@@ -1,0 +1,12 @@
+{
+  "automatic_culling": false,
+  "emissive_ambient": true,
+  "flip_v": true,
+  "loader": "immersive_technology_reforged:obj",
+  "model": "immersive_technology_reforged:models/multiblock/metal/obj/rotor/rotor.obj",
+  "render_type": "minecraft:cutout",
+  "shade_quads": true,
+  "textures": {
+    "particle": "immersive_technology_reforged:multiblock/metal/rotor"
+  }
+}

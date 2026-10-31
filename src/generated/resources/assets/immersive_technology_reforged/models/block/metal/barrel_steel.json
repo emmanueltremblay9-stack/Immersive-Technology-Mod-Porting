@@ -1,0 +1,5 @@
+{
+  "type": "vertical",
+  "base_name": "immersive_technology_reforged:block/metal/barrel_steel",
+  "loader": "immersive_technology_reforged:conf_sides"
+}

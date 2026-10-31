@@ -1,0 +1,23 @@
+{
+  "required": false,
+  "package": "mctmods.immersivetechnology.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "refmap": "immersive_technology_reforged.refmap.json",
+  "mixins": [
+    "common.CapacitorBlockEntityMixin",
+    "common.FluidPipeBlockEntityMixin",
+    "common.accessor.IEBlockCapCacheAccess",
+    "common.InitializationTrackerMixin",
+    "common.MixerLogicDebounceMixin",
+    "common.MixerRecipePriorityMixin",
+    "common.MixerStateExtensionMixin",
+    "common.MultiblockBEHelperMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "client.BlockRenderDispatcherMixin"
+  ]
+}

@@ -49,7 +49,7 @@ public class ITFluids {
     public static final List<ITFluids.FluidEntry> ALL_ENTRIES = new ArrayList<>();
     public static final Set<ITBlocks.BlockEntry<? extends LiquidBlock>> ALL_FLUID_BLOCKS = new HashSet<>();
     private static final HashMap<String, DeferredHolder<Fluid, ? extends Fluid>> FLUID_REGISTRY_MAP = new HashMap<>();
-    public static Function<String, Fluid> getFluid = (key) -> FLUID_REGISTRY_MAP.get(key).get();
+    public static Function<String, Fluid> getFluid = (key) -> Objects.requireNonNull(FLUID_REGISTRY_MAP.get(key), "Unknown Immersive Technology fluid: " + key).get();
 
     public static final ITFluids.FluidEntry CHLORINE = FluidEntry.make(
             "chlorine", 0, rl("block/fluid/fluid_gas_still"), rl("block/fluid/fluid_gas_flowing"),
@@ -101,18 +101,6 @@ public class ITFluids {
             props -> props.density(-100).viscosity(500).temperature(1000), 0xFF3E444F
     );
 
-    static {
-        FLUID_REGISTRY_MAP.put("chlorine", CHLORINE.getStillGetter());
-        FLUID_REGISTRY_MAP.put("distilled_water", DISTILLED_WATER.getStillGetter());
-        FLUID_REGISTRY_MAP.put("exhaust_steam", EXHAUST_STEAM.getStillGetter());
-        FLUID_REGISTRY_MAP.put("flue_gas", FLUE_GAS.getStillGetter());
-        FLUID_REGISTRY_MAP.put("gravel_slurry", GRAVEL_SLURRY.getStillGetter());
-        FLUID_REGISTRY_MAP.put("heated_salt_slurry", HEATED_SALT.getStillGetter());
-        FLUID_REGISTRY_MAP.put("molten_salt", MOLTEN_SALT.getStillGetter());
-        FLUID_REGISTRY_MAP.put("salt_slurry", SALT_SLURRY.getStillGetter());
-        FLUID_REGISTRY_MAP.put("steam", STEAM.getStillGetter());
-    }
-
     public static List<? extends Fluid> getITFluids() { return REGISTER.getEntries().stream().map(DeferredHolder::get).collect(Collectors.toList()); }
 
     public record FluidEntry(DeferredHolder<Fluid, ITFluid> flowing, DeferredHolder<Fluid, ITFluid> still, ITBlocks.BlockEntry<ITFluidBlock> block, DeferredHolder<Item, BucketItem> bucket, DeferredHolder<FluidType, FluidType> type, List<Property<?>> properties, int tintColor) {
@@ -135,6 +123,7 @@ public class ITFluids {
             DeferredHolder<FluidType, FluidType> type = TYPE_REGISTER.register(name, () -> makeTypeWithTextures(builder, stillTex, flowingTex, tintColor));
             Mutable<ITFluids.FluidEntry> thisMutable = new MutableObject<>();
             DeferredHolder<Fluid, ITFluid> still = REGISTER.register(name, () -> ITFluid.makeFluid(makeStill, thisMutable.getValue()));
+            FLUID_REGISTRY_MAP.put(name, still);
             DeferredHolder<Fluid, ITFluid> flowing = REGISTER.register(name+"_flowing", () -> ITFluid.makeFluid(makeFlowing, thisMutable.getValue()));
             ITBlocks.BlockEntry<ITFluidBlock> block = new ITBlocks.BlockEntry<>(name+"_fluid_block", () -> BlockBehaviour.Properties.ofFullCopy(Blocks.WATER), p -> new ITFluidBlock(thisMutable.getValue(), p));
             DeferredHolder<Item, BucketItem> bucket = ITItems.REGISTER.register(name+"_bucket", () -> makeBucket(still, burnTime));

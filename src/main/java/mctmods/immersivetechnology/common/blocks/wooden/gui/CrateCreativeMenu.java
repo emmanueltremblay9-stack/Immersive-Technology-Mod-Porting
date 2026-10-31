@@ -52,6 +52,7 @@ public class CrateCreativeMenu extends ITContainerMenu {
 
     @Override
     public @NotNull ItemStack quickMoveStack(@NotNull Player pPlayer, int pIndex) {
+        if (pIndex < 0 || pIndex >= this.slots.size()) return ItemStack.EMPTY;
         Slot slot = this.slots.get(pIndex);
         if (!slot.hasItem()) return ItemStack.EMPTY;
         ItemStack itemStack1 = slot.getItem();

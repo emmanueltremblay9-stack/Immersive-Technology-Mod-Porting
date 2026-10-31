@@ -36,6 +36,8 @@ public class CommonProxy {
         ITCreativeTab.REGISTER.register(event);
     }
 
+    public void registerModEventHandlers(IEventBus event) {}
+
     public void reinitializeGUI() {}
 
     public Level getClientWorld() { return null; }

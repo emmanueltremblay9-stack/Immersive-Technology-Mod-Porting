@@ -1,0 +1,139 @@
+{
+  "parent": "minecraft:block/block",
+  "dynamic": false,
+  "inner_model": {
+    "parent": "minecraft:block/block",
+    "ambientocclusion": false,
+    "automatic_culling": false,
+    "emissive_ambient": true,
+    "flip_v": true,
+    "loader": "immersive_technology_reforged:obj",
+    "model": "immersive_technology_reforged:models/multiblock/metal/obj/distiller/distiller_mirrored.obj",
+    "mtl_override": "distiller.mtl",
+    "shade_quads": true,
+    "textures": {
+      "particle": "immersive_technology_reforged:multiblock/metal/distiller"
+    }
+  },
+  "loader": "immersive_technology_reforged:basic_split",
+  "split_parts": [
+    [
+      1,
+      -1,
+      1
+    ],
+    [
+      1,
+      0,
+      -1
+    ],
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      1
+    ],
+    [
+      0,
+      0,
+      -1
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      -1,
+      0,
+      -1
+    ],
+    [
+      -1,
+      0,
+      0
+    ],
+    [
+      -1,
+      0,
+      1
+    ],
+    [
+      0,
+      1,
+      -1
+    ],
+    [
+      0,
+      1,
+      0
+    ],
+    [
+      -1,
+      1,
+      -1
+    ],
+    [
+      -1,
+      1,
+      0
+    ],
+    [
+      1,
+      -1,
+      -1
+    ],
+    [
+      0,
+      -1,
+      -1
+    ],
+    [
+      0,
+      -1,
+      1
+    ],
+    [
+      -1,
+      -1,
+      -1
+    ],
+    [
+      -1,
+      -1,
+      1
+    ],
+    [
+      1,
+      1,
+      -1
+    ],
+    [
+      1,
+      1,
+      0
+    ],
+    [
+      1,
+      -1,
+      0
+    ],
+    [
+      0,
+      -1,
+      0
+    ],
+    [
+      -1,
+      -1,
+      0
+    ]
+  ],
+  "textures": {
+    "particle": "immersive_technology_reforged:multiblock/metal/distiller"
+  }
+}

@@ -33,7 +33,8 @@ public class ValveFluidMenu extends ITContainerMenu {
     public ValveFluidMenu(MenuType<ValveFluidMenu> type, int id, Inventory inv, FriendlyByteBuf buffer) {
         super(ITContainerMenu.clientCtx(type, id));
         BlockPos pos = buffer.readBlockPos();
-        this.tile = (ValveFluidBlockEntity) inv.player.level().getBlockEntity(pos);
+        var blockEntity = inv.player.level().getBlockEntity(pos);
+        this.tile = blockEntity instanceof ValveFluidBlockEntity valve ? valve : null;
         addDataSlot(new DataSlot() { public int get() { return 0; } public void set(int v) { packetLimit = v; } });
         addDataSlot(new DataSlot() { public int get() { return 0; } public void set(int v) { timeLimit = v; } });
         addDataSlot(new DataSlot() { public int get() { return 0; } public void set(int v) { keepSize = v; } });

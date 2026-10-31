@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "immersive_technology_reforged:tile_drop"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "immersive_technology_reforged:blocks/barrel_steel"
+}

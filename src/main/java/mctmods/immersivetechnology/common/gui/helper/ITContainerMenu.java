@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.player.PlayerContainerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-@EventBusSubscriber(modid = ITLib.MODID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = ITLib.MODID)
 public abstract class ITContainerMenu extends AbstractContainerMenu {
     protected final List<ITGenericContainerData<?>> genericData = new ArrayList<>();
     protected final List<ServerPlayer> usingPlayers = new ArrayList<>();
@@ -62,12 +61,19 @@ public abstract class ITContainerMenu extends AbstractContainerMenu {
 
     public void receiveSync(List<Pair<Integer, ITGenericDataSerializers.DataPair<?>>> synced) {
         for (Pair<Integer, ITGenericDataSerializers.DataPair<?>> syncElement : synced) {
-            genericData.get(syncElement.getFirst()).processSync(syncElement.getSecond().data());
+            int index = syncElement.getFirst();
+            if (index < 0 || index >= genericData.size()) continue;
+            genericData.get(index).processSync(syncElement.getSecond().data());
         }
     }
 
     @Override public void clicked(int id, int dragType, @NotNull ClickType clickType, @NotNull Player player) {
-        Slot slot = id < 0 ? null : this.slots.get(id);
+        if (id < 0) {
+            super.clicked(id, dragType, clickType, player);
+            return;
+        }
+        if (id >= this.slots.size()) return;
+        Slot slot = this.slots.get(id);
         if (!(slot instanceof ITSlot.ItemHandlerGhost)) { super.clicked(id, dragType, clickType, player); return; }
         ItemStack stackSlot = slot.getItem();
         if (dragType == 2) { slot.set(ItemStack.EMPTY); }
@@ -95,6 +101,7 @@ public abstract class ITContainerMenu extends AbstractContainerMenu {
     }
 
     @Override @Nonnull public ItemStack quickMoveStack(@NotNull Player player, int slot) {
+        if (slot < 0 || slot >= this.slots.size()) return ItemStack.EMPTY;
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slotObject = this.slots.get(slot);
         if (slotObject.hasItem()) {

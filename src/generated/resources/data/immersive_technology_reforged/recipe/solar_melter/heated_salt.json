@@ -1,0 +1,13 @@
+{
+  "type": "immersive_technology_reforged:solar_melter",
+  "input": {
+    "amount": 1000,
+    "tag": "immersive_technology_reforged:heated_salt_slurry"
+  },
+  "output": {
+    "amount": 500,
+    "id": "immersive_technology_reforged:molten_salt"
+  },
+  "requiredTemp": 1000.0,
+  "time": 20
+}

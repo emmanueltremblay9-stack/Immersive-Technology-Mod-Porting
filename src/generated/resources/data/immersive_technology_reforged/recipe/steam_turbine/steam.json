@@ -1,0 +1,12 @@
+{
+  "type": "immersive_technology_reforged:steam_turbine",
+  "input": {
+    "amount": 100,
+    "tag": "immersive_technology_reforged:steam"
+  },
+  "output": {
+    "amount": 100,
+    "id": "immersive_technology_reforged:exhaust_steam"
+  },
+  "time": 1
+}

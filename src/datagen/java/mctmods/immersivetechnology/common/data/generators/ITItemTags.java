@@ -21,12 +21,14 @@ public class ITItemTags extends ItemTagsProvider {
     }
 
     @Override protected void addTags(@NotNull Provider provider) {
-        tag(ItemTags.create(ResourceLocation.fromNamespaceAndPath("forge", "salts"))).add(ITItems.SALT.get());
-        tag(ItemTags.create(ResourceLocation.fromNamespaceAndPath("forge", "dusts/salt"))).add(ITItems.SALT.get());
+        ResourceLocation ieHammers = ResourceLocation.fromNamespaceAndPath("immersiveengineering", "tools/hammers");
+        ResourceLocation ieScrewdrivers = ResourceLocation.fromNamespaceAndPath("immersiveengineering", "tools/screwdrivers");
+        tag(ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "salts"))).add(ITItems.SALT.get());
+        tag(ITTags.saltDustCommon).add(ITItems.SALT.get());
         tag(ITTags.igniters).add(Items.TORCH, Items.FLINT_AND_STEEL);
         tag(ITTags.igniters_consume).add(Items.TORCH);
-        tag(ITTags.formationTools).add(ITItems.FORMATION_TOOL.get()).addOptional(ResourceLocation.fromNamespaceAndPath("immersiveengineering", "hammer"));
-        tag(ITTags.screwdrivers).addOptional(ResourceLocation.fromNamespaceAndPath("immersiveengineering", "screwdriver"));
-        tag(ItemTags.create(ResourceLocation.fromNamespaceAndPath("immersiveengineering", "tools/hammers"))).add(ITItems.FORMATION_TOOL.get());
+        tag(ITTags.formationTools).add(ITItems.FORMATION_TOOL.get()).addOptional(ResourceLocation.fromNamespaceAndPath("immersiveengineering", "hammer")).addOptionalTag(ieHammers);
+        tag(ITTags.screwdrivers).addOptional(ResourceLocation.fromNamespaceAndPath("immersiveengineering", "screwdriver")).addOptionalTag(ieScrewdrivers);
+        tag(ItemTags.create(ieHammers)).add(ITItems.FORMATION_TOOL.get());
     }
 }

@@ -43,17 +43,22 @@ public class ImmersiveTechnology {
         ITLib.IT_LOGGER.info("IT Starting");
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::enqueueIMC);
+        registerDataGenerators(modEventBus);
         ITLib.IT_LOGGER.info("Starting Proxy Mod Construction");
         CommonProxy.modConstruction(modEventBus);
+        proxy.registerModEventHandlers(modEventBus);
         ITLootFunctions.init(modEventBus);
         ITLib.IT_LOGGER.info("Initializing Packet Handler");
         modEventBus.addListener(ITPacketHandler::registerPayloads);
         ITLib.IT_LOGGER.info("Initializing Mixins and adding Mixin Configuration");
         MixinBootstrap.init();
-        Mixins.addConfiguration("mixins.immersivetechnology.json");
+        Mixins.addConfiguration("mixins.immersive_technology_reforged.json");
         modContainer.registerConfig(ModConfig.Type.COMMON, ITCommonConfig.SPEC);
         modContainer.registerConfig(ModConfig.Type.SERVER, ITServerConfig.SPEC);
         modContainer.registerConfig(ModConfig.Type.CLIENT, ITClientConfig.SPEC);
+        modEventBus.addListener(ITCommonConfig::onConfig);
+        modEventBus.addListener(ITServerConfig::onConfig);
+        modEventBus.addListener(ITClientConfig::onConfig);
         NeoForge.EVENT_BUS.register(ImmersiveTechnology.class);
     }
 
@@ -67,6 +72,17 @@ public class ImmersiveTechnology {
     private void enqueueIMC(final InterModEnqueueEvent event) {
         if (ModList.get().isLoaded("theoneprobe")) {
             OneProbeCompat.enqueueIMC();
+        }
+    }
+
+    private static void registerDataGenerators(IEventBus modEventBus) {
+        try {
+            Class<?> dataProvider = Class.forName("mctmods.immersivetechnology.common.data.ITDataProvider");
+            dataProvider.getMethod("register", IEventBus.class).invoke(null, modEventBus);
+        } catch (ClassNotFoundException ignored) {
+            // The datagen source set is not packaged in normal runtime jars.
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("Failed to register Immersive Technology data providers", e);
         }
     }
 

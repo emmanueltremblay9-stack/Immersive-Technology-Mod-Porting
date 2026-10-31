@@ -1,0 +1,17 @@
+{
+  "automatic_culling": true,
+  "emissive_ambient": true,
+  "flip_v": true,
+  "loader": "immersive_technology_reforged:obj",
+  "model": "immersive_technology_reforged:models/block/metal/obj/valve_load/valve_load.obj",
+  "render_type": "minecraft:cutout",
+  "shade_quads": true,
+  "textures": {
+    "particle": "immersive_technology_reforged:block/metal/valve_load"
+  },
+  "visibility": {
+    "Base": true,
+    "Handle_Closed": true,
+    "Handle_Open": false
+  }
+}

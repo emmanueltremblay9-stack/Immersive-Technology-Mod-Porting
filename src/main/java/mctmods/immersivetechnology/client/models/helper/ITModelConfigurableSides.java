@@ -73,7 +73,6 @@ public class ITModelConfigurableSides extends ITBakedModel {
     }
 
     @Nonnull public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData, @Nullable RenderType layer) {
-        if (side == null) { return ImmutableList.of(); }
         Map<Direction, ITEnums.IOSideConfig> config;
         if (extraData.has(ITProperties.Model.SIDECONFIG)) { config = extraData.get(ITProperties.Model.SIDECONFIG); }
         else {
@@ -81,6 +80,9 @@ public class ITModelConfigurableSides extends ITBakedModel {
             for (Direction d : DirectionUtils.VALUES) { config.put(d, ITEnums.IOSideConfig.NONE); }
         }
         assert config != null;
+        if (side == null) {
+            return state == null ? ImmutableList.copyOf(this.modelCache.getUnchecked(config).values()) : ImmutableList.of();
+        }
         return ImmutableList.of(this.modelCache.getUnchecked(config).get(side));
     }
 

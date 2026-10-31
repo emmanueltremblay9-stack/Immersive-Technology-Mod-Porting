@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "immersive_technology_reforged:rotor_creative"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "immersive_technology_reforged:blocks/rotor_creative"
+}

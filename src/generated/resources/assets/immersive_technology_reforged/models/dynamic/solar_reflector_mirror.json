@@ -1,0 +1,8 @@
+{
+  "automatic_culling": false,
+  "emissive_ambient": true,
+  "flip_v": true,
+  "loader": "immersive_technology_reforged:obj",
+  "model": "immersive_technology_reforged:models/multiblock/metal/obj/solar_reflector/solar_reflector_mirror.obj",
+  "shade_quads": true
+}

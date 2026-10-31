@@ -1,0 +1,9 @@
+{
+  "type": "immersive_technology_reforged:boiler_liquid",
+  "heatPerTick": 0.1,
+  "input": {
+    "amount": 50,
+    "tag": "neoforge:gasoline"
+  },
+  "time": 10
+}

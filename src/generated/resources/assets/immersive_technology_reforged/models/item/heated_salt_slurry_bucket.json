@@ -1,0 +1,6 @@
+{
+  "parent": "neoforge:item/bucket",
+  "flip_gas": false,
+  "fluid": "immersive_technology_reforged:heated_salt_slurry",
+  "loader": "neoforge:fluid_container"
+}

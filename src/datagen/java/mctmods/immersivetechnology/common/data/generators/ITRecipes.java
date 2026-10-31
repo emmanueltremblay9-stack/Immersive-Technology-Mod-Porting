@@ -91,9 +91,9 @@ public class ITRecipes extends RecipeProvider {
 
     private void recipesBoilerLiquid(@Nonnull RecipeOutput out) {
         BoilerLiquidRecipeBuilder.builder().addInput(IETags.fluidBiodiesel, 10).setTime(10).setHeatPerTick(0.1).setTargetHeat(100.0).build(out, toResourceLocation("boiler_liquid/biodiesel"));
-        BoilerLiquidRecipeBuilder.builder().addInput(FluidTags.create(ResourceLocation.fromNamespaceAndPath("forge", "gasoline")), 50).setTime(10).setHeatPerTick(0.1).setTargetHeat(100.0).build(out, toResourceLocation("boiler_liquid/gasoline"));
-        BoilerLiquidRecipeBuilder.builder().addInput(FluidTags.create(ResourceLocation.fromNamespaceAndPath("forge", "diesel")), 7).setTime(10).setHeatPerTick(0.1).setTargetHeat(100.0).build(out, toResourceLocation("boiler_liquid/diesel"));
-        BoilerLiquidRecipeBuilder.builder().addInput(FluidTags.create(ResourceLocation.fromNamespaceAndPath("forge", "kerosene")), 9).setTime(10).setHeatPerTick(0.1).setTargetHeat(100.0).build(out, toResourceLocation("boiler_liquid/kerosene"));
+        BoilerLiquidRecipeBuilder.builder().addInput(FluidTags.create(ResourceLocation.fromNamespaceAndPath("neoforge", "gasoline")), 50).setTime(10).setHeatPerTick(0.1).setTargetHeat(100.0).build(out, toResourceLocation("boiler_liquid/gasoline"));
+        BoilerLiquidRecipeBuilder.builder().addInput(FluidTags.create(ResourceLocation.fromNamespaceAndPath("neoforge", "diesel")), 7).setTime(10).setHeatPerTick(0.1).setTargetHeat(100.0).build(out, toResourceLocation("boiler_liquid/diesel"));
+        BoilerLiquidRecipeBuilder.builder().addInput(FluidTags.create(ResourceLocation.fromNamespaceAndPath("neoforge", "kerosene")), 9).setTime(10).setHeatPerTick(0.1).setTargetHeat(100.0).build(out, toResourceLocation("boiler_liquid/kerosene"));
     }
 
     private void recipesBoilerSolid(@Nonnull RecipeOutput out) {
@@ -120,7 +120,7 @@ public class ITRecipes extends RecipeProvider {
     private void recipesMixer(@Nonnull RecipeOutput out) {
         new MixerRecipeJsonBuilder(ITFluids.SALT_SLURRY.getStill(), 1000)
                 .addFluidTag(FluidTags.WATER, 1000)
-                .addInput(new IngredientWithSize(ITTags.saltForge, 4))
+                .addInput(new IngredientWithSize(ITTags.saltDustCommon, 4))
                 .setEnergy(3200)
                 .build(out, toResourceLocation("mixer/salt_slurry"));
         new MixerRecipeJsonBuilder(ITFluids.GRAVEL_SLURRY.getStill(), 1000)
@@ -132,16 +132,16 @@ public class ITRecipes extends RecipeProvider {
 
     private void recipesTurbine(@Nonnull RecipeOutput out) {
         SteamTurbineRecipeBuilder.builder().addInput(ITTags.fluidSteam, 100).addOutput(ITFluids.EXHAUST_STEAM.getStill(), 100).setTime(1).build(out, toResourceLocation("steam_turbine/steam"));
-        SteamTurbineRecipeBuilder.builder().addInput(ITTags.fluidSteamForge, 100).addOutput(ITFluids.EXHAUST_STEAM.getStill(), 100).setTime(1).build(out, toResourceLocation("steam_turbine/steam_forge"));
+        SteamTurbineRecipeBuilder.builder().addInput(ITTags.fluidSteamCommon, 100).addOutput(ITFluids.EXHAUST_STEAM.getStill(), 100).setTime(1).build(out, toResourceLocation("steam_turbine/steam_common"));
         GasTurbineRecipeBuilder.builder().addInput(IETags.fluidBiodiesel, 160).addOutput(ITFluids.FLUE_GAS.getStill(), 1000).setTime(10).build(out, toResourceLocation("gas_turbine/biodiesel"));
 
-        var gasolineBuilder = GasTurbineRecipeBuilder.builder().addInput(FluidTags.create(ResourceLocation.fromNamespaceAndPath("forge", "gasoline")), 800).addOutput(ITFluids.FLUE_GAS.getStill(), 1000).setTime(10);
+        var gasolineBuilder = GasTurbineRecipeBuilder.builder().addInput(FluidTags.create(ResourceLocation.fromNamespaceAndPath("neoforge", "gasoline")), 800).addOutput(ITFluids.FLUE_GAS.getStill(), 1000).setTime(10);
         gasolineBuilder.build(out.withConditions(modLoaded("immersivepetroleum")), toResourceLocation("gas_turbine/gasoline"));
 
-        var dieselBuilder = GasTurbineRecipeBuilder.builder().addInput(FluidTags.create(ResourceLocation.fromNamespaceAndPath("forge", "diesel")), 114).addOutput(ITFluids.FLUE_GAS.getStill(), 1000).setTime(10);
+        var dieselBuilder = GasTurbineRecipeBuilder.builder().addInput(FluidTags.create(ResourceLocation.fromNamespaceAndPath("neoforge", "diesel")), 114).addOutput(ITFluids.FLUE_GAS.getStill(), 1000).setTime(10);
         dieselBuilder.build(out.withConditions(modLoaded("immersivepetroleum")), toResourceLocation("gas_turbine/diesel"));
 
-        var keroseneBuilder = GasTurbineRecipeBuilder.builder().addInput(FluidTags.create(ResourceLocation.fromNamespaceAndPath("forge", "kerosene")), 150).addOutput(ITFluids.FLUE_GAS.getStill(), 1000).setTime(10);
+        var keroseneBuilder = GasTurbineRecipeBuilder.builder().addInput(FluidTags.create(ResourceLocation.fromNamespaceAndPath("neoforge", "kerosene")), 150).addOutput(ITFluids.FLUE_GAS.getStill(), 1000).setTime(10);
         keroseneBuilder.build(out.withConditions(modLoaded("immersivepetroleum")), toResourceLocation("gas_turbine/kerosene"));
     }
 

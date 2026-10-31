@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 
 @SuppressWarnings("unused")
 public class ITLib {
-    public static final String MODID = "immersivetechnology";
-    public static final String VERSION = "2.0.1";
+    public static final String MODID = "immersive_technology_reforged";
+    public static final String VERSION = "3.0.28";
     public static final String DESC = "desc." + MODID + ".";
     public static final String DESC_INFO = DESC + "info.";
     public static final String DESC_FLAVOUR = DESC + "flavour.";
@@ -17,5 +17,8 @@ public class ITLib {
 
     public static ResourceLocation rl(String name) { return ResourceLocation.fromNamespaceAndPath(ITLib.MODID, name); }
 
-    public static float remapRange(float inMin, float inMax, float outMin, float outMax, float value) { return outMin + ((value - inMin) / inMax) * (outMax - outMin); }
+    public static float remapRange(float inMin, float inMax, float outMin, float outMax, float value) {
+        if (inMax == inMin) return outMin;
+        return outMin + ((value - inMin) / (inMax - inMin)) * (outMax - outMin);
+    }
 }

@@ -1,0 +1,13 @@
+{
+  "values": [
+    "immersive_technology_reforged:formation_tool",
+    {
+      "id": "immersiveengineering:hammer",
+      "required": false
+    },
+    {
+      "id": "#immersiveengineering:tools/hammers",
+      "required": false
+    }
+  ]
+}
